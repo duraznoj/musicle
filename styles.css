@@ -13,8 +13,26 @@ body {
   align-items: center;
 }
 
+.wrapper{
+  display: flex;
+  margin-left:auto;
+  margin-right:auto;
+  height:auto;
+  width:auto;
+}
+
+#score {
+  /*background-color: red;*/
+  display: flex;
+  /*height: 200px; /*calc(var(--width)/2);*/
+  /*width: 500px
+  /*--width: 500px;*/
+}
+
 .piano {
   display: flex;
+  /*float:left;*/
+  clear: left;
 }
 
 .key {
