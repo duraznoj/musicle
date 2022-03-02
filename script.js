@@ -6,7 +6,8 @@ const whiteKeys = document.querySelectorAll('.key.white'); //have to add period 
 const blackKeys = document.querySelectorAll('.key.black');
 
 const vf = new Vex.Flow.Factory({
-  renderer: { elementId: 'score', width: 500, height: 200, background: white},
+  //renderer: { elementId: 'score-1', width: 500, height: 200},
+  renderer: { elementId: 'score-1'},
 });
 
 const score = vf.EasyScore();

@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" charset="utf-8" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.js"></script>
-    <!script src="score.js" charset="utf-8" defer></script>
   </head>
   <body>
-    <!div id="boo"></div>
-
-    <div class="wrapper">
-      <div id="score"></div>
-
-      <div class="piano">
+    <div class="container">
+      <div class="item-1-help">Help</div>
+      <div class="item-2-score">Score
+        <div id="score-1"></div>
+      </div>
+      <div class="item-3-settings">Settings</div>
+      <div class="item-4-piano">Piano
         <div data-note="C" class="key white"></div>
         <div data-note="Db" class="key black"></div>
         <div data-note="D" class="key white"></div>
@@ -30,22 +30,33 @@
         <div data-note="Bb" class="key black"></div>
         <div data-note="B" class="key white"></div>
       </div>
-
-      <audio id="C" src="notes/notes_C.mp3"></audio>
-      <audio id="Db" src="notes/notes_Db.mp3"></audio>
-      <audio id="D" src="notes/notes_D.mp3"></audio>
-      <audio id="Eb" src="notes/notes_Eb.mp3"></audio>
-      <audio id="E" src="notes/notes_E.mp3"></audio>
-      <audio id="F" src="notes/notes_F.mp3"></audio>
-      <audio id="G" src="notes/notes_G.mp3"></audio>
-      <audio id="Gb" src="notes/notes_Gb.mp3"></audio>
-      <audio id="A" src="notes/notes_A.mp3"></audio>
-      <audio id="Ab" src="notes/notes_Ab.mp3"></audio>
-      <audio id="B" src="notes/notes_B.mp3"></audio>
     </div>
 
-
-
+    <audio id="C" src="notes/notes_C.mp3"></audio>
+    <audio id="Db" src="notes/notes_Db.mp3"></audio>
+    <audio id="D" src="notes/notes_D.mp3"></audio>
+    <audio id="Eb" src="notes/notes_Eb.mp3"></audio>
+    <audio id="E" src="notes/notes_E.mp3"></audio>
+    <audio id="F" src="notes/notes_F.mp3"></audio>
+    <audio id="G" src="notes/notes_G.mp3"></audio>
+    <audio id="Gb" src="notes/notes_Gb.mp3"></audio>
+    <audio id="A" src="notes/notes_A.mp3"></audio>
+    <audio id="Ab" src="notes/notes_Ab.mp3"></audio>
+    <audio id="B" src="notes/notes_B.mp3"></audio>
 
   </body>
 </html>
+
+
+<!div data-note="C" class="key white"></div>
+<!div data-note="Db" class="key black"></div>
+<!div data-note="D" class="key white"></div>
+<!div data-note="Eb" class="key black"></div>
+<!div data-note="E" class="key white"></div>
+<!div data-note="F" class="key white"></div>
+<!div data-note="Gb" class="key black"></div>
+<!div data-note="G" class="key white"></div>
+<!div data-note="Ab" class="key black"></div>
+<!div data-note="A" class="key white"></div>
+<!div data-note="Bb" class="key black"></div>
+<!div data-note="B" class="key white"></div>
