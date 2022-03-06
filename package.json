@@ -1,0 +1,28 @@
+{
+  "name": "musicle",
+  "version": "1.0.0",
+  "description": "A game to guess musical phrases!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duraznoj/musicle.git"
+  },
+  "keywords": [
+    "game",
+    "music",
+    "phrase",
+    "Lingo"
+  ],
+  "author": "Sashka Warner",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/duraznoj/musicle/issues"
+  },
+  "homepage": "https://github.com/duraznoj/musicle#readme",
+  "dependencies": {
+    "vexflow": "^3.0.9"
+  }
+}

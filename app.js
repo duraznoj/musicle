@@ -1,0 +1,136 @@
+const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
+const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];
+
+const keys = document.querySelectorAll('.key');
+const whiteKeys = document.querySelectorAll('.key.white'); //have to add period for space
+const blackKeys = document.querySelectorAll('.key.black');
+
+let numClicks = 0;
+
+/*boilerplate VF code*/
+const VF = Vex.Flow;
+const div = document.getElementById("score-1")
+const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+renderer.resize(500, 200);
+const context = renderer.getContext();
+
+/*add stave*/
+const stave = new VF.Stave(10, 0, 500).addClef('treble');
+stave.setContext(context).draw();
+
+/*ground up version  for creating basic noteheads - pitch parameter unclear*/
+/*const formatter = new VF.Formatter();
+const voice = new VF.Voice(VF.Flow.TIME4_4).setStrict(false);*/
+
+/*const note_head1 = new VF.NoteHead({ duration: '4', line: 3 });*/
+/*const note_head1 = new VF.NoteHead({ duration: '4', });
+const note_head2 = new VF.NoteHead({ duration: '4', line: 2.5 });
+const note_head3 = new VF.NoteHead({ duration: '4', line: 0 });
+
+
+voice.addTickables([note_head1, note_head2, note_head3]);
+formatter.joinVoices([voice]).formatToStave([voice], stave);
+
+voice.draw(context, stave);*/
+
+/*create stemless notes: https://groups.google.com/g/vexflow/c/KY8Fw4leCyU WORKS*/
+/*var notes = [
+  // A quarter-note C.
+  new VF.StaveNote({clef: "treble", keys: ["c/4"], duration: "q" }).setStem(new VF.Stem()),
+
+  // A quarter-note D.
+  new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "q" }).setStem(new VF.Stem()),
+
+  // A quarter-note rest. Note that the key (b/4) specifies the vertical
+  // position of the rest.
+  new VF.StaveNote({clef: "treble", keys: ["b/4"], duration: "qr" }).setStem(new VF.Stem()),
+
+  // A C-Major chord.
+  new VF.StaveNote({clef: "treble", keys: ["c/4", "e/4", "g/4"], duration: "q" }).setStem(new VF.Stem())
+];
+
+// Create a voice in 4/4 and add the notes from above
+var voice = new VF.Voice({num_beats: 4,  beat_value: 4});
+voice.addTickables(notes);
+
+// Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
+var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+
+// Render voice
+voice.draw(context, stave);*/
+
+
+
+
+keys.forEach(key => {
+  key.addEventListener('click', () => playNote(key))
+});
+
+document.addEventListener('keydown', (e) => {
+  if(e.repeat) return
+  const key = e.key;
+  const whiteKeyIndex = WHITE_KEYS.indexOf(key);
+  const blackKeyIndex = BLACK_KEYS.indexOf(key);
+
+  if (whiteKeyIndex > -1)
+  {
+    playNote(whiteKeys[whiteKeyIndex]);
+  }
+  if(blackKeyIndex > -1){
+    playNote(blackKeys[blackKeyIndex]);
+  }
+})
+
+function playNote(key){
+  /*var attribs = key.attributes;
+        for(var i = 0; i < attribs.length; i++) {
+            console.log(attribs[i]);
+        }*/
+
+  /*console.log("key: " + key.dataset.note);*/
+
+  numClicks += 1;
+  console.log(numClicks);
+
+
+  var currentNote = key.dataset.note;
+  console.log("key: " + currentNote);
+  const noteAudio = document.getElementById(key.dataset.note);
+  //console.log("key: "+noteAudio);
+  noteAudio.currentTime = 0;
+  noteAudio.play();
+  key.classList.add('active');
+  noteAudio.addEventListener('ended', () => {
+    key.classList.remove('active');
+  })
+  /* to do - add logic for listening for sequence of notes then rendering at end...
+  but also want to have feedback for user as to which notes have been enterered*/
+    var notes = [
+      // A quarter-note C.
+      new VF.StaveNote({clef: "treble", keys: [currentNote + "/4"], duration: "q" }).setStem(new VF.Stem()),
+
+      /*new VF.StaveNote({clef: "treble", keys: ["c/4"], duration: "q" }).setStem(new VF.Stem()),*/
+
+      // A quarter-note D.
+      new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "q" }).setStem(new VF.Stem()),
+
+      // A quarter-note rest. Note that the key (b/4) specifies the vertical
+      // position of the rest.
+      new VF.StaveNote({clef: "treble", keys: ["b/4"], duration: "qr" }).setStem(new VF.Stem()),
+
+      // A C-Major chord.
+      new VF.StaveNote({clef: "treble", keys: ["c/4", "e/4", "g/4"], duration: "q" }).setStem(new VF.Stem())
+    ];
+
+    // Create a voice in 4/4 and add the notes from above
+    var voice = new VF.Voice({num_beats: 4,  beat_value: 4});
+    voice.addTickables(notes);
+
+    // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
+    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+
+    // Render voice
+    voice.draw(context, stave);
+
+
+}
