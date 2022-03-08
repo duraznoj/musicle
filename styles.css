@@ -51,38 +51,29 @@ body {
   grid-column: 1;
 }
 
-.item-2-score {
-  /*display: flex;*/
-  width: var(--width);
-  height: auto;
+.item-2-score-flex-container {
+  /*border: 3px solid #fff;
+  padding: 20px;*/
+  display: flex;
+  justify-content: center;
+  /*flex-direction: row;*/
+  /*justify-content: space-between;*/
+  /*align-items: center;*/
+  /*align-content: center;*/
+  /*width: var(--width);
+  height: auto;*/
   grid-row: 1;
   grid-column: 2;
 }
 
-#score-1{
-  display: block;
-  margin: auto;
-  /*justify-content: center;*/
-  /*width: 200 px;*/
-  /*width: 500 px;
-  height: 200 px;*/
+.flex-child {
+  flex: 1;
+  border: 2px solid yellow;
 }
 
-/*.wrapper{
-  display: flex;
-  margin-left:auto;
-  margin-right:auto;
-  height:auto;
-  width:auto;
-}*
-
-/*#score {*/
-  /*background-color: red;*/
-  /*display: flex;
-  /*height: 200px; /*calc(var(--width)/2);*/
-  /*width: 500px
-  /*--width: 500px;*/
-/*}*/
+.flex-child:first-child {
+    margin-right: 20px;
+}
 
 .item-3-settings {
   grid-row: 1 / span 2;
