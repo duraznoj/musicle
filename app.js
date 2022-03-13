@@ -10,9 +10,8 @@ const buttons = document.querySelectorAll('.item-4-piano button');
 const musicle = ['C', 'D', 'E', 'D', 'Eb']
 
 const VF = Vex.Flow;
-/*const numNotes = 2;*/
-/*const divIDArr = ["#score-1", "#score-2",]/* "score-3", "score-4"]*/
-var contextArr = []
+const numNotes = 2;
+const contextArr = [];
 let numClicks = 0;
 
 const guessRows = [
@@ -36,7 +35,7 @@ const createContext = (divID) => {
   /*add stave*/
   const stave = new VF.Stave(10, 0, 300).addClef('treble');
   stave.setContext(context).draw();
-  /*return [context, stave];*/
+  return [context, stave];
 }
 
 guessRows.forEach((guessRow, guessRowIndex) => {
@@ -51,25 +50,9 @@ guessRows.forEach((guessRow, guessRowIndex) => {
   tileDisplay.append(rowElement);
 
   guessRow.forEach((guess, guessIndex) => {
-    /*console.log(document.querySelector('#guessRow-' + guessRowIndex + '-tile-' + guessIndex));
-    console.log(typeof(document.querySelector('#guessRow-' + guessRowIndex + '-tile-' + guessIndex)));*/
     contextArr.push(createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex)); /*need the id identifier*/
   });
 });
-
-
-/*divIDArr.forEach((div) => {
-  contextArr.push(createContext(div));
-});*/
-
-
-
-/*divIDArr.forEach((div) => {
-  contextArr.push(createContext(div));
-});*/
-
-/*console.table(contextArr);*/
-
 
 keys.forEach(key => {
   key.addEventListener('click', () => playNote(key))
@@ -123,23 +106,11 @@ function playNote(key){
   /* to do - add logic for listening for sequence of notes then rendering at end...
   but also want to have feedback for user as to which notes have been enterered*/
   var notes = [
-    // A quarter-note C.
+    // A quarter-note.
     new VF.StaveNote({clef: "treble", keys: [currentNote + "/4"], duration: "q" }).setStem(new VF.Stem()),
-
-    /*new VF.StaveNote({clef: "treble", keys: ["c/4"], duration: "q" }).setStem(new VF.Stem()),*/
-
-    // A quarter-note D.
-    /*new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "q" }).setStem(new VF.Stem()),
-
-    // A quarter-note rest. Note that the key (b/4) specifies the vertical
-    // position of the rest.
-    new VF.StaveNote({clef: "treble", keys: ["b/4"], duration: "qr" }).setStem(new VF.Stem()),
-
-    // A C-Major chord.
-    new VF.StaveNote({clef: "treble", keys: ["c/4", "e/4", "g/4"], duration: "q" }).setStem(new VF.Stem())*/
   ];
 
-  // Create a voice in 4/4 and add the notes from above
+  // Create a voice in 4/4 and add the note from above
   var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
   voice.addTickables(notes);
 
@@ -148,6 +119,8 @@ function playNote(key){
 
   // Render voice
   /*voice.draw(context, stave);*/
-  /*console.table(contextArr[0][1]);*/
+  /*console.table(contextArr[1]);*/ /*undefined*/
+  /*console.table(document.querySelector("svg"));
+  console.table(document.querySelector(".vf-stave"));*/
   voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);
 }
