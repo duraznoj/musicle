@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <title>Musicle</title>
     <base href=".">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <script type="module" src="app.js" charset="utf-8" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.js"></script>
   </head>
@@ -17,14 +17,20 @@
 
     <div class="container">
       <div class="item-1-help">Help</div>
-      <div class="item-2-score-flex-container">Score
+      
+      <!--div class="item-2-score-flex-container">Score
 
         <div class="flex-child" id="score-1">Flex Column 1</div>
         <div class="flex-child" id="score-2">Flex Column 2</div>
 
-      </div>
+      <div-->
+
+      <div class="message-container"></div>
+      <div class="tile-container"></div>
+
       <div class="item-3-settings">Settings</div>
-      <div class="item-4-piano">Piano
+      <div class="item-4-piano">
+        <button id="enter">Enter</button>
         <div data-note="C" class="key white"></div>
         <div data-note="Db" class="key black"></div>
         <div data-note="D" class="key white"></div>
@@ -37,6 +43,7 @@
         <div data-note="A" class="key white"></div>
         <div data-note="Bb" class="key black"></div>
         <div data-note="B" class="key white"></div>
+        <button id="delete">Delete</button>
       </div>
     </div>
 
