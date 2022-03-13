@@ -7,9 +7,11 @@ const whiteKeys = document.querySelectorAll('.key.white'); //have to add period 
 const blackKeys = document.querySelectorAll('.key.black');
 const buttons = document.querySelectorAll('.item-4-piano button');
 
+const musicle = ['C', 'D', 'E', 'D', 'Eb']
+
 const VF = Vex.Flow;
 /*const numNotes = 2;*/
-const divIDArr = ["#score-1", "#score-2",]/* "score-3", "score-4"]*/
+/*const divIDArr = ["#score-1", "#score-2",]/* "score-3", "score-4"]*/
 var contextArr = []
 let numClicks = 0;
 
@@ -22,19 +24,7 @@ const guessRows = [
   ['', '', '', '', '']
 ]
 
-guessRows.forEach((guessRow, guessRowIndex) => {
-  const rowElement = document.createElement('div');
-  rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
-  tileDisplay.append(rowElement)
-  guessRow.forEach((guess, guessIndex) => {
-    const tileElement = document.createElement('div');
-    tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
-    tileElement.classList.add('tile');
-    rowElement.append(tileElement);
-  })
-})
-
-/*boilerplate VF code*/
+/*boilerplate VF code - note: has to be before the guessrows for loop*/
 const createContext = (divID) => {
   /*const VF = Vex.Flow;*/
   /*const div = document.getElementById(divID)*/
@@ -46,8 +36,33 @@ const createContext = (divID) => {
   /*add stave*/
   const stave = new VF.Stave(10, 0, 300).addClef('treble');
   stave.setContext(context).draw();
-  return [context, stave];
+  /*return [context, stave];*/
 }
+
+guessRows.forEach((guessRow, guessRowIndex) => {
+  const rowElement = document.createElement('div');
+  rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
+  guessRow.forEach((guess, guessIndex) => {
+    const tileElement = document.createElement('div');
+    tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
+    tileElement.classList.add('tile');
+    rowElement.append(tileElement);
+  });
+  tileDisplay.append(rowElement);
+
+  guessRow.forEach((guess, guessIndex) => {
+    /*console.log(document.querySelector('#guessRow-' + guessRowIndex + '-tile-' + guessIndex));
+    console.log(typeof(document.querySelector('#guessRow-' + guessRowIndex + '-tile-' + guessIndex)));*/
+    contextArr.push(createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex)); /*need the id identifier*/
+  });
+});
+
+
+/*divIDArr.forEach((div) => {
+  contextArr.push(createContext(div));
+});*/
+
+
 
 /*divIDArr.forEach((div) => {
   contextArr.push(createContext(div));
@@ -125,7 +140,7 @@ function playNote(key){
   ];
 
   // Create a voice in 4/4 and add the notes from above
-  /*var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+  var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
   voice.addTickables(notes);
 
   // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
@@ -134,5 +149,5 @@ function playNote(key){
   // Render voice
   /*voice.draw(context, stave);*/
   /*console.table(contextArr[0][1]);*/
-  /*voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);*/
+  voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);
 }
