@@ -1,15 +1,38 @@
 const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
 const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];
 
+const tileDisplay = document.querySelector('.tile-container')
 const keys = document.querySelectorAll('.key');
 const whiteKeys = document.querySelectorAll('.key.white'); //have to add period for space
 const blackKeys = document.querySelectorAll('.key.black');
+const buttons = document.querySelectorAll('.item-4-piano button');
 
 const VF = Vex.Flow;
 /*const numNotes = 2;*/
 const divIDArr = ["#score-1", "#score-2",]/* "score-3", "score-4"]*/
 var contextArr = []
 let numClicks = 0;
+
+const guessRows = [
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', '']
+]
+
+guessRows.forEach((guessRow, guessRowIndex) => {
+  const rowElement = document.createElement('div');
+  rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
+  tileDisplay.append(rowElement)
+  guessRow.forEach((guess, guessIndex) => {
+    const tileElement = document.createElement('div');
+    tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
+    tileElement.classList.add('tile');
+    rowElement.append(tileElement);
+  })
+})
 
 /*boilerplate VF code*/
 const createContext = (divID) => {
@@ -26,17 +49,27 @@ const createContext = (divID) => {
   return [context, stave];
 }
 
-divIDArr.forEach((div) => {
+/*divIDArr.forEach((div) => {
   contextArr.push(createContext(div));
-});
+});*/
 
 /*console.table(contextArr);*/
+
 
 keys.forEach(key => {
   key.addEventListener('click', () => playNote(key))
 });
 
-document.addEventListener('keydown', (e) => {
+buttons.forEach((button) =>{
+  button.addEventListener('click', () => editNote(button));
+})
+
+const editNote = (button) => {
+  /*console.log('clicked');*/
+  /*document.getElementsByClassName("buttons")[0].id; */
+  console.log(button.id)
+}
+/*document.addEventListener('keydown', (e) => {
   if(e.repeat) return
   const key = e.key;
   const whiteKeyIndex = WHITE_KEYS.indexOf(key);
@@ -49,7 +82,7 @@ document.addEventListener('keydown', (e) => {
   if(blackKeyIndex > -1){
     playNote(blackKeys[blackKeyIndex]);
   }
-})
+})*/
 
 function playNote(key){
   /*var attribs = key.attributes;
@@ -92,7 +125,7 @@ function playNote(key){
   ];
 
   // Create a voice in 4/4 and add the notes from above
-  var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+  /*var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
   voice.addTickables(notes);
 
   // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
@@ -101,5 +134,5 @@ function playNote(key){
   // Render voice
   /*voice.draw(context, stave);*/
   /*console.table(contextArr[0][1]);*/
-  voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);
+  /*voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);*/
 }
