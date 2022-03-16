@@ -5,9 +5,9 @@ const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];
 const pitches = [];
 const lowest_pitch = 48;
 const highest_pitch = 71;
-for(let p = lowest_pitch; p <= highest_pitch; p++){
-  pitches.push(p);
-};
+
+/*initialize blank pitch to note name conversion table object */
+var conversion_table = {};
 
 /*create corresponding array for note names for use with vexflow*/
 const note_letters = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -15,27 +15,7 @@ const note_names_lower = note_letters.map((val) => val + '/3');
 const note_names_higher = note_letters.map((val) => val + '/4');
 const note_names = note_names_lower.concat(note_names_higher);
 
-/*create dictionary from the pitches and the vexflow note names for converting between the two*/
-var conversion_table = {};
-pitches.forEach((pitch, index) => conversion_table[pitch] = note_names[index]);
-console.log(conversion_table);
-
-/*var note_map = {};
-note_names.forEach(function(note) {note_map[note.id] = author;});
-
-// now do the "join":
-books.forEach(function(book) {
-    book.author = authormap[book.author_id];
-});
-
-// now you can access:
-alert(books[0].author.name);*/
-
-/*const KEY_DICT = 
-[
-  {'c/3':'48'}, 
-  'c#/3':'49', 'd/3':'50', 'd#/3':'51'}*/ /*to-do- finish this*/
-
+/*define constants for accessing and creating html elements*/
 const tileDisplay = document.querySelector('.tile-container');
 const messageDisplay = document.querySelector('.message-container');
 const keys = document.querySelectorAll('.key');
@@ -48,10 +28,8 @@ const musicle = 'CDEFEb'
 
 const VF = Vex.Flow;
 const contextArr = [];
-/*let numClicks = 0;*/
 let currentRow = 0;
 let currentTile = 0;
-
 
 const guessRows = [
   ['', '', '', '', ''],
@@ -70,6 +48,23 @@ const contextRows = [
   ['', '', '', '', ''],
   ['', '', '', '', '']
 ];
+
+/*populate pitches array for use in generating piano keys*/
+for(let p = lowest_pitch; p <= highest_pitch; p++){
+  pitches.push(p);
+};
+
+/*create lookup table from the pitches and the vexflow note names for converting between the two*/
+pitches.forEach((pitch, index) => conversion_table[pitch] = note_names[index]);
+
+/*function to convert between midi pitch number and vexflow note names*/
+const convert_pitches = (input_pitches) => {
+  let output_notes = [];
+  input_pitches.forEach((pitch, index) => {
+    output_notes.push(conversion_table[pitch]);
+  });
+  return(output_notes);
+};
 
 /*boilerplate VF code - note: has to be before the guessrows for loop*/
 const createContext = (divID, hasClef) => {
