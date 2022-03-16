@@ -1,5 +1,36 @@
 const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
 const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];
+
+/*select range of pitches we want to use for the piano keys*/
+const pitches = [];
+const lowest_pitch = 48;
+const highest_pitch = 71;
+for(let p = lowest_pitch; p <= highest_pitch; p++){
+  pitches.push(p);
+};
+
+/*create corresponding array for note names for use with vexflow*/
+const note_letters = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+const note_names_lower = note_letters.map((val) => val + '/3');
+const note_names_higher = note_letters.map((val) => val + '/4');
+const note_names = note_names_lower.concat(note_names_higher);
+
+/*create dictionary from the pitches and the vexflow note names for converting between the two*/
+var conversion_table = {};
+pitches.forEach((pitch, index) => conversion_table[pitch] = note_names[index]);
+console.log(conversion_table);
+
+/*var note_map = {};
+note_names.forEach(function(note) {note_map[note.id] = author;});
+
+// now do the "join":
+books.forEach(function(book) {
+    book.author = authormap[book.author_id];
+});
+
+// now you can access:
+alert(books[0].author.name);*/
+
 /*const KEY_DICT = 
 [
   {'c/3':'48'}, 
