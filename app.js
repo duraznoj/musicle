@@ -81,6 +81,12 @@ const createContext = (divID, hasClef) => {
   return [context, stave]; /*store context and stave objects so we can have something to draw notes on later*/
 }
 
+pitches.forEach((pitch) => {
+  const keyElement = document.createElement('div');
+  /*keyElement.setAttribute('') to do- generate function to assign color of key*/
+});
+
+/*create tiles for music notes*/
 guessRows.forEach((guessRow, guessRowIndex) => {
   const rowElement = document.createElement('div');
   rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
@@ -92,10 +98,12 @@ guessRows.forEach((guessRow, guessRowIndex) => {
   });
   tileDisplay.append(rowElement);
 
+  /*render staves within the tiles */
   guessRow.forEach((guess, guessIndex) => {
     /*contextArr.push(createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex)); /*need the id identifier*/
     contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex);
   });
+
 });
 
 /*console.table(contextRows);*/
