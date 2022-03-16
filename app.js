@@ -1,5 +1,9 @@
 const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
 const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];
+/*const KEY_DICT = 
+[
+  {'c/3':'48'}, 
+  'c#/3':'49', 'd/3':'50', 'd#/3':'51'}*/ /*to-do- finish this*/
 
 const tileDisplay = document.querySelector('.tile-container');
 const messageDisplay = document.querySelector('.message-container');
@@ -163,7 +167,7 @@ function playNote(key){
     key.classList.remove('active');
   })
 
-  var stave_note = [
+  /*var stave_note = [
     // A quarter-note.
     new VF.StaveNote({clef: "treble", keys: [currentNote + "/4"], duration: "q" }).setStem(new VF.Stem()),
   ];
@@ -181,7 +185,7 @@ function playNote(key){
   /*console.table(document.querySelector("svg"));
   console.table(document.querySelector(".vf-stave"));*/
   /*voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);*/
-  voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); /* args = [context, stave]*/
+  /*voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); /* args = [context, stave]*/
   
   currentTile++;
 }
