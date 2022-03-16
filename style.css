@@ -116,7 +116,7 @@ body {
 }
 
 .white{
-  --width: 100px;
+  --width: 70px;
   background-color: white;
   border: 1px solid #333;
 }
@@ -126,7 +126,7 @@ body {
 }
 
 .black{
-  --width: 60px;
+  --width: 40px;
   border: 1px solid #333;
   background-color: black;
   margin-left: calc(var(--width)/-2);
