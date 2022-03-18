@@ -15,5 +15,6 @@ Sources:
 
 3) Game development was based in part on the wonderful Wordle JS tutorial video (https://www.youtube.com/watch?v=mpby4HiElek) from Ania Kubów (https://github.com/kubowania). The Wordle JS tutorial code is available for use under the MIT License (https://github.com/kubowania/wordle-javascript).
 
+4) The note audio files were created by me.
 
 Note: All URLs are linked at the time of writing on Mar 17, 2022 and may not be current.
