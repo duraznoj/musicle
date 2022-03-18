@@ -4,7 +4,7 @@ const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];*/ /*only need this for keyboard in
 
 /*select range of pitches we want to use for the piano keys*/
 const pitches = [];
-const lowest_pitch = 48;
+const lowest_pitch = 48; 
 const highest_pitch = 71;
 
 /*create corresponding array for note names for use with vexflow*/
@@ -27,6 +27,7 @@ const piano = document.querySelector('.item-4-piano')
 let isGameOver = false;
 
 /*choose melody for the game*/
+const key_sig = 'D';
 const musicle_in = [48,49,50,51,52];
 /*convert melody array of numbers to an array of strings for comparing with div attributes later on*/
 let musicle = musicle_in.map(val => val.toString());
@@ -60,6 +61,12 @@ const contextRows = [
 for(let p = lowest_pitch; p <= highest_pitch; p++){
   pitches.push(p);
 };
+
+/*define middle pitch for rendering bass vs treble clef*/
+const middle_pitch = pitches[Math.floor((highest_pitch - lowest_pitch) / 2) + 1];
+/*console.log(highest_pitch)
+console.log(middle_pitch)
+console.log(lowest_pitch)*/
 
 /*create lookup table from the pitches, vexflow note names and piano key colors for converting between them*/
 let conversion_lookup = {};
@@ -129,9 +136,12 @@ const createContext = (divID, hasClef) => {
   const context = renderer.getContext();
 
   /*add stave*/
-  const stave = new VF.Stave(10, 0, 300).addClef('treble');
-  stave.setContext(context).draw();
-  return [context, stave]; /*store context and stave objects so we can have something to draw notes on later*/
+  const treble_stave = new VF.Stave(10, -40, 280).addClef('treble').addKeySignature(key_sig);
+  const bass_stave = new VF.Stave(10, 30, 280).addClef('bass').addKeySignature(key_sig);
+  treble_stave.setContext(context).draw();
+  bass_stave.setContext(context).draw();
+
+  return [context, treble_stave, bass_stave]; /*store context and stave objects so we can have something to draw notes on later*/
 }
 
 /*create tiles for music notes*/
@@ -235,16 +245,16 @@ const editNote = (button) => {
 /*function to play note audio, store note in guessRows matrix, and render note on vexflow staves in the tile elements*/
 function playNote(key){
 
-  var currentNote = key.dataset.note;
-  console.log("key: " + currentNote);
+  var current_note = key.dataset.note;
+  console.log("key: " + current_note);
   /*console.log(guessRows);*/
 
   /*store note in guessRows matrix*/
-  guessRows[currentRow][currentTile] = currentNote;
+  guessRows[currentRow][currentTile] = current_note;
 
   /*add note value to element data value*/
   const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile);
-  tile.setAttribute('data', currentNote);
+  tile.setAttribute('data', current_note);
 
   const noteAudio = document.getElementById(key.dataset.note);
   //console.log("key: "+noteAudio);
@@ -255,27 +265,46 @@ function playNote(key){
     key.classList.remove('active');
   })
 
-  var stave_note = [
-    // A quarter-note.
-    /*new VF.StaveNote({clef: "treble", keys: [currentNote + "/4"], duration: "q" }).setStem(new VF.Stem()),*/ /*only use if input notes are letters*/
-    new VF.StaveNote({clef: "treble", keys: [conversion_lookup[currentNote].note_name + "/4"], duration: "q" }).setStem(new VF.Stem()),
-  ];
+  /*convert midi pitch to note name for vexflow*/
+  const current_note_name = conversion_lookup[current_note].note_name;
+  console.log(current_note_name)
 
-  // Create a voice in 4/4 and add the note from above
-  var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
-  voice.addTickables(stave_note);
-
-  // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
-  var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
-
-  // Render voice
-  /*voice.draw(context, stave);*/
-  /*console.table(contextArr[1]);*/ /*undefined*/
-  /*console.table(document.querySelector("svg"));
-  console.table(document.querySelector(".vf-stave"));*/
-  /*voice.draw(contextArr[numClicks-1][0], contextArr[numClicks-1][1]);*/
-  voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); /* args = [context, stave]*/
+  if(current_note >= lowest_pitch && current_note < middle_pitch){
+    console.log("bass")
+    var stave_note = [
+      // A quarter-note.
+      new VF.StaveNote({clef: "bass", keys: [current_note_name + "/4"], duration: "q" }).setStem(new VF.Stem()),
+    ];
   
+    // Create a voice in 4/4 and add the note from above
+    var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+    voice.addTickables(stave_note);
+  
+    // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
+    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+  
+    // Render voice
+    /*voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); /* args = [context, stave]*/
+    voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][2]);
+
+  } else if(current_note >= middle_pitch && current_note <= highest_pitch){
+    console.log("treble")
+    var stave_note = [
+      // A quarter-note.
+      new VF.StaveNote({clef: "treble", keys: [current_note_name + "/4"], duration: "q" }).setStem(new VF.Stem()),
+    ];
+  
+    // Create a voice in 4/4 and add the note from above
+    var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+    voice.addTickables(stave_note);
+  
+    // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
+    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+  
+    // Render voice
+    /*voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); /* args = [context, stave]*/
+    voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]);
+  }
   currentTile++;
 }
 
