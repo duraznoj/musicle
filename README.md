@@ -9,7 +9,7 @@ The song list is currently based on a subset of the "500 Greatest Songs of All T
 
 Sources:
 
-1) This game uses the excellent VexFlow library created by Mohair Cheppudira (https://github.com/0xfe). VexFlow is available under the MIT License (https://github.com/0xfe/vexflow).
+1) This game uses the excellent VexFlow library created by Mohit Cheppudira (https://github.com/0xfe). VexFlow is available under the MIT License (https://github.com/0xfe/vexflow).
 
 2) Melody data are adapted from the fantastic "A Corpus Study of Rock Music" melodic transcription database (http://rockcorpus.midside.com/melodic_transcriptions.html). From the website: "This website is the public portal for an ongoing, collaborative corpus based research project to study rock music, conducted by Trevor de Clercq [TdC] (trevor.declercq@gmail.com), David Temperley [DT] (dtemperley@esm.rochester.edu), Ethan Lustig, and Ivan Tan." I created a bash script to process the melodic transcription data to extract song names, introductory sequence of pitches and key signatures from the transcriptions. The bash script uses the helpful perl script "process_mel5.pl" (http://rockcorpus.midside.com/programs.html#P2). The data and programs from the "A Corpus Study of Rock Music" is available for academic and commercial use under the terms of the CC BY 4.0 License (https://www.creativecommons.org/licenses/by/4.0/).
 
