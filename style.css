@@ -47,12 +47,15 @@ body {
 .tile-container div {
   display: flex;
   justify-content: center;
-  height: 100px;
+  /*height: 100px;*/
+  --tile-height: 100px:
 }
 
 .tile-container .tile {
-  width: 150px;
-  height: 70px;
+  /*width: 150px;*/
+  width: var(--tile-width);
+  --tile-width: 150px;
+  height: var(--tile-height);
   border: 2px solid#3a3a3c;
   box-sizing: border-box;
   justify-content: center;
@@ -60,6 +63,21 @@ body {
   color: #ffffff;
   background-color: #ffffff;
   /*margin: 2px;*/
+}
+
+.tile-container svg {
+  justify-content: center;
+  align-items: center;
+  /*height: calc(var(--tile-height) * 1);*/
+  height: auto;
+  width: var(--tile-width);
+  /*viewBox: '0 0 500 500';
+  preserveAspectRatio: 'xMidYMid';*/
+}
+
+.tile-container .vf-stave {
+  height: auto;
+
 }
 
 .grey-overlay {
