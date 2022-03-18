@@ -15,7 +15,7 @@ body {
 }
 
 .header{
-  padding: 5px;
+  padding: 1px;
   text-align: center;
   color: white;
   font-size: 15px;
@@ -40,13 +40,14 @@ body {
 .tile-container {
   grid-row: 2;
   grid-column: 2;
-  margin-bottom: 30px;
-  padding: 20px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 .tile-container div {
   display: flex;
   justify-content: center;
+  height: 100px;
 }
 
 .tile-container .tile {
@@ -58,7 +59,7 @@ body {
   align-items: center;
   color: #ffffff;
   background-color: #ffffff;
-  margin: 2px;
+  /*margin: 2px;*/
 }
 
 .grey-overlay {
@@ -79,15 +80,15 @@ body {
 .message-container{
   display: flex;
   justify-content: center;
-  height: 30 px;
+  height: 5 px;
   grid-row: 1;
   grid-column: 2;
 }
 
 .message-container p{
   background-color: #818384;
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 5px;
   margin: 0;
 }
 
