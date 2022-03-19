@@ -28,10 +28,10 @@ let isGameOver = false;
 
 /*choose melody for the game*/
 const key_sig = 'D';
-const musicle_in = [48,49,50,51,52];
+const treble_in = [48,49,50,51,52];
 /*convert melody array of numbers to an array of strings for comparing with div attributes later on*/
-let musicle = musicle_in.map(val => val.toString());
-/*console.log(musicle)*/
+let treble = treble_in.map(val => val.toString());
+/*console.log(treble)*/
 
 const VF = Vex.Flow;
 const contextArr = [];
@@ -179,9 +179,9 @@ const flipTile = () => {
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
   rowTiles.forEach((tile, index) => {
     const dataNote = tile.getAttribute('data');
-    if(dataNote == musicle[index]){
+    if(dataNote == treble[index]){
       tile.classList.add('green-overlay');
-    } else if(musicle.includes(dataNote)){
+    } else if(treble.includes(dataNote)){
       tile.classList.add('yellow-overlay');
     } else {
       tile.classList.add('grey-overlay');
@@ -219,14 +219,14 @@ const editNote = (button) => {
   else if(button.id == "enter" && currentTile > 4){
 
     const guess = guessRows[currentRow].join('');
-    const musicle_join = musicle.join('');
-    console.log('guess = ' + guess + " musicle= " + musicle_join);
-    /*console.log(guess === musicle_join)*/
+    const treble_join = treble.join('');
+    console.log('guess = ' + guess + " treble= " + treble_join);
+    /*console.log(guess === treble_join)*/
 
     /*color tile based on guess accuracy using the flipTile() function*/
     flipTile();
 
-    if(guess === musicle_join){
+    if(guess === treble_join){
       showMessage("Outstanding!");
       isGameOver == true;
       return;
