@@ -1,4 +1,4 @@
-# Musicle
+# Treble
 
 A Wordle-inspired game to guess popular musical phrases! 
 
