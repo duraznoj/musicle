@@ -13,6 +13,8 @@ const note_names_lower = note_letters.map((val) => val + '/4');
 const note_names_higher = note_letters.map((val) => val + '/5');
 const note_names = note_names_lower.concat(note_names_higher);
 
+const key_signatures = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']; //add case for key of Gb?
+
 /*create array of key colors for use in generating piano*/
 const key_colors_basic = ["white", "black", "white", "black", "white", "white", "black", "white", "black", "white", "black", "white"]
 const key_colors = key_colors_basic.concat(key_colors_basic)
@@ -22,18 +24,12 @@ const body = document.querySelector('body');
 const tileDisplay = document.querySelector('.tile-container');
 const messageDisplay = document.querySelector('.message-container');
 const piano = document.querySelector('.item-4-piano')
+const piano_keys = document.querySelector('.item-4-piano.key');
 /*const body = document.querySelector('body');*/
 
 
 /*boolean for game status*/
 let isGameOver = false;
-
-//import local json containing melodies
-var melody_json;
-fetch("./melody_processing/processed/intro_pitches.json")
-.then(response => response.json())
-.then(data => melody_json = data)
-.then(() => console.log(melody_json))
 
 /*var test_func = (async () => {
   var promise1 = new Promise(function(resolve, reject) {
@@ -56,14 +52,15 @@ console.log("Test = " + test);*/
 
 
 /*choose melody for the game*/
-const key_sig = 'D';
-const treble_in = [68,69,70,81,72];
+//const key_sig = 'D';
+//const treble_in = [68,69,70,81,72];
 /*convert melody array of numbers to an array of strings for comparing with div attributes later on*/
-let treble = treble_in.map(val => val.toString());
+//let treble = treble_in.map(val => val.toString());
+
 /*console.log(treble)*/
 
 const VF = Vex.Flow;
-const contextArr = [];
+//const contextArr = [];
 let currentRow = 0;
 let currentTile = 0;
 
@@ -156,7 +153,7 @@ const buttons = document.querySelectorAll('.item-4-piano button');
 
 
 /*boilerplate VF code - note: has to be before the guessrows for loop*/
-const createContext = (divID, hasClef) => {
+const createContext = (divID, key_sig) => {
   /*const VF = Vex.Flow;*/
   /*const div = document.getElementById(divID)*/
   const div = document.querySelector(divID)
@@ -164,7 +161,7 @@ const createContext = (divID, hasClef) => {
   const div_width = div.clientWidth;
   //const div_height = window.getComputedStyle(div, null).getPropertyValue('height');
   //const div_width = window.getComputedStyle(div, null).getPropertyValue('width');
-  console.log("h: " + div_height + " w: " + div_width);  
+  //console.log("h: " + div_height + " w: " + div_width);  
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   renderer.resize(div_width, div_height); // (width, height)
   //console.log("h2: " + div_height + " w2: " + div_width);  
@@ -181,27 +178,6 @@ const createContext = (divID, hasClef) => {
   return [context, stave]; /*store context and stave objects so we can have something to draw notes on later*/
 }
 
-/*create tiles for music notes*/
-guessRows.forEach((guessRow, guessRowIndex) => {
-  const rowElement = document.createElement('div');
-  rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
-  rowElement.classList.add('guessRow');
-  guessRow.forEach((guess, guessIndex) => {
-    const tileElement = document.createElement('div');
-    tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
-    tileElement.classList.add('tile');
-    tileElement.style.width ="100%";
-    tileElement.style.height ="100%";
-    rowElement.append(tileElement);
-  });
-  tileDisplay.append(rowElement);
-
-  /*render staves within the tiles */
-  guessRow.forEach((guess, guessIndex) => {
-    contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex);
-  });
-
-});
 
 //console.table(contextRows);
 
@@ -215,39 +191,29 @@ const showMessage = (message) => {
 }
 
 /*function to color tiles based on guesses*/
-const flipTile = () => {
+const flipTile = (treble) => {
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
   rowTiles.forEach((tile, index) => {
     const dataNote = tile.getAttribute('data');
     if(dataNote == treble[index]){
       tile.classList.add('green-overlay');
+      
     } else if(treble.includes(dataNote)){
       tile.classList.add('yellow-overlay');
+      //keys
     } else {
       tile.classList.add('grey-overlay');
     }
   });
 };
 
-keys.forEach(key => {
-  key.addEventListener('click', () => {
-    if(currentTile < 5 && currentRow < 6){
-      playNote(key);
-      /*console.table(guessRows)*/
-    }
-  });
-});
-
-buttons.forEach((button) =>{
-  button.addEventListener('click', () => editNote(button));
-});
-
-
 /*function to handle what happens when you click the enter or delete buttons*/
-const editNote = (button) => {
+const editNote = (button, treble) => {
   /*console.log('clicked');*/
   /*document.getElementsByClassName("buttons")[0].id; */
   console.log(button.id)
+  //console.table(treble)
+
   if(button.id == "delete" && currentTile > 0){
     currentTile--; /*go back to previous tile*/
     const context = contextRows[currentRow][currentTile][0]; /*get context - consider making this a single value for all functions?*/
@@ -257,14 +223,13 @@ const editNote = (button) => {
   }
   /*if the enter button is pressed and 5 tiles have been populated then check if the guess is correct*/
   else if(button.id == "enter" && currentTile > 4){
-
     const guess = guessRows[currentRow].join('');
     const treble_join = treble.join('');
-    console.log('guess = ' + guess + " treble= " + treble_join);
+    console.log('guess = ' + guess + " treble = " + treble_join);
     /*console.log(guess === treble_join)*/
 
     /*color tile based on guess accuracy using the flipTile() function*/
-    flipTile();
+    flipTile(treble);
 
     if(guess === treble_join){
       showMessage("Outstanding!");
@@ -326,4 +291,123 @@ function playNote(key){
 
   currentTile++;
 }
+
+function xmur3(str) {
+  for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++) {
+      h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+      h = h << 13 | h >>> 19;
+  } return function() {
+      h = Math.imul(h ^ (h >>> 16), 2246822507);
+      h = Math.imul(h ^ (h >>> 13), 3266489909);
+      return (h ^= h >>> 16) >>> 0;
+  }
+}
+
+function mulberry32(a) {
+  return function() {
+    var t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+// Create xmur3 state:
+//var seed = xmur3("20220320");
+
+//var rand = mulberry32(seed());
+//var rand = mulberry32(20220320);
+
+
+/*old_range = (1 - 0)  
+new_range = (200 - 1)  
+NewValue = (((rand() - OldMin) * NewRange) / OldRange) + NewMin
+
+var rand_idx = rand()
+console.log(rand())
+console.log(rand())
+console.log(rand())
+console.log(rand())
+console.log(rand())*/
+
+
+
+//main function for use in async fetch call
+const main_func = (treble, key_sig) => {
+  //console.log("treble: " + treble + " key: " + key_sig);
+
+  /*create tiles for music notes*/
+  guessRows.forEach((guessRow, guessRowIndex) => {
+    const rowElement = document.createElement('div');
+    rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
+    rowElement.classList.add('guessRow');
+    guessRow.forEach((guess, guessIndex) => {
+      const tileElement = document.createElement('div');
+      tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
+      tileElement.classList.add('tile');
+      tileElement.style.width ="100%";
+      tileElement.style.height ="100%";
+      rowElement.append(tileElement);
+    });
+    tileDisplay.append(rowElement);
+
+    /*render staves within the tiles */
+    guessRow.forEach((guess, guessIndex) => {
+      contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, key_sig);
+    });
+  });
+
+  keys.forEach(key => {
+    key.addEventListener('click', () => {
+      if(currentTile < 5 && currentRow < 6){
+        playNote(key);
+        /*console.table(guessRows)*/
+      }
+    });
+  });
+
+  buttons.forEach((button) =>{
+    button.addEventListener('click', () => editNote(button, treble));
+  });
+
+}
+
+//import local json containing melodies
+let melody_json;
+fetch("./melody_processing/processed/intro_pitches.json")
+.then(response => response.json())
+.then(data => melody_json = data)
+.then(() => {
+  //console.log(melody_json);
+  //console.log(melody_json.intro_pitches[1])
+  //choose which song to use and store in song variable
+  const song = melody_json.intro_pitches[1]
+   //convert song variable elements to strings for later comparisons
+  var treble = song.notes.map(val => val.toString()); //need this for "includes" checking for overlays
+  //console.log(treble.includes('65'));
+  const key_sig_in = song.key_signature[0];
+  var key_sig = key_signatures[key_sig_in-1];
+ 
+ 
+  console.log("treble: " + treble + " key: " + key_sig);
+   //let treble = treble_in.map(val => val.toString());
+  main_func(treble, key_sig);
+
+
+  /*song.forEach(s => {
+    //convert song variable elements to strings for later comparisons
+  var treble = s.notes.map(val => val.toString());
+  const key_sig_in = s.key_signature[0];
+  var key_sig = key_signatures[key_sig_in-1];*/
+
+  /*if(!treble | !key_sig){
+    //console.log("missing data")
+  } else {
+    //console.log("treble: " + treble + " key: " + key_sig);
+  }*/
+  //console.log("check - treble: " + treble + " key: " + key_sig);
+ 
+});
+
+
 
