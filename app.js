@@ -22,6 +22,8 @@ const body = document.querySelector('body');
 const tileDisplay = document.querySelector('.tile-container');
 const messageDisplay = document.querySelector('.message-container');
 const piano = document.querySelector('.item-4-piano')
+/*const body = document.querySelector('body');*/
+
 
 /*boolean for game status*/
 let isGameOver = false;
@@ -132,14 +134,16 @@ const createContext = (divID, hasClef) => {
   /*const div = document.getElementById(divID)*/
   const div = document.querySelector(divID)
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-  /*renderer.resize(300, 100);*/
+  const div_height = div.clientHeight;
+  const div_width = div.clientWidth;
+  console.log("h: " + div_height + " w: " + div_width);
+  renderer.resize(div_width, div_height); // (width, height)
+  /*console.log(div.clientWidth);*/
   const context = renderer.getContext();
-  /*context.setViewBox(0, 0, 300, 100); //size
-
+  //context.setViewBox(0, 0); //x, y, width, height
   /*add stave*/
-  const stave = new VF.Stave(10, 0, 280).addClef('treble').addKeySignature(key_sig);
+  const stave = new VF.Stave(10, -19, div_width * 0.9).addClef('treble').addKeySignature(key_sig); //(x, y, width)
   stave.setContext(context).draw();
-
   return [context, stave]; /*store context and stave objects so we can have something to draw notes on later*/
 }
 
@@ -151,19 +155,20 @@ guessRows.forEach((guessRow, guessRowIndex) => {
     const tileElement = document.createElement('div');
     tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
     tileElement.classList.add('tile');
+    tileElement.style.width ="100%";
+    tileElement.style.height ="100%";
     rowElement.append(tileElement);
   });
   tileDisplay.append(rowElement);
 
   /*render staves within the tiles */
   guessRow.forEach((guess, guessIndex) => {
-    /*contextArr.push(createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex)); /*need the id identifier*/
     contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex);
   });
 
 });
 
-/*console.table(contextRows);*/
+//console.table(contextRows);
 
 /*function to show messages after guesses and at end of game*/
 const showMessage = (message) => {
