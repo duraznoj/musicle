@@ -160,17 +160,23 @@ const createContext = (divID, hasClef) => {
   /*const VF = Vex.Flow;*/
   /*const div = document.getElementById(divID)*/
   const div = document.querySelector(divID)
-  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   const div_height = div.clientHeight;
   const div_width = div.clientWidth;
-  console.log(divID);
-  console.log("h: " + div_height + " w: " + div_width);
-  renderer.resize(div_width/2, div_height); // (width, height)
+  //const div_height = window.getComputedStyle(div, null).getPropertyValue('height');
+  //const div_width = window.getComputedStyle(div, null).getPropertyValue('width');
+  console.log("h: " + div_height + " w: " + div_width);  
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(div_width, div_height); // (width, height)
+  //console.log("h2: " + div_height + " w2: " + div_width);  
+
+  /*const div_height = div.clientHeight;
+  const div_width = div.innerWidth;*/
+  //renderer.resize(div_width/2, div_height); // (width, height)
   /*console.log(div.clientWidth);*/
   const context = renderer.getContext();
   //context.setViewBox(0, 0); //x, y, width, height
   /*add stave*/
-  const stave = new VF.Stave(10, -19, div_width / 2 * 0.8).addClef('treble').addKeySignature(key_sig); //(x, y, width)
+  const stave = new VF.Stave(10, -20, div_width * 0.85).addClef('treble').addKeySignature(key_sig); //(x, y, width)
   stave.setContext(context).draw();
   return [context, stave]; /*store context and stave objects so we can have something to draw notes on later*/
 }
