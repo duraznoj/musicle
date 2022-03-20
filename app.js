@@ -4,7 +4,7 @@ const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];*/ /*only need this for keyboard in
 
 /*select range of pitches we want to use for the piano keys*/
 const pitches = [];
-const lowest_pitch = 60; 
+const lowest_pitch = 60;
 const highest_pitch = 83;
 
 /*create corresponding array for note names for use with vexflow*/
@@ -163,13 +163,14 @@ const createContext = (divID, hasClef) => {
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   const div_height = div.clientHeight;
   const div_width = div.clientWidth;
-  //console.log("h: " + div_height + " w: " + div_width);
-  renderer.resize(div_width, div_height); // (width, height)
+  console.log(divID);
+  console.log("h: " + div_height + " w: " + div_width);
+  renderer.resize(div_width/2, div_height); // (width, height)
   /*console.log(div.clientWidth);*/
   const context = renderer.getContext();
   //context.setViewBox(0, 0); //x, y, width, height
   /*add stave*/
-  const stave = new VF.Stave(10, -19, div_width * 0.9).addClef('treble').addKeySignature(key_sig); //(x, y, width)
+  const stave = new VF.Stave(10, -19, div_width / 2 * 0.8).addClef('treble').addKeySignature(key_sig); //(x, y, width)
   stave.setContext(context).draw();
   return [context, stave]; /*store context and stave objects so we can have something to draw notes on later*/
 }
@@ -178,6 +179,7 @@ const createContext = (divID, hasClef) => {
 guessRows.forEach((guessRow, guessRowIndex) => {
   const rowElement = document.createElement('div');
   rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
+  rowElement.classList.add('guessRow');
   guessRow.forEach((guess, guessIndex) => {
     const tileElement = document.createElement('div');
     tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
