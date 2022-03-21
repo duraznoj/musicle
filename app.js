@@ -182,7 +182,7 @@ const createContext = (divID, key_sig) => {
 //console.table(contextRows);
 
 /*function to show messages after guesses and at end of game*/
-const showMessage = (message) => {
+const show_message = (message) => {
   const messageElement = document.createElement('p');
   messageElement.textContent = message;
   messageDisplay.append(messageElement);
@@ -191,19 +191,30 @@ const showMessage = (message) => {
 }
 
 /*function to color tiles based on guesses*/
-const flipTile = (treble) => {
-  const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
-  rowTiles.forEach((tile, index) => {
-    const dataNote = tile.getAttribute('data');
-    if(dataNote == treble[index]){
-      tile.classList.add('green-overlay');
-      
-    } else if(treble.includes(dataNote)){
-      tile.classList.add('yellow-overlay');
-      //keys
-    } else {
-      tile.classList.add('grey-overlay');
-    }
+const flip_tile = (treble) => {
+  const row_tiles = document.querySelector("#guessRow-" + currentRow).childNodes;
+  row_tiles.forEach((tile, index) => {
+    const data_note = tile.getAttribute('data'); //data_note = key.dataset.note is a string
+    const current_key = document.querySelector('[data-note="' + data_note + '"]');
+    console.log('[data-note="' + data_note + '"]');
+
+    setTimeout(() => {
+      tile.classList.add('flip');
+      if(data_note == treble[index]){
+        tile.classList.add('green-overlay');
+        current_key.classList.add('green-overlay');
+  
+      } else if(treble.includes(data_note)){
+        tile.classList.add('yellow-overlay');
+        current_key.classList.add('yellow-overlay');
+  
+      } else {
+        tile.classList.add('grey-overlay');
+        current_key.classList.add('grey-overlay');
+  
+      }
+    }, 500 * index);
+    
   });
 };
 
@@ -228,15 +239,15 @@ const editNote = (button, treble) => {
     console.log('guess = ' + guess + " treble = " + treble_join);
     /*console.log(guess === treble_join)*/
 
-    /*color tile based on guess accuracy using the flipTile() function*/
-    flipTile(treble);
+    /*color tile based on guess accuracy using the flip_tile() function*/
+    flip_tile(treble);
 
     if(guess === treble_join){
-      showMessage("Outstanding!");
+      show_message("Outstanding!");
       isGameOver == true;
       return;
     } else if(currentRow >= 5){
-      showMessage("Game over.");
+      show_message("Game over.");
       isGameOver = true;
       return;
     } else if(currentRow < 5){
@@ -251,6 +262,7 @@ function playNote(key){
 
   var current_note = key.dataset.note;
   console.log("key: " + current_note);
+  //console.log("type: " + typeof(current_note));
   /*console.log(guessRows);*/
 
   /*store note in guessRows matrix*/

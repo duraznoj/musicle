@@ -98,22 +98,47 @@ body {
   align-items: center;*/
 }
 
-.grey-overlay {
-  /*background-color: #3a3a3c !important;*/
-  background: rgba(115, 117, 116, 0.534) !important;
-  /*border: none !important; this seems to change row size due to lack of border...*/
+.tile.flip {
+  animation: 0.5s linear flipping;
 }
 
-.yellow-overlay{
+@keyframes flipping {
+  0%{
+    transform: rotateX(0deg);
+  }
+  50%{
+    transform: rotateX(90deg);
+  }
+  100%{
+    transform: rotateX(0deg);
+  }
+}
+
+.grey-overlay {
+  /*background-color: #3a3a3c !important;*/
+  background: rgba(115, 117, 116, 0.533) !important;
+}
+
+.yellow-overlay {
   /*background-color: #b59f3a !important;*/
-  background: rgba(241, 229, 117, 0.747) !important;
-  /*border: none !important;*/
+  background: rgba(241, 229, 117, 0.745) !important;
 }
 
 .green-overlay {
   /*background-color: #538d4e !important;*/
-  background: rgba(115, 204, 167, 0.925) !important;
-  /*border: none !important;*/
+  background: rgb(116, 205, 168, 0.925) !important;
+}
+
+.key.black.grey-overlay {
+  background-color: #737574 !important;
+}
+
+.key.black.yellow-overlay {
+  background-color: #f1e575 !important;
+}
+
+.key.black.green-overlay {
+  background-color: #74cda8 !important;
 }
 
 .message-container{
@@ -179,7 +204,7 @@ body {
   height: 60%;
   --width: calc(100%/28);
   width: var(--width);
-  border: 1px solid #333;
+  border: 2px solid #333;
   background-color: black;
   margin-left: calc(var(--width)/-2);
   margin-right: calc(var(--width)/-2);
