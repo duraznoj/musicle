@@ -1,4 +1,38 @@
 /*CONSTANTS*/
+//import local json containing melodies
+let melodyJSON;
+
+const importJSON = () => {
+  fetch("./melody_processing/processed/intro_pitches.json")
+    .then(response => response.json())
+    .then(data => {
+      melodyJSON = data;
+      //console.log(melodyJSON);
+      console.table(melodyJSON.intro_pitches[0]);
+
+    /*.then(() => {
+      //console.log(melodyJSON);
+      //console.log(melodyJSON.intro_pitches[1])
+      //choose which song to use and store in song variable
+      const song = melodyJSON.intro_pitches[1]
+      //convert song variable elements to strings for later comparisons
+      let treble = song.notes.map(val => val.toString()); //need this for "includes" checking for overlays
+      //console.log(treble.includes('65'));
+      //console.log(treble[0] == '66');
+      const keySigIn = song.key_signature[0];
+      let keySig = keySignatures[keySigIn - 1];
+
+      const outArr = [treble, keySig];
+    
+      console.log("treble: " + treble + " key: " + keySig);*/
+    
+    }).catch(err => console.log(err));
+}
+importJSON();
+
+
+
+
 /*const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
 const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];*/ /*only need this for keyboard input*/
 
@@ -386,58 +420,15 @@ console.log(rand())
 console.log(rand())
 console.log(rand())*/
 
-//import local json containing melodies
-const importJSON = () => {
 
-  let melodyJSON;
-  fetch("./melody_processing/processed/intro_pitches.json")
-  .then(response => response.json())
-  .then(data => melodyJSON = data)
-  .then(() => {
-    //console.log(melodyJSON);
-    //console.log(melodyJSON.intro_pitches[1])
-    //choose which song to use and store in song variable
-    const song = melodyJSON.intro_pitches[1]
-    //convert song variable elements to strings for later comparisons
-    let treble = song.notes.map(val => val.toString()); //need this for "includes" checking for overlays
-    //console.log(treble.includes('65'));
-    //console.log(treble[0] == '66');
-    const keySigIn = song.key_signature[0];
-    let keySig = keySignatures[keySigIn - 1];
-
-    const outArr = [treble, keySig];
-  
-    console.log("treble: " + treble + " key: " + keySig);
-    
-    /*var promises = outArr.map(function(o) {
-      return o;
-    });*/
-    return Promise.all(outArr);
-    //return [treble, keySig];
-    //let treble = treble_in.map(val => val.toString());
-    //mainFunc(treble, keySig);
-
-    /*song.forEach(s => {
-      //convert song variable elements to strings for later comparisons
-    var treble = s.notes.map(val => val.toString());
-    const keySigIn = s.keySignature[0];
-    var keySig = keySignatures[keySigIn-1];*/
-
-    /*if(!treble | !keySig){
-      //console.log("missing data")
-    } else {
-      //console.log("treble: " + treble + " key: " + keySig);
-    }*/
-    //console.log("check - treble: " + treble + " key: " + keySig);
-  
-  });
-}
 
 /*importJSON().then((t) => {
   console.table(t);
 });*/
 
   //console.log(" mainFunc treble: " + treble + " key: " + keySig);
+
+//console.table(melodyJSON)
 
 //create tiles for music notes
 guessRows.forEach((guessRow, guessRowIndex) => {
@@ -461,6 +452,7 @@ guessRows.forEach((guessRow, guessRowIndex) => {
       //contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, treble_arr[1]);
     //})
     //contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+    //contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, melodyJSON.intro_pitches[1].key_signature);
   });
 });
 
@@ -478,9 +470,7 @@ keys.forEach(key => {
 buttons.forEach((button) =>{
   //button.addEventListener('click', () => editNote(button, treble));
   button.addEventListener('click', () => {
-    importJSON().then(treble_arr => {
-      editNote(button, treble_arr[1]);
-    });
+    editNote(button, melodyJSON.intro_pitches[1].notes);
   });
 });
 
