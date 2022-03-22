@@ -58,13 +58,22 @@ const pitches = [];
 const lowestPitch = 60;
 const highestPitch = 83;
 
-/*create corresponding array for note names for use with vexflow*/
-const noteLetters = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-const noteNamesLower = noteLetters.map((val) => val + '/4');
-const noteNamesHigher = noteLetters.map((val) => val + '/5');
-const noteNames = noteNamesLower.concat(noteNamesHigher);
+//create corresponding arrays for note names for use with vexflow
+//define two arrays - one for flats and one for sharps so that we can draw the appropriate note for the given key signature
+const noteLettersFlats = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+const noteLettersSharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+const noteNamesFlatsLower = noteLettersFlats.map((val) => val + '/4');
+const noteNamesFlatsHigher = noteLettersFlats.map((val) => val + '/5');
+const noteNamesFlats = noteNamesFlatsLower.concat(noteNamesFlatsHigher);
+
+const noteNamesSharpsLower = noteLettersSharps.map((val) => val + '/4');
+const noteNamesSharpsHigher = noteLettersSharps.map((val) => val + '/5');
+const noteNamesSharps = noteNamesSharpsLower.concat(noteNamesSharpsHigher);
 
 const keySignatures = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']; //add case for key of Gb?
+const keySigFlats = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'Eb'];
+const keySigSharps = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
 
 /*create array of key colors for use in generating piano*/
 const keyColorsBasic = ["white", "black", "white", "black", "white", "white", "black", "white", "black", "white", "black", "white"]
@@ -130,16 +139,27 @@ let conversionLookup = {};
 for (let i=0; i < pitches.length; i++) {
   /*populate conversionLookup object indices with the elements of pitches, and assign data to the indices from the pitches, noteNames, and keyColors arrays
   can concat multiple variables for the index if we want more details*/
-  conversionLookup[pitches[i]] = {"pitch" : pitches[i],"noteName" : noteNames[i],"keyColor" : keyColors[i]}; 
+  conversionLookup[pitches[i]] = {"pitch" : pitches[i],"noteNameFlat" : noteNamesFlats[i], "noteNameSharp" : noteNamesSharps[i], "keyColor" : keyColors[i]}; 
 }
 
+//console.table(conversionLookup)
+
 //function to convert between midi pitch number and vexflow note names
-const convertPitches = (inPitches) => {
-  let outNotes = [];
+const convertPitch = (inPitch) => {
+  let outNote;
+  //convert midi pitch to note name for vexflow
+  if (keySigFlats.includes(keySig)) {
+    outNote = conversionLookup[inPitch].noteNameFlat;
+
+  } else if (keySigSharps.includes(keySig)){
+    outNote = conversionLookup[inPitch].noteNameSharp;
+  }
+  /*let outNotes = [];
   inPitches.forEach((pitch) => {
     outNotes.push(conversionLookup[pitch].noteName);
   });
-  return(outNotes);
+  return(outNotes);*/
+  return outNote;
 };
 
 //create elements for list of note audio element
@@ -361,8 +381,8 @@ function playNote(key){
     key.classList.remove('active');
   })
 
-  //convert midi pitch to note name for vexflow
-  const currentNoteName = conversionLookup[currentNote].noteName;
+  //const currentNoteName = conversionLookup[currentNote].noteName;
+  const currentNoteName = convertPitch(currentNote);
   console.log(currentNoteName)
 
   var staveNote = [
