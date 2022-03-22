@@ -1,40 +1,27 @@
-/*CONSTANTS & IMPORTS*/
-//import local json containing melodies
-//let treble;
-//let keySig;
-let in_treble = [65, 67, 70, 67, 65];
+//CONSTANTS AND IMPORTS
+
+//for testing without json import:
+/*let in_treble = [65, 67, 70, 67, 65];
 let treble = in_treble.map(val => val.toString());
-
-let keySig = 'D'
-
+let keySig = 'D'*/
 //let checkTreble = Object.assign({}, treble); 
 //if we want a copy of the original element that can withstand changes without mutating the original we have to use Object.assign();
 //we can also map the objects to a new array, which we need to do anyway to compare between same type;
-
 //let checkTreble = treble.map(val => val.toString());
-//console.log("checkTreble as assigned: \n");
-//console.table(checkTreble)
-
-//checkTreble[0] = ' ';
-//checkTreble.splice(3, 1);
-//console.log("new checkTreble: \n")
-//console.table(checkTreble);
-//console.log("elem of checkTreble: \n")
-//console.log(Object.values(checkTreble).includes('65'))
-//console.log("comparison: " + checkTreble.includes(''))
-
-//console.log("src treble: \n")
-//console.table(treble);
 
 
+//import json containing melodies
+let treble;
+let keySig;
 
-
-/*const getTreble = () => {
+const getTreble = () => {
   fetch("./melody_processing/processed/intro_pitches.json")
     .then(response => response.json())
     .then(json => {
       treble = json.intro_pitches[1].notes;
       keySig = keySignatures[json.intro_pitches[1].key_signature - 1];
+      //console.log(treble);
+      //console.log(keySig);
 
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
@@ -45,9 +32,7 @@ let keySig = 'D'
     
     }).catch(err => console.log(err));
 }
-getTreble();*/
-
-
+getTreble();
 
 
 /*const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
@@ -398,9 +383,9 @@ function playNote(key){
   var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
   // Render voice
-  //voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //args = [context, stave]
-  voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]);
+  voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //args = [context, stave]
 
+  // increment tile counter
   currentTile++;
 }
 
@@ -460,9 +445,9 @@ guessRows.forEach((guessRow, guessRowIndex) => {
   tileDisplay.append(rowElement);
 
   //render staves within the tiles
-  guessRow.forEach((guess, guessIndex) => {
+  /*guessRow.forEach((guess, guessIndex) => {
     contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
-  });
+  });*/
 });
 
 keys.forEach(key => {
