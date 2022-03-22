@@ -1,27 +1,92 @@
 //CONSTANTS AND IMPORTS
 
 //for testing without json import:
-/*let in_treble = [65, 67, 70, 67, 65];
-let treble = in_treble.map(val => val.toString());
-let keySig = 'D'*/
+//let inTreble = [59,62,59,64,59];
+//let treble = inTreble.map(val => val.toString());
+//let keySig = 'D'
 //let checkTreble = Object.assign({}, treble); 
 //if we want a copy of the original element that can withstand changes without mutating the original we have to use Object.assign();
 //we can also map the objects to a new array, which we need to do anyway to compare between same type;
 //let checkTreble = treble.map(val => val.toString());
 
+/*select range of pitches we want to use for the piano keys*/
+const pitches = [];
+const lowestPitch = 60;
+const highestPitch = 84;
 
 //import json containing melodies
+let songName;
 let treble;
 let keySig;
+//let shiftedPitches;
+//let octaveDifference;
+
+//function to shift input pitches to the correct octave for our piano keyboard
+const shiftPitches = (inPitches) => {
+  //assumes intro melodies are never more than two octaves apart
+  console.log(" inPitches: " + inPitches);
+  const minTreblePitch = Math.min(...inPitches);
+  const maxTreblePitch = Math.max(...inPitches);
+  let shiftedPitches;
+  let octaveDifference;
+  if (minTreblePitch < lowestPitch) {
+    if (minTreblePitch % 12 === 0) {
+      console.log('min: multiple of 12');
+      console.log(lowestPitch - minTreblePitch);
+      octaveDifference = (lowestPitch - minTreblePitch);
+      console.log("low octave difference: " + octaveDifference);
+    } else {
+      octaveDifference = ((Math.floor((lowestPitch - minTreblePitch) / 12) + 1) * 12);
+      console.log("low octave difference: " + octaveDifference);
+    }
+    shiftedPitches = inPitches.map(p => p + octaveDifference)
+    //console.log("low octave difference: " + octaveDifference);
+    console.log("low: " + shiftedPitches);
+    
+  } else if (maxTreblePitch > highestPitch) {
+    if (maxTreblePitch % 12 === 0) {
+      console.log('max: multiple of 12');
+      console.log(maxTreblePitch - highestPitch);
+      octaveDifference = (maxTreblePitch - highestPitch);
+    } else {
+      octaveDifference = ((Math.floor((maxTreblePitch - highestPitch) / 12) + 1) * 12)
+    }
+    console.log("high octave difference: " + ((octaveDifference + 1) * 12));
+    shiftedPitches = inPitches.map(val => val - octaveDifference);
+    console.log("high: " + shiftedPitches);
+
+  } else {
+    console.log("No difference");
+    shiftedPitches = inPitches;
+  }
+  console.log("out shifted: " + shiftedPitches);
+  return shiftedPitches;
+}
+
+//console.log("shift global scope out: " + shiftPitches(inTreble));
+//console.log( "shift global scope out: " + shiftedPitches);
+
 
 const getTreble = () => {
   fetch("./melody_processing/processed/intro_pitches.json")
     .then(response => response.json())
     .then(json => {
-      treble = json.intro_pitches[1].notes;
-      keySig = keySignatures[json.intro_pitches[1].key_signature - 1];
-      //console.log(treble);
-      //console.log(keySig);
+      //let melody_json = json.intro_pitches
+      const melody = json.intro_pitches[135];
+      let inTreble = melody.notes;
+      //console.log("melody.notes: " + melody.notes.join);
+      let shiftedTreble = shiftPitches(inTreble);
+      treble = shiftedTreble.map(val => val.toString());
+
+      songName = melody.song_name.replace('_', ' ').toUpperCase();
+      //treble = inTreble;
+      //console.log("min: " + minTreblePitch + " max: " + maxTreblePitch);
+      keySig = keySignatures[melody.key_signature]; //source is in integer notation
+
+      console.log(melody);
+      console.log(songName);
+      console.log(treble);
+      console.log(keySig);
 
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
@@ -38,10 +103,10 @@ getTreble();
 /*const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
 const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j'];*/ /*only need this for keyboard input*/
 
-/*select range of pitches we want to use for the piano keys*/
+/*select range of pitches we want to use for the piano keys
 const pitches = [];
 const lowestPitch = 60;
-const highestPitch = 83;
+const highestPitch = 83;*/
 
 //create corresponding arrays for note names for use with vexflow
 //define two arrays - one for flats and one for sharps so that we can draw the appropriate note for the given key signature
@@ -50,19 +115,23 @@ const noteLettersSharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A',
 
 const noteNamesFlatsLower = noteLettersFlats.map((val) => val + '/4');
 const noteNamesFlatsHigher = noteLettersFlats.map((val) => val + '/5');
-const noteNamesFlats = noteNamesFlatsLower.concat(noteNamesFlatsHigher);
+const noteNamesFlats = noteNamesFlatsLower.concat(noteNamesFlatsHigher)
+noteNamesFlats.push('C/6'); //add extra 'C' to have full second octave
 
 const noteNamesSharpsLower = noteLettersSharps.map((val) => val + '/4');
 const noteNamesSharpsHigher = noteLettersSharps.map((val) => val + '/5');
 const noteNamesSharps = noteNamesSharpsLower.concat(noteNamesSharpsHigher);
+noteNamesSharps.push('C/6'); //add extra 'C' to have full second octave
 
 const keySignatures = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']; //add case for key of Gb?
 const keySigFlats = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'Eb'];
 const keySigSharps = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
 
 /*create array of key colors for use in generating piano*/
-const keyColorsBasic = ["white", "black", "white", "black", "white", "white", "black", "white", "black", "white", "black", "white"]
-const keyColors = keyColorsBasic.concat(keyColorsBasic)
+const keyColorsBasic = ["white", "black", "white", "black", "white", "white", "black", "white", "black", "white", "black", "white"];
+const keyColors = keyColorsBasic.concat(keyColorsBasic);
+keyColors.push("white"); //add extra white key to have full second octave
+//console.table(keyColors);
 
 /*define constants for accessing and creating html elements*/
 const body = document.querySelector('body');
@@ -328,11 +397,13 @@ const editNote = (button) => {
     flipTile();
 
     if(guess === trebleJoin){
-      showMessage("Outstanding!");
+      showMessage("OUTSTANDING!");
+      showMessage("SONG: " + songName);
       isGameOver == true;
       return;
     } else if(currentRow >= 5){
-      showMessage("Game over.");
+      showMessage("GAME OVER");
+      showMessage("SONG: " + songName);
       isGameOver = true;
       return;
     } else if(currentRow < 5){
