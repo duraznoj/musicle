@@ -72,16 +72,18 @@ const getTreble = () => {
     .then(response => response.json())
     .then(json => {
       //let melody_json = json.intro_pitches
-      const melody = json.intro_pitches[135];
+      const melody = json.intro_pitches[57];
+      songName = melody.song_name.replace('_', ' ').toUpperCase();
       let inTreble = melody.notes;
+      keySig = keySignatures[melody.key_signature]; //source is in integer notation
+
+      if (inTreble.length === 0 || !keySig) {
+        console.log("empty notes or key sig");
+      };
+
       //console.log("melody.notes: " + melody.notes.join);
       let shiftedTreble = shiftPitches(inTreble);
       treble = shiftedTreble.map(val => val.toString());
-
-      songName = melody.song_name.replace('_', ' ').toUpperCase();
-      //treble = inTreble;
-      //console.log("min: " + minTreblePitch + " max: " + maxTreblePitch);
-      keySig = keySignatures[melody.key_signature]; //source is in integer notation
 
       console.log(melody);
       console.log(songName);
@@ -396,12 +398,12 @@ const editNote = (button) => {
     //color tile based on guess accuracy using the flipTile() function
     flipTile();
 
-    if(guess === trebleJoin){
+    if(guess === trebleJoin && !isGameOver){
       showMessage("OUTSTANDING!");
       showMessage("SONG: " + songName);
-      isGameOver == true;
+      isGameOver = true;
       return;
-    } else if(currentRow >= 5){
+    } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
       showMessage("SONG: " + songName);
       isGameOver = true;
@@ -471,14 +473,14 @@ function xmur3(str) {
   }
 }
 
-function mulberry32(a) {
+/*function mulberry32(a) {
   return function() {
     var t = a += 0x6D2B79F5;
     t = Math.imul(t ^ t >>> 15, t | 1);
     t ^= t + Math.imul(t ^ t >>> 7, t | 61);
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   }
-}
+}*/
 
 // Create xmur3 state:
 //var seed = xmur3("20220320");
@@ -533,7 +535,10 @@ keys.forEach(key => {
 
 buttons.forEach((button) =>{
   button.addEventListener('click', () => {
-    editNote(button);
+    if(!isGameOver){
+      editNote(button);
+    }
+    //editNote(button);
   });
 });
 
