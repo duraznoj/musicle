@@ -9,6 +9,61 @@
 //we can also map the objects to a new array, which we need to do anyway to compare between same type;
 //let checkTreble = treble.map(val => val.toString());
 
+//Hash function 
+function xmur3(str) {
+  for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++) {
+      h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+      h = h << 13 | h >>> 19;
+  } return function() {
+      h = Math.imul(h ^ (h >>> 16), 2246822507);
+      h = Math.imul(h ^ (h >>> 13), 3266489909);
+      return (h ^= h >>> 16) >>> 0;
+  }
+}
+
+//Mulberry32 PNRG 
+function mulberry32(a) {
+  return function() {
+    var t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+
+//console.log("index: " + randScaled);
+
+//simulate various different dates for testing
+/*for(let i = 20220301; i < 20250502; i++) {
+  const seed = xmur3(String(i));
+  const rand = mulberry32(seed());
+  const randScaled = Math.floor(rand() * 199); //199 songs currently
+  console.log(randScaled);
+}*/
+
+
+//Function to generate random index to get a different song each day
+const getRandIndex = (nSongs) => {
+
+  //Get current date in YYYYMMDD format,
+  const GMTDate = moment().format('YYYYMMDD');
+  //console.log("Date: " + typeof(GMTDate));
+
+  //Convert string to hash, 
+  const seed = xmur3(GMTDate);
+
+  //Use hash to seed pseudo-random number generator
+  const rand = mulberry32(seed());
+
+  //Scale result to number of songs to get random song index
+  const randScaled = Math.floor(rand() * nSongs); //199 songs currently
+
+  return randScaled;
+}
+
+const numSongs = 199;
+
 /*select range of pitches we want to use for the piano keys*/
 const pitches = [];
 const lowestPitch = 60;
@@ -24,7 +79,7 @@ let keySig;
 //function to shift input pitches to the correct octave for our piano keyboard
 const shiftPitches = (inPitches) => {
   //assumes intro melodies are never more than two octaves apart
-  console.log(" inPitches: " + inPitches);
+  console.log("inPitches: " + inPitches);
   const minTreblePitch = Math.min(...inPitches);
   const maxTreblePitch = Math.max(...inPitches);
   let shiftedPitches;
@@ -72,13 +127,31 @@ const getTreble = () => {
     .then(response => response.json())
     .then(json => {
       //let melody_json = json.intro_pitches
-      const melody = json.intro_pitches[57];
+
+      //generate random index so we can select a new song every day
+      const currentSongIndex = getRandIndex(numSongs);
+
+      //get song from json
+      const melody = json.intro_pitches[currentSongIndex];
+
+      //get name of song, notes in the melody and key signature
       songName = melody.song_name.replace('_', ' ').toUpperCase();
       let inTreble = melody.notes;
       keySig = keySignatures[melody.key_signature]; //source is in integer notation
 
-      if (inTreble.length === 0 || !keySig) {
+      //if intro pitches or key signature is empty get a new index...
+      while (inTreble.length === 0 || !keySig) {
         console.log("empty notes or key sig");
+        //generate random index so we can select a new song every day
+        const currentSongIndex = getRandIndex(numSongs);
+
+        //get song from json
+        const melody = json.intro_pitches[currentSongIndex];
+
+        //get name of song, notes in the melody and key signature
+        songName = melody.song_name.replace('_', ' ').toUpperCase();
+        let inTreble = melody.notes;
+        keySig = keySignatures[melody.key_signature]; //source is in integer notation
       };
 
       //console.log("melody.notes: " + melody.notes.join);
@@ -461,46 +534,6 @@ function playNote(key){
   // increment tile counter
   currentTile++;
 }
-
-function xmur3(str) {
-  for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++) {
-      h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
-      h = h << 13 | h >>> 19;
-  } return function() {
-      h = Math.imul(h ^ (h >>> 16), 2246822507);
-      h = Math.imul(h ^ (h >>> 13), 3266489909);
-      return (h ^= h >>> 16) >>> 0;
-  }
-}
-
-/*function mulberry32(a) {
-  return function() {
-    var t = a += 0x6D2B79F5;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  }
-}*/
-
-// Create xmur3 state:
-//var seed = xmur3("20220320");
-
-//var rand = mulberry32(seed());
-//var rand = mulberry32(20220320);
-
-
-/*old_range = (1 - 0)  
-new_range = (200 - 1)  
-NewValue = (((rand() - OldMin) * NewRange) / OldRange) + NewMin
-
-var rand_idx = rand()
-console.log(rand())
-console.log(rand())
-console.log(rand())
-console.log(rand())
-console.log(rand())*/
-
-
 
 //create tiles for music notes
 guessRows.forEach((guessRow, guessRowIndex) => {
