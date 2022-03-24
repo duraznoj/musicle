@@ -31,9 +31,6 @@ function mulberry32(a) {
   }
 }
 
-
-//console.log("index: " + randScaled);
-
 //simulate various different dates for testing
 /*for(let i = 20220301; i < 20220310; i++) {
   const seed = xmur3(String(i));
@@ -42,75 +39,24 @@ function mulberry32(a) {
   console.log(rand());
 }*/
 
-//const numSongs = 193;
-const GMTDate = moment().format('YYYYMMDD');
-
+//function to get random index so we can choose a new song each day
 const getRandIndex = (nSongs) => {
 
-  //Get current date in YYYYMMDD format,
-  const GMTDate = moment().format('YYYYMMDD');
-  //console.log("Date: " + typeof(GMTDate));
+  //Get current date in yyyyMMdd format,
+  const dt = luxon.DateTime.utc().toFormat('yyyyMMdd'); //UTC time
+  console.log("Date: " + dt);
 
   //Convert string to hash, 
-  const seed = xmur3(GMTDate);
+  const seed = xmur3(dt);
   
   //Use hash to seed pseudo-random number generator
   const rand = mulberry32(seed());
 
   //Scale result to number of songs to get random song index
   const randScaled = Math.floor(rand() * nSongs);
-  
+
   return randScaled;
 }
-//class to generate random index to get a different song each day
-/*class GetRandIndex {
-  constructor(tDate, nSongs){
-
-    //Get current date in YYYYMMDD format,
-    //const GMTDate = moment().format('YYYYMMDD');
-    this.tDate = tDate;
-    this.nSongs = nSongs;
-    //console.log("Date: " + typeof(GMTDate));
-
-    //Convert string to hash, 
-    //const seed = xmur3(GMTDate);
-    
-    
-    //this.seed = xmur3(this.tDate);
-
-    //Use hash to seed pseudo-random number generator
-    //const rand = mulberry32(seed());
-    //this.rand = mulberry32(this.seed());
-
-    //Scale result to number of songs to get random song index
-    //const randScaled = Math.floor(rand() * nSongs); //199 songs currently
-    //this.randScaled = Math.floor(this.rand() * nSongs); //199 songs currently
-  }
-  get randScaled() {
-    return this.rScaled();
-  }
-
-  get randSeed() {
-    return this.rSeed();
-  }
-
-  rSeed() {
-    return Math.floor(mulberry32(xmur3(this.tDate)())() * this.nSongs)
-    //return "Hi";
-  }
-
-  rScaled() {
-    return Math.floor(mulberry32(xmur3(this.tDate)())() * this.nSongs)
-    //return "Hi";
-  }
-  
-}
-
-const test = new GetRandIndex(GMTDate, numSongs);
-//console.log(test.randScaled);
-//console.log(test.randScaled);*/
-
-//console.log(GetRandIndex(GMTDate, numSongs));
 
 /*select range of pitches we want to use for the piano keys*/
 const pitches = [];
@@ -180,6 +126,8 @@ const getTreble = () => {
       const numSongs = Object.keys(json.intro_pitches).length;
       //console.log(numSongs);
       let currentSongIndex = getRandIndex(numSongs - 1);
+      console.log("currentSongIndex: " + currentSongIndex);
+      //let currentSongIndex = '20220323';
 
       //get song from json
       let melody = json.intro_pitches[currentSongIndex];
