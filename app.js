@@ -42,7 +42,7 @@ function mulberry32(a) {
   console.log(rand());
 }*/
 
-const numSongs = 199;
+//const numSongs = 193;
 const GMTDate = moment().format('YYYYMMDD');
 
 const getRandIndex = (nSongs) => {
@@ -177,7 +177,9 @@ const getTreble = () => {
       //let melody_json = json.intro_pitches
 
       //generate random index so we can select a new song every day
-      let currentSongIndex = getRandIndex(numSongs);
+      const numSongs = Object.keys(json.intro_pitches).length;
+      //console.log(numSongs);
+      let currentSongIndex = getRandIndex(numSongs - 1);
 
       //get song from json
       let melody = json.intro_pitches[currentSongIndex];
