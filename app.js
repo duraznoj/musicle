@@ -35,15 +35,16 @@ function mulberry32(a) {
 //console.log("index: " + randScaled);
 
 //simulate various different dates for testing
-/*for(let i = 20220301; i < 20250502; i++) {
+/*for(let i = 20220301; i < 20220310; i++) {
   const seed = xmur3(String(i));
   const rand = mulberry32(seed());
-  const randScaled = Math.floor(rand() * 199); //199 songs currently
-  console.log(randScaled);
+  //const randScaled = Math.floor(rand() * 199); //199 songs currently
+  console.log(rand());
 }*/
 
+const numSongs = 199;
+const GMTDate = moment().format('YYYYMMDD');
 
-//Function to generate random index to get a different song each day
 const getRandIndex = (nSongs) => {
 
   //Get current date in YYYYMMDD format,
@@ -52,17 +53,64 @@ const getRandIndex = (nSongs) => {
 
   //Convert string to hash, 
   const seed = xmur3(GMTDate);
-
+  
   //Use hash to seed pseudo-random number generator
   const rand = mulberry32(seed());
 
   //Scale result to number of songs to get random song index
-  const randScaled = Math.floor(rand() * nSongs); //199 songs currently
-
+  const randScaled = Math.floor(rand() * nSongs);
+  
   return randScaled;
 }
+//class to generate random index to get a different song each day
+/*class GetRandIndex {
+  constructor(tDate, nSongs){
 
-const numSongs = 199;
+    //Get current date in YYYYMMDD format,
+    //const GMTDate = moment().format('YYYYMMDD');
+    this.tDate = tDate;
+    this.nSongs = nSongs;
+    //console.log("Date: " + typeof(GMTDate));
+
+    //Convert string to hash, 
+    //const seed = xmur3(GMTDate);
+    
+    
+    //this.seed = xmur3(this.tDate);
+
+    //Use hash to seed pseudo-random number generator
+    //const rand = mulberry32(seed());
+    //this.rand = mulberry32(this.seed());
+
+    //Scale result to number of songs to get random song index
+    //const randScaled = Math.floor(rand() * nSongs); //199 songs currently
+    //this.randScaled = Math.floor(this.rand() * nSongs); //199 songs currently
+  }
+  get randScaled() {
+    return this.rScaled();
+  }
+
+  get randSeed() {
+    return this.rSeed();
+  }
+
+  rSeed() {
+    return Math.floor(mulberry32(xmur3(this.tDate)())() * this.nSongs)
+    //return "Hi";
+  }
+
+  rScaled() {
+    return Math.floor(mulberry32(xmur3(this.tDate)())() * this.nSongs)
+    //return "Hi";
+  }
+  
+}
+
+const test = new GetRandIndex(GMTDate, numSongs);
+//console.log(test.randScaled);
+//console.log(test.randScaled);*/
+
+//console.log(GetRandIndex(GMTDate, numSongs));
 
 /*select range of pitches we want to use for the piano keys*/
 const pitches = [];
@@ -129,30 +177,15 @@ const getTreble = () => {
       //let melody_json = json.intro_pitches
 
       //generate random index so we can select a new song every day
-      const currentSongIndex = getRandIndex(numSongs);
+      let currentSongIndex = getRandIndex(numSongs);
 
       //get song from json
-      const melody = json.intro_pitches[currentSongIndex];
+      let melody = json.intro_pitches[currentSongIndex];
 
       //get name of song, notes in the melody and key signature
       songName = melody.song_name.replace('_', ' ').toUpperCase();
       let inTreble = melody.notes;
       keySig = keySignatures[melody.key_signature]; //source is in integer notation
-
-      //if intro pitches or key signature is empty get a new index...
-      while (inTreble.length === 0 || !keySig) {
-        console.log("empty notes or key sig");
-        //generate random index so we can select a new song every day
-        const currentSongIndex = getRandIndex(numSongs);
-
-        //get song from json
-        const melody = json.intro_pitches[currentSongIndex];
-
-        //get name of song, notes in the melody and key signature
-        songName = melody.song_name.replace('_', ' ').toUpperCase();
-        let inTreble = melody.notes;
-        keySig = keySignatures[melody.key_signature]; //source is in integer notation
-      };
 
       //console.log("melody.notes: " + melody.notes.join);
       let shiftedTreble = shiftPitches(inTreble);

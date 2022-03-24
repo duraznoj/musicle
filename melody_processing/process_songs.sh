@@ -1,7 +1,7 @@
 #!/bin/bash
 # get first pitches of song and key signature and write to json
 # author: Sashka Warner
-# date: Mar 17, 2022
+# date: Mar 23, 2022
 
 #note- this assumes the directory is set up as:
 #.
@@ -39,15 +39,24 @@ do
   #run the process-mel5.pl perl script to get the key signature, extract second colum and get the first entry (some songs have key changes)
   get_key_cmd=`perl process-mel5.pl -6 0 $FILE  | cut -d ' ' -f 2 | head -1`
   #echo $process_cmd
-  if [[ $FILE == $last ]]
+  process_output="$process_cmd"
+  key_output="$get_key_cmd"
+  #only write to file if the song has notes and a key signature associated with it
+  if [[ -n $process_output ]] && [[ -n $key_output ]]
   then
-    echo "$FILE is the last" 
-    printf '{"song_name":"%s","notes":[%s],"key_signature":[%s]}\n' "$f_name" "$process_cmd" "$get_key_cmd" >> $FULL_DEST_PATH #json doesn't allow trailing commmas
-    break
-  else 
-    echo "$FILE"
-    printf '{"song_name":"%s","notes":[%s],"key_signature":[%s]},\n' "$f_name" "$process_cmd" "$get_key_cmd" >> $FULL_DEST_PATH
-    #format output and append to output file
+    if [[ $FILE == $last ]]    
+    then 
+      echo "$FILE is the last" 
+      #format output and append to output file
+      printf '{"song_name":"%s","notes":[%s],"key_signature":[%s]}\n' "$f_name" "$process_cmd" "$get_key_cmd" >> $FULL_DEST_PATH #json doesn't allow trailing commmas
+      break
+    else
+      echo "$FILE"
+      #format output and append to output file
+      printf '{"song_name":"%s","notes":[%s],"key_signature":[%s]},\n' "$f_name" "$process_cmd" "$get_key_cmd" >> $FULL_DEST_PATH
+    fi
+  else
+    echo "$FILE missing notes or key signature"
   fi 
 done
 
