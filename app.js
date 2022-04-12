@@ -55,7 +55,7 @@ const highestPitch = 84;
 //import json containing melodies
 let songName;
 let treble;
-let keySig;
+var keySig;
 //let shiftedPitches;
 //let octaveDifference;
 
@@ -111,8 +111,8 @@ keyColors.push("white"); //add extra white key to have full second octave
 
 /*define constants for accessing and creating html elements*/
 const body = document.querySelector('body');
-//const tileDisplay = document.querySelector('.tile-container');
-var tileDisplay = document.querySelector('.tile-container');
+const tileDisplay = document.querySelector('.tile-container');
+//var tileDisplay = document.querySelector('.tile-container');
 const messageDisplay = document.querySelector('.message-container');
 const piano = document.querySelector('.item-4-piano')
 const pianoKeys = document.querySelector('.item-4-piano.key');
@@ -135,7 +135,7 @@ const VF = Vex.Flow;
 let currentRow = 0;
 let currentTile = 0;
 
-var guessRows = [ //previously was defined with 'let'
+let guessRows = [ //previously was defined with 'var' - before that 'let'
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
@@ -144,7 +144,7 @@ var guessRows = [ //previously was defined with 'let'
   ['', '', '', '', '']
 ];
 
-var contextRows = [ //previously was defined with 'let'
+let contextRows = [ //previously was defined with 'var' - before that - 'let'
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
@@ -152,6 +152,17 @@ var contextRows = [ //previously was defined with 'let'
   ['', '', '', '', ''],
   ['', '', '', '', '']
 ];
+
+/*var staveRows = [ //previously was defined with 'let'
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', '']
+];*/
+
+let checkRows = [];
 
 //MAIN
 
@@ -270,12 +281,28 @@ const getTreble = () => {
           contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
         });
       });
+
+      //const test = createContext('#guessRow-' + 0 + '-tile-' + 0, keySig);
+
+      /*const currentContext = document.querySelector("#guessRow-0-tile-0 > svg > .vf-stave")
+      console.log("Elements : \n");
+      console.log(currentContext);
+      //console.log(currentStave);*/
       
       //save context in local storage
-      window.localStorage.setObj("contextRows", contextRows);
-      tileDisplay = document.querySelector(".tile-container"); //don't need to define this earlier? Could add createTiles() above the stave rendering?
-      console.log("tileDisplay to be stored: "+ tileDisplay.innerHTML);
-      window.localStorage.setItem("tileDisplay", tileDisplay.innerHTML);
+      //window.localStorage.setObj("contextRows", contextRows);
+      //console.log("storing context element in getTreble: \n");
+      //console.table(contextRows[0][0]);
+
+      //console.log("storing stave element in getTreble: \n");
+      //console.table(staveRows[0][0]);
+      //window.localStorage.setObj("staveRows", staveRows); //doesn't work
+
+      window.localStorage.setObj("guessRows", guessRows); 
+      
+      //tileDisplay = document.querySelector(".tile-container"); //don't need to define this earlier? Could add createTiles() above the stave rendering?
+      //console.log("tileDisplay to be stored: "+ tileDisplay.innerHTML);
+      //window.localStorage.setItem("tileDisplay", tileDisplay.innerHTML);
     
     }).catch(err => console.log(err));
 
@@ -325,6 +352,34 @@ const createTiles = () => {
 }
 
 //boilerplate VF code - note: has to be before the guessRows for loop
+/*const createContext = (divID, keySig) => {
+  //const VF = Vex.Flow;
+  //const div = document.getElementById(divID)
+  const div = document.querySelector(divID)
+  const divHeight = div.clientHeight;
+  const divWidth = div.clientWidth;
+  //const divHeight = window.getComputedStyle(div, null).getPropertyValue('height');
+  //const divWidth = window.getComputedStyle(div, null).getPropertyValue('width');
+  //console.log("h: " + divHeight + " w: " + divWidth);  
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(divWidth, divHeight); // (width, height)
+  //console.log("h2: " + divHeight + " w2: " + divWidth);  
+
+  //const divHeight = div.clientHeight;
+  //const divWidth = div.innerWidth;
+  //renderer.resize(divWidth/2, divHeight); // (width, height)
+  //console.log(div.clientWidth);
+  const context = renderer.getContext();
+  //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
+  //context.setViewBox(0, 0); //x, y, width, height
+  //add stave
+  const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
+  stave.setContext(context).draw();
+  //return [context, stave]; //store context and stave objects so we can have something to draw notes on later
+  return context;
+}*/
+//console.table(contextRows);
+
 const createContext = (divID, keySig) => {
   //const VF = Vex.Flow;
   //const div = document.getElementById(divID)
@@ -343,12 +398,23 @@ const createContext = (divID, keySig) => {
   //renderer.resize(divWidth/2, divHeight); // (width, height)
   //console.log(div.clientWidth);
   const context = renderer.getContext();
+  //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
   //context.setViewBox(0, 0); //x, y, width, height
   //add stave
   const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
   stave.setContext(context).draw();
   return [context, stave]; //store context and stave objects so we can have something to draw notes on later
+  //return context;
 }
+
+/*const createStave = (inContext, keySig) => {
+  const stave = new VF.Stave(10, -20, 150 * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
+  stave.setContext(inContext).draw();
+  console.log("Create stave")
+  //return [context, stave]; //store context and stave objects so we can have something to draw notes on later
+  return stave;
+}*/
+
 //console.table(contextRows);
 
 //initLocalStorage();
@@ -376,8 +442,11 @@ function resetGameState() {
   window.localStorage.removeItem("songName");
   window.localStorage.removeItem("treble");
   window.localStorage.removeItem("keySig");
+  window.localStorage.removeItem("guessRows");
+  window.localStorage.removeItem("checkRows");
   //window.localStorage.removeItem("contextRows");
-  window.localStorage.removeItem("tileDisplay");
+  //window.localStorage.removeItem("staveRows");
+  //window.localStorage.removeItem("tileDisplay");
   //window.localStorage.removeItem("guessedWordCount");
   //window.localStorage.removeItem("guessedsongs");
   //window.localStorage.removeItem("keyboardContainer");
@@ -403,20 +472,64 @@ function initLocalStorage() {
       console.log("storedTreble: \n" + treble);
       keySig = window.localStorage.getItem("keySig");
       console.log("storedKeySig: " + keySig);
-      //contextRows = window.localStorage.getObj("contextRows")
-      //console.log("storedContextRows: \n")
-      //console.table(contextRows);
-      const storedTileDisplay = window.localStorage.getItem("tileDisplay");
-      if (storedTileDisplay) {
-        document.querySelector(".tile-container").innerHTML = storedTileDisplay;
-      }
+      
+      guessRows = window.localStorage.getObj("guessRows");
+      console.log("storedGuessRows: \n")
+      console.table(guessRows);
+
+      checkRows = window.localStorage.getObj("checkRows");
+      console.log("storedCheckRows: \n")
+      console.table(checkRows);
+
+      //create tiles
+      createTiles();
 
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
         guessRow.forEach((guess, guessIndex) => {
           contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+          //render notes and colors within the staves
+          //console.log("conversion table \n");
+          //console.table(conversionLookup);
+          //drawNote(guessRows[guessRowIndex][guessIndex]);
         });
       });
+
+      guessRows.forEach((guessRow, guessRowIndex) => {
+        guessRow.forEach((guess, guessIndex) => {
+          //contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+          //render notes and colors within the staves
+          //console.log("conversion table \n");
+          //console.table(conversionLookup);
+          //drawNote(guessRows[guessRowIndex][guessIndex]);
+
+          if(guessIndex !== 0 && guessIndex % 4 === 0) {
+            currentRow++;
+          }
+          console.log("currentRow in guessRow drawNote loop: \n" + currentRow);
+        });
+      });
+      
+      //contextRows = window.localStorage.getObj("contextRows");
+      //console.log("storedContextRows: \n")
+      //console.table(contextRows);
+
+      //staveRows = window.localStorage.getObj("staveRows");
+      //console.log("storedStaveRows: \n")
+      //console.log(staveRows);
+
+      /*const storedTileDisplay = window.localStorage.getItem("tileDisplay");
+      if (storedTileDisplay) {
+        document.querySelector(".tile-container").innerHTML = storedTileDisplay;
+        console.log('tile display exists');
+      }*/
+
+      //render staves within the tiles
+      /*guessRows.forEach((guessRow, guessRowIndex) => {
+        guessRow.forEach((guess, guessIndex) => {
+          contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+        });
+      });*/
 
     } else if (currentDate !== storedCurrentDate) {
       console.log("stored date !== currentDate");
@@ -666,11 +779,11 @@ const flipTile = () => {
     console.table(checkTreble)
   });
 
-  /*console.log("After checking yellow and before adding classlist variables: \n");
-  console.log("checkTreble: \n");
-  console.table(checkTreble)
+  //console.log("After checking yellow and before adding classlist variables: \n");
+  //console.log("checkTreble: \n");
+  //console.table(checkTreble)
   console.log("guess: \n");
-  console.table(guess);*/
+  console.table(guess);
   //console.log("source treble: \n");
   //console.table(treble);
 
@@ -688,6 +801,15 @@ const flipTile = () => {
     
   });
 
+  checkRows.push(guess);
+  console.log("pushed checkRows: \n" )
+  console.table(checkRows)
+
+  //window.localStorage.setObj('checkRows', checkRows);
+
+  //window.localStorage.setObj('guessRows', guessRows);
+
+
 };
 
 /*function to handle what happens when you click the enter or delete buttons*/
@@ -699,7 +821,9 @@ const editNote = (button) => {
 
   if(button.id == "Delete" && currentTile > 0){
     currentTile--; //go back to previous tile
-    const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
+    //const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
+    const currentContext = contextRows[currentRow][currentTile];
+    //const currentStave = staveRows[currentRow][currentTile];
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
     guessRows[currentRow][currentTile] = ''; //delete note from matrix
     console.log(guessRows);
@@ -710,6 +834,7 @@ const editNote = (button) => {
     const trebleJoin = treble.join('');
     console.log('editNote scope: guess = ' + guess + " treble = " + trebleJoin);
     //console.log(guess === trebleJoin)
+    //window.localStorage.setItem('guessRows', guessRows);
 
     //color tile based on guess accuracy using the flipTile() function
     flipTile();
@@ -728,7 +853,41 @@ const editNote = (button) => {
       currentRow++;
       currentTile = 0;
     }
+    
+    window.localStorage.setObj('checkRows', checkRows);
+    window.localStorage.setObj('guessRows', guessRows);
   }
+}
+
+const drawNote = (inNote) => {
+  if(inNote) {
+    //const currentNoteName = conversionLookup[inNote].noteName;
+    const currentNoteName = convertPitch(Number(inNote));
+    console.log(currentNoteName)
+
+    var staveNote = [
+      // A quarter-note.
+      new VF.StaveNote({clef: "treble", keys: [currentNoteName + "/5"], duration: "q" }).setStem(new VF.Stem()),
+    ];
+
+    // Create a voice in 4/4 and add the note from above
+    var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+    voice.addTickables(staveNote);
+
+    // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
+    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+
+    //Draw note
+    voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]);
+
+    // increment tile counter
+    currentTile++;
+    console.log("currentTile in drawNote: " + currentTile);
+  }
+  else {
+    console.log("No note");
+  }
+  
 }
 
 //function to play note audio, store note in guessRows matrix, and render note on vexflow staves in the tile elements
@@ -755,7 +914,9 @@ function playNote(key){
     key.classList.remove('active');
   })
 
-  //const currentNoteName = conversionLookup[currentNote].noteName;
+  drawNote(currentNote);
+
+  /*//const currentNoteName = conversionLookup[currentNote].noteName;
   const currentNoteName = convertPitch(currentNote);
   console.log(currentNoteName)
 
@@ -771,11 +932,11 @@ function playNote(key){
   // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
   var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
-  // Render voice
-  voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //args = [context, stave]
+  //Draw note
+  voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]);
 
   // increment tile counter
-  currentTile++;
+  currentTile++;*/
 }
 
 
@@ -783,6 +944,7 @@ function playNote(key){
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 initLocalStorage();
+
 
 //create elements for list of note audio element
 pitches.forEach((pitch, index) => {
