@@ -134,6 +134,7 @@ const VF = Vex.Flow;
 //const contextArr = [];
 let currentRow = 0;
 let currentTile = 0;
+let storedCurrentRow = 0;
 
 let guessRows = [ //previously was defined with 'var' - before that 'let'
   ['', '', '', '', ''],
@@ -444,6 +445,8 @@ function resetGameState() {
   window.localStorage.removeItem("keySig");
   window.localStorage.removeItem("guessRows");
   window.localStorage.removeItem("checkRows");
+  window.localStorage.removeItem("currentRow");
+  window.localStorage.removeItem("isGameOver");
   //window.localStorage.removeItem("contextRows");
   //window.localStorage.removeItem("staveRows");
   //window.localStorage.removeItem("tileDisplay");
@@ -481,9 +484,20 @@ function initLocalStorage() {
       console.log("storedCheckRows: \n")
       console.table(checkRows);
 
+      storedCurrentRow = window.localStorage.getItem("currentRow");
+      console.log("storedCurrentRow: \n")
+      console.log(storedCurrentRow);
+
+      isGameOver = window.localStorage.getItem("isGameOver");
+      console.log("storedIsGameOver: " + isGameOver);
+
       //create tiles
       createTiles();
 
+      //console.log("currentRow: " + currentRow);
+      //console.log("currentTile: " + currentTile);
+      //console.log("isGameOver? " + isGameOver);
+
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
         guessRow.forEach((guess, guessIndex) => {
@@ -495,41 +509,39 @@ function initLocalStorage() {
         });
       });
 
-      guessRows.forEach((guessRow, guessRowIndex) => {
-        guessRow.forEach((guess, guessIndex) => {
-          //contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
-          //render notes and colors within the staves
-          //console.log("conversion table \n");
-          //console.table(conversionLookup);
-          //drawNote(guessRows[guessRowIndex][guessIndex]);
+      if(!storedCurrentRow) {
+        //currentRow = 0;
 
-          if(guessIndex !== 0 && guessIndex % 4 === 0) {
-            currentRow++;
-          }
-          console.log("currentRow in guessRow drawNote loop: \n" + currentRow);
+      } else {
+        guessRows.slice(0, storedCurrentRow+1).forEach((guessRow, guessRowIndex) => { //only want to iterate up to the currentRow
+          //console.log("iter guessRow: " + guessRow);
+  
+          guessRow.forEach((guess, guessIndex) => { 
+            //contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+            //render notes and colors within the staves
+            //console.log("conversion table \n");
+            //console.table(conversionLookup);
+            console.log("note to be drawn: " + guessRows[guessRowIndex][guessIndex]);
+            drawNote(guessRows[guessRowIndex][guessIndex]);
+            
+            if(guessIndex !== 0 && guessIndex % 4 === 0) {
+              //currentRow++;
+              currentTile = 0;
+              //console.log("currentTile in init guessRow loop: " + currentTile);
+            }
+          });
+
+          currentRow++;
+          console.log("currentRow in init guessRow loop: " + currentRow);
         });
-      });
+  
+        currentRow = storedCurrentRow;
+        currentTile = 0; //reset currentTile
+      }
       
-      //contextRows = window.localStorage.getObj("contextRows");
-      //console.log("storedContextRows: \n")
-      //console.table(contextRows);
-
-      //staveRows = window.localStorage.getObj("staveRows");
-      //console.log("storedStaveRows: \n")
-      //console.log(staveRows);
-
-      /*const storedTileDisplay = window.localStorage.getItem("tileDisplay");
-      if (storedTileDisplay) {
-        document.querySelector(".tile-container").innerHTML = storedTileDisplay;
-        console.log('tile display exists');
-      }*/
-
-      //render staves within the tiles
-      /*guessRows.forEach((guessRow, guessRowIndex) => {
-        guessRow.forEach((guess, guessIndex) => {
-          contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
-        });
-      });*/
+      console.log("currentRow: " + currentRow);
+      console.log("currentTile: " + currentTile);
+      console.log("isGameOver? " + isGameOver);
 
     } else if (currentDate !== storedCurrentDate) {
       console.log("stored date !== currentDate");
@@ -821,8 +833,8 @@ const editNote = (button) => {
 
   if(button.id == "Delete" && currentTile > 0){
     currentTile--; //go back to previous tile
-    //const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
-    const currentContext = contextRows[currentRow][currentTile];
+    const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
+    //const currentContext = contextRows[currentRow][currentTile];
     //const currentStave = staveRows[currentRow][currentTile];
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
     guessRows[currentRow][currentTile] = ''; //delete note from matrix
@@ -843,17 +855,29 @@ const editNote = (button) => {
       showMessage("OUTSTANDING!");
       showMessage("SONG: " + songName);
       isGameOver = true;
+      window.localStorage.setItem('isGameOver', isGameOver);
+      window.localStorage.setItem('currentRow', currentRow);
+      window.localStorage.setObj('checkRows', checkRows);
+      window.localStorage.setObj('guessRows', guessRows);
       return;
     } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
       showMessage("SONG: " + songName);
       isGameOver = true;
+      window.localStorage.setItem('isGameOver', isGameOver);
+      window.localStorage.setItem('currentRow', currentRow);
+      window.localStorage.setObj('checkRows', checkRows);
+      window.localStorage.setObj('guessRows', guessRows);
       return;
     } else if(currentRow < 5){
       currentRow++;
       currentTile = 0;
+      //window.localStorage.setItem('currentRow', currentRow);
+      //window.localStorage.setObj('checkRows', checkRows);
+      //window.localStorage.setObj('guessRows', guessRows);
     }
     
+    window.localStorage.setItem('currentRow', currentRow);
     window.localStorage.setObj('checkRows', checkRows);
     window.localStorage.setObj('guessRows', guessRows);
   }
@@ -861,6 +885,7 @@ const editNote = (button) => {
 
 const drawNote = (inNote) => {
   if(inNote) {
+    console.log("note to be drawn in drawNote: " + inNote +"\n");
     //const currentNoteName = conversionLookup[inNote].noteName;
     const currentNoteName = convertPitch(Number(inNote));
     console.log(currentNoteName)
@@ -877,8 +902,10 @@ const drawNote = (inNote) => {
     // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
     var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
+    console.log("drawNote - currentRow: " + currentRow + " currentTile: " + currentTile + "\n");
+
     //Draw note
-    voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]);
+    voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //have to make sure currentRow is correct
 
     // increment tile counter
     currentTile++;
@@ -1011,6 +1038,7 @@ document.addEventListener('keydown', (e) => {
   console.log("e.key: " + e.key);
   const whiteKeyIndex = WHITE_KEYS.indexOf(key); //+ whiteOctaveShift; //can't have addition of octaveShift at this step
   const blackKeyIndex = BLACK_KEYS.indexOf(key); //+ blackOctaveShift;
+  console.log("keydown event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
   if (!isGameOver && currentRow <= 5 & currentTile <= 4){
     if (whiteKeyIndex > -1 && whiteKeyIndex <= 14) {
       console.log("whiteKeyIndex: " + whiteKeyIndex)
