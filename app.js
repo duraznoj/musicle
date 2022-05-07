@@ -38,8 +38,9 @@ let currentJSONIndex = 0;
 //get song index from json_indices
 let currentSongIndex = json_indices[currentJSONIndex];
 
-//define number of games played
+//define stats variables
 let totalGames;
+let currentStreak;
 
 /*var contextRows = [
   ['', '', '', '', ''],
@@ -405,6 +406,11 @@ function initLocalStorage() {
   console.log("totalGames");
   console.table(totalGames);
 
+  currentStreak = window.localStorage.getItem("currentStreak") || 0;
+
+  console.log("currentStreak");
+  console.table(currentStreak);
+
   if(storedCurrentDate) { //could add check for if other items exist...
     if(currentDate === storedCurrentDate) {
       console.log("stored date === currentDate")
@@ -739,6 +745,8 @@ const editNote = (button) => {
       window.localStorage.setObj('guessRows', guessRows);
       totalGames = ((Number(totalGames)) + 1).toString();
       window.localStorage.setItem("totalGames", totalGames);
+      currentStreak = ((Number(currentStreak)) + 1).toString();
+      window.localStorage.setItem("currentStreak", currentStreak);
       return;
     } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
@@ -750,6 +758,8 @@ const editNote = (button) => {
       window.localStorage.setObj('guessRows', guessRows);
       totalGames = ((Number(totalGames)) + 1).toString()
       window.localStorage.setItem("totalGames", totalGames);
+      currentStreak = 0;
+      window.localStorage.setItem("currentStreak", currentStreak);
       return;
     } else if(currentRow < 5){
       currentRow++;
@@ -938,7 +948,7 @@ document.addEventListener('keydown', (e) => {
 
 keys.forEach(key => {
   key.addEventListener('click', () => {
-    if(currentTile < 5 && currentRow < 6){
+    if(!isGameOver && currentRow <= 5 & currentTile <= 4){
       playNote(key);
       //console.table(guessRows)
     }
