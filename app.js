@@ -41,6 +41,7 @@ let currentSongIndex = json_indices[currentJSONIndex];
 //define stats variables
 let totalGames;
 let currentStreak;
+let totalWins;
 
 /*var contextRows = [
   ['', '', '', '', ''],
@@ -411,6 +412,11 @@ function initLocalStorage() {
   console.log("currentStreak");
   console.table(currentStreak);
 
+  totalWins = window.localStorage.getItem("totalWins") || 0;
+
+  console.log("totalWins");
+  console.table(totalWins);
+
   if(storedCurrentDate) { //could add check for if other items exist...
     if(currentDate === storedCurrentDate) {
       console.log("stored date === currentDate")
@@ -747,6 +753,8 @@ const editNote = (button) => {
       window.localStorage.setItem("totalGames", totalGames);
       currentStreak = ((Number(currentStreak)) + 1).toString();
       window.localStorage.setItem("currentStreak", currentStreak);
+      totalWins = ((Number(totalWins)) + 1).toString();
+      window.localStorage.setItem("totalWins", totalWins);
       return;
     } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
