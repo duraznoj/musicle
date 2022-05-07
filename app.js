@@ -38,6 +38,9 @@ let currentJSONIndex = 0;
 //get song index from json_indices
 let currentSongIndex = json_indices[currentJSONIndex];
 
+//define number of games played
+let totalGames;
+
 /*var contextRows = [
   ['', '', '', '', ''],
   ['', '', '', '', ''],
@@ -154,17 +157,8 @@ let contextRows = [ //previously was defined with 'var' - before that - 'let'
   ['', '', '', '', '']
 ];
 
-/*var staveRows = [ //previously was defined with 'let'
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', '']
-];*/
-
 let checkRows = [];
-//let checkRows = new Array();
+
 
 //MAIN
 
@@ -271,7 +265,6 @@ const getTreble = () => {
       window.localStorage.setObj("treble", treble);
       window.localStorage.setItem("keySig", keySig);
 
-
       console.log(melody);
       console.log(songName);
       console.log(treble);
@@ -284,28 +277,9 @@ const getTreble = () => {
         });
       });
 
-      //const test = createContext('#guessRow-' + 0 + '-tile-' + 0, keySig);
-
-      /*const currentContext = document.querySelector("#guessRow-0-tile-0 > svg > .vf-stave")
-      console.log("Elements : \n");
-      console.log(currentContext);
-      //console.log(currentStave);*/
+      window.localStorage.setObj("guessRows", guessRows);
+      window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
       
-      //save context in local storage
-      //window.localStorage.setObj("contextRows", contextRows);
-      //console.log("storing context element in getTreble: \n");
-      //console.table(contextRows[0][0]);
-
-      //console.log("storing stave element in getTreble: \n");
-      //console.table(staveRows[0][0]);
-      //window.localStorage.setObj("staveRows", staveRows); //doesn't work
-
-      window.localStorage.setObj("guessRows", guessRows); 
-      
-      //tileDisplay = document.querySelector(".tile-container"); //don't need to define this earlier? Could add createTiles() above the stave rendering?
-      //console.log("tileDisplay to be stored: "+ tileDisplay.innerHTML);
-      //window.localStorage.setItem("tileDisplay", tileDisplay.innerHTML);
-    
     }).catch(err => console.log(err));
 
 }
@@ -321,15 +295,10 @@ const convertPitch = (inPitch) => {
   } else if (keySigSharps.includes(keySig)){
     outNote = conversionLookup[inPitch].noteNameSharp;
   }
-  /*let outNotes = [];
-  inPitches.forEach((pitch) => {
-    outNotes.push(conversionLookup[pitch].noteName);
-  });
-  return(outNotes);*/
+
   return outNote;
 };
 
-//guessRows.forEach etc used to be here
 //create tiles for music notes
 const createTiles = () => {
   guessRows.forEach((guessRow, guessRowIndex) => {
@@ -345,42 +314,8 @@ const createTiles = () => {
       rowElement.append(tileElement);
     });
     tileDisplay.append(rowElement);
-  
-    //render staves within the tiles
-    /*guessRow.forEach((guess, guessIndex) => {
-      contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
-    });*/
   });
 }
-
-//boilerplate VF code - note: has to be before the guessRows for loop
-/*const createContext = (divID, keySig) => {
-  //const VF = Vex.Flow;
-  //const div = document.getElementById(divID)
-  const div = document.querySelector(divID)
-  const divHeight = div.clientHeight;
-  const divWidth = div.clientWidth;
-  //const divHeight = window.getComputedStyle(div, null).getPropertyValue('height');
-  //const divWidth = window.getComputedStyle(div, null).getPropertyValue('width');
-  //console.log("h: " + divHeight + " w: " + divWidth);  
-  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-  renderer.resize(divWidth, divHeight); // (width, height)
-  //console.log("h2: " + divHeight + " w2: " + divWidth);  
-
-  //const divHeight = div.clientHeight;
-  //const divWidth = div.innerWidth;
-  //renderer.resize(divWidth/2, divHeight); // (width, height)
-  //console.log(div.clientWidth);
-  const context = renderer.getContext();
-  //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
-  //context.setViewBox(0, 0); //x, y, width, height
-  //add stave
-  const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
-  stave.setContext(context).draw();
-  //return [context, stave]; //store context and stave objects so we can have something to draw notes on later
-  return context;
-}*/
-//console.table(contextRows);
 
 const createContext = (divID, keySig) => {
   //const VF = Vex.Flow;
@@ -448,6 +383,7 @@ function resetGameState() {
   window.localStorage.removeItem("checkRows");
   window.localStorage.removeItem("currentRow");
   window.localStorage.removeItem("isGameOver");
+  //window.localStorage.removeItem("totalGames");
   //window.localStorage.removeItem("contextRows");
   //window.localStorage.removeItem("staveRows");
   //window.localStorage.removeItem("tileDisplay");
@@ -463,6 +399,11 @@ function initLocalStorage() {
   //const storedCurrentSongIndex = window.localStorage.getItem("currentSongIndex");
   //const storedSong
   //const storedTreble = window.localStorage.getObj("treble");
+
+  totalGames = window.localStorage.getItem("totalGames") || 0;
+
+  console.log("totalGames");
+  console.table(totalGames);
 
   if(storedCurrentDate) { //could add check for if other items exist...
     if(currentDate === storedCurrentDate) {
@@ -503,10 +444,6 @@ function initLocalStorage() {
       guessRows.forEach((guessRow, guessRowIndex) => {
         guessRow.forEach((guess, guessIndex) => {
           contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
-          //render notes and colors within the staves
-          //console.log("conversion table \n");
-          //console.table(conversionLookup);
-          //drawNote(guessRows[guessRowIndex][guessIndex]);
         });
       });
 
@@ -518,7 +455,6 @@ function initLocalStorage() {
           //console.log("iter guessRow: " + guessRow);
   
           guessRow.forEach((guess, guessIndex) => {
-
             if(checkRows[guessRowIndex]) {
               const colorToBeAdded = checkRows[guessRowIndex][guessIndex].color;
               const tileToBeColored = document.querySelector("#guessRow-" + currentRow).childNodes;
@@ -528,9 +464,9 @@ function initLocalStorage() {
               tileToBeColored[guessIndex].classList.add(colorToBeAdded);
               keyToBeColored.classList.add(colorToBeAdded);
 
-            } else {
+            } //else {
               //console.log("No color");
-            }
+            //}
 
             //console.log("note to be drawn: " + guessRows[guessRowIndex][guessIndex]);
             drawNote(guessRows[guessRowIndex][guessIndex]); //note: currentTile changes within drawNote function
@@ -581,68 +517,7 @@ function initLocalStorage() {
 
 
 
-/*function loadLocalStorage() {
-  currentSongIndex =
-    Number(window.localStorage.getItem("currentSongIndex")) ||
-    currentSongIndex;
-  guessedWordCount =
-    Number(window.localStorage.getItem("guessedWordCount")) ||
-    guessedWordCount;
-  availableSpace =
-    Number(window.localStorage.getItem("availableSpace")) || availableSpace;
-  guessedsongs =
-    JSON.parse(window.localStorage.getItem("guessedsongs")) || guessedsongs;
-
-  currentSong = songs[currentSongIndex];
-
-  const storedBoardContainer = window.localStorage.getItem("boardContainer");
-  if (storedBoardContainer) {
-    document.getElementById("board-container").innerHTML =
-      storedBoardContainer;
-  }
-
-  const storedKeyboardContainer =
-    window.localStorage.getItem("keyboardContainer");
-  if (storedKeyboardContainer) {
-    document.getElementById("keyboard-container").innerHTML =
-      storedKeyboardContainer;
-
-    addKeyboardClicks();
-  }
-}
-
-
-function createSquares() {
-  const gameBoard = document.getElementById("board");
-
-  for (let i = 0; i < 30; i++) {
-    let square = document.createElement("div");
-    square.classList.add("animate__animated");
-    square.classList.add("square");
-    square.setAttribute("id", i + 1);
-    gameBoard.appendChild(square);
-  }
-}
-
-function preserveGameState() {
-  window.localStorage.setItem("guessedsongs", JSON.stringify(guessedsongs));
-
-  const keyboardContainer = document.getElementById("keyboard-container");
-  window.localStorage.setItem(
-    "keyboardContainer",
-    keyboardContainer.innerHTML
-  );
-
-  const boardContainer = document.getElementById("board-container");
-  window.localStorage.setItem("boardContainer", boardContainer.innerHTML);
-}
-
-function updateTotalGames() {
-  const totalGames = window.localStorage.getItem("totalGames") || 0;
-  window.localStorage.setItem("totalGames", Number(totalGames) + 1);
-}
-
-function showResult() {
+/*function showResult() {
   const finalResultEl = document.getElementById("final-score");
   finalResultEl.textContent = "Wordle 1 - You win!";
 
@@ -825,14 +700,6 @@ const flipTile = () => {
   });
 
   checkRows.push(guess);
-  //console.log("pushed checkRows: \n" )
-  //console.table(checkRows)
-
-  //window.localStorage.setObj('checkRows', checkRows);
-
-  //window.localStorage.setObj('guessRows', guessRows);
-
-
 };
 
 /*function to handle what happens when you click the enter or delete buttons*/
@@ -870,6 +737,8 @@ const editNote = (button) => {
       window.localStorage.setItem('currentRow', currentRow);
       window.localStorage.setObj('checkRows', checkRows);
       window.localStorage.setObj('guessRows', guessRows);
+      totalGames = ((Number(totalGames)) + 1).toString();
+      window.localStorage.setItem("totalGames", totalGames);
       return;
     } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
@@ -879,6 +748,8 @@ const editNote = (button) => {
       window.localStorage.setItem('currentRow', currentRow);
       window.localStorage.setObj('checkRows', checkRows);
       window.localStorage.setObj('guessRows', guessRows);
+      totalGames = ((Number(totalGames)) + 1).toString()
+      window.localStorage.setItem("totalGames", totalGames);
       return;
     } else if(currentRow < 5){
       currentRow++;
