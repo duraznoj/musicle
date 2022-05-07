@@ -15,7 +15,7 @@ const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmm'); //UTC time - 
 console.log("Date: " + currentDate);
 
 //create array of json indices in random order (generated with basic python script)
-const json_indices = [99, 4, 37, 109, 82, 52, 19, 75, 10, 
+const jsonIndices = [99, 4, 37, 109, 82, 52, 19, 75, 10, 
   92, 80, 165, 54, 144, 102, 77, 163, 90, 61, 39, 73, 71, 
   128, 162, 170, 158, 30, 28, 66, 179, 7, 112, 148, 145, 
   110, 74, 60, 33, 2, 139, 38, 86, 137, 161, 63, 36, 140, 184, 169, 
@@ -31,12 +31,13 @@ const json_indices = [99, 4, 37, 109, 82, 52, 19, 75, 10,
   189, 121, 159, 183, 176, 79, 17, 58, 186, 23, 0, 72, 171, 
   117, 85, 59, 64, 47, 27, 67, 34, 57, 156, 119, 1, 118, 126, 
   115, 131, 125, 32, 14, 192, 68, 21,];
-//console.table(json_indices);
+//console.table(jsonIndices);
 
 //set currentJSON Index to 0 the first time we load the page
-let currentJSONIndex = 0;
-//get song index from json_indices
-let currentSongIndex = json_indices[currentJSONIndex];
+let currentJSONIndex;
+//get song index from jsonIndices
+//let currentSongIndex = jsonIndices[currentJSONIndex];
+let currentSongIndex;
 
 //define stats variables
 let totalGames;
@@ -377,7 +378,7 @@ loadLocalStorage();*/
 //function to remove localStorage items when we need to create a new game state
 function resetGameState() {
   window.localStorage.removeItem("currentDate");
-  window.localStorage.removeItem("songIndex");
+  //window.localStorage.removeItem("songIndex");
   window.localStorage.removeItem("songName");
   window.localStorage.removeItem("treble");
   window.localStorage.removeItem("keySig");
@@ -398,9 +399,16 @@ function resetGameState() {
 
 function initLocalStorage() {
   const storedCurrentDate = window.localStorage.getItem("currentDate");
+  
   //const storedCurrentSongIndex = window.localStorage.getItem("currentSongIndex");
   //const storedSong
   //const storedTreble = window.localStorage.getObj("treble");
+
+  currentJSONIndex = Number(window.localStorage.getItem("currentJSONIndex")) || 0;
+  console.log("currentJSONIndex: " + currentJSONIndex);
+
+  currentSongIndex = jsonIndices[currentJSONIndex];
+  console.log("currentSongIndex: " + currentSongIndex);
 
   totalGames = window.localStorage.getItem("totalGames") || 0;
 
@@ -420,9 +428,8 @@ function initLocalStorage() {
   if(storedCurrentDate) { //could add check for if other items exist...
     if(currentDate === storedCurrentDate) {
       console.log("stored date === currentDate")
+      
       //load data
-      currentSongIndex = Number(window.localStorage.getItem("currentSongIndex"));
-      console.log("storedCurrentSongIndex: " + currentSongIndex);
       songName = window.localStorage.getItem("songName");
       console.log("storedSongName: " + songName);
       treble = window.localStorage.getObj("treble");
@@ -504,11 +511,14 @@ function initLocalStorage() {
 
     } else if (currentDate !== storedCurrentDate) {
       console.log("stored date !== currentDate");
+      currentJSONIndex++; //move to next song
+      currentSongIndex = jsonIndices[currentJSONIndex];
       //reset game state and initialize new game state
       resetGameState();
       //store current date and songIndex to local storage
       window.localStorage.setItem("currentDate", currentDate);
-      window.localStorage.setItem("currentSongIndex", currentSongIndex);
+      window.localStorage.setItem("currentJSONIndex", currentJSONIndex.toString());
+      //window.localStorage.setItem("currentSongIndex", currentSongIndex);
       //call getTreble() async function that stores the treble data and contextRows to local storage
       getTreble();
       //create tile html elements
@@ -519,7 +529,8 @@ function initLocalStorage() {
     console.log("no date stored")
     //store current date and songIndex to local storage
     window.localStorage.setItem("currentDate", currentDate);
-    window.localStorage.setItem("currentSongIndex", currentSongIndex);
+    window.localStorage.setItem("currentJSONIndex", currentJSONIndex.toString());
+    //window.localStorage.setItem("currentSongIndex", currentSongIndex);
     //call getTreble() async function that stores the treble data and contextRows to local storage
     getTreble();
     //create tile html elements
@@ -528,26 +539,7 @@ function initLocalStorage() {
 }
 
 
-
-/*function showResult() {
-  const finalResultEl = document.getElementById("final-score");
-  finalResultEl.textContent = "Wordle 1 - You win!";
-
-  const totalWins = window.localStorage.getItem("totalWins") || 0;
-  window.localStorage.setItem("totalWins", Number(totalWins) + 1);
-
-  const currentStreak = window.localStorage.getItem("currentStreak") || 0;
-  window.localStorage.setItem("currentStreak", Number(currentStreak) + 1);
-}
-
-function showLosingResult() {
-  const finalResultEl = document.getElementById("final-score");
-  finalResultEl.textContent = `Wordle 1 - Unsuccessful Today!`;
-
-  window.localStorage.setItem("currentStreak", 0);
-}
-
-function updateWordIndex() {
+/*function updateWordIndex() {
   console.log({ currentSongIndex });
   window.localStorage.setItem("currentSongIndex", currentSongIndex + 1);
 }
@@ -626,7 +618,7 @@ const showMessage = (message) => {
   const messageElement = document.createElement('p');
   messageElement.textContent = message;
   messageDisplay.append(messageElement);
-  setTimeout(() => messageDisplay.removeChild(messageElement), 2000);
+  setTimeout(() => messageDisplay.removeChild(messageElement), 4000);
 
 }
 
@@ -743,6 +735,7 @@ const editNote = (button) => {
 
     if(guess === trebleJoin && !isGameOver){
       showMessage("OUTSTANDING!");
+      showMessage("TREBLE " + currentJSONIndex);
       showMessage("SONG: " + songName);
       isGameOver = true;
       window.localStorage.setItem('isGameOver', isGameOver);
@@ -758,7 +751,8 @@ const editNote = (button) => {
       return;
     } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
-      showMessage("SONG: " + songName);
+      showMessage("TREBLE " + currentJSONIndex);
+      showMessage("SONG: " + songName);      
       isGameOver = true;
       window.localStorage.setItem('isGameOver', isGameOver);
       window.localStorage.setItem('currentRow', currentRow);
