@@ -397,7 +397,7 @@ function resetGameState() {
   //window.localStorage.removeItem("availableSpace");
 }
 
-function initLocalStorage() {
+const initLocalStorage = () => {
   const storedCurrentDate = window.localStorage.getItem("currentDate");
   
   //const storedCurrentSongIndex = window.localStorage.getItem("currentSongIndex");
@@ -539,13 +539,9 @@ function initLocalStorage() {
 }
 
 
-/*function updateWordIndex() {
-  console.log({ currentSongIndex });
-  window.localStorage.setItem("currentSongIndex", currentSongIndex + 1);
-}
-
-function initHelpModal() {
+const initHelpModal = () => {
   const modal = document.getElementById("help-modal");
+  const modalContent = document.getElementById("help-modal-content");
 
   // Get the button that opens the modal
   const btn = document.getElementById("help");
@@ -555,12 +551,14 @@ function initHelpModal() {
 
   // When the user clicks on the button, open the modal
   btn.addEventListener("click", function () {
-    modal.style.display = "block";
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
   });
 
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
-    modal.style.display = "none";
+    //modal.style.display = "none";
+    modalContent.style.display = "none";
   });
 
   // When the user clicks anywhere outside of the modal, close it
@@ -571,10 +569,10 @@ function initHelpModal() {
   });
 }
 
-function updateStatsModal() {
-  const currentStreak = window.localStorage.getItem("currentStreak");
-  const totalWins = window.localStorage.getItem("totalWins");
-  const totalGames = window.localStorage.getItem("totalGames");
+const updateStatsModal = () => {
+  //const currentStreak = window.localStorage.getItem("currentStreak");
+  //const totalWins = window.localStorage.getItem("totalWins");
+  //const totalGames = window.localStorage.getItem("totalGames");
 
   document.getElementById("total-played").textContent = totalGames;
   document.getElementById("total-wins").textContent = totalWins;
@@ -584,8 +582,9 @@ function updateStatsModal() {
   document.getElementById("win-pct").textContent = winPct;
 }
 
-function initStatsModal() {
+const initStatsModal = () => {
   const modal = document.getElementById("stats-modal");
+  const modalContent = document.getElementById("stats-modal-content");
 
   // Get the button that opens the modal
   const btn = document.getElementById("stats");
@@ -596,12 +595,14 @@ function initStatsModal() {
   // When the user clicks on the button, open the modal
   btn.addEventListener("click", function () {
     updateStatsModal();
-    modal.style.display = "block";
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
   });
 
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
-    modal.style.display = "none";
+    //modal.style.display = "none";
+    modalContent.style.display = "none";
   });
 
   // When the user clicks anywhere outside of the modal, close it
@@ -611,7 +612,37 @@ function initStatsModal() {
     }
   });
 }
-});*/
+
+const initSettingsModal = () => {
+  const modal = document.getElementById("settings-modal");
+  const modalContent = document.getElementById("settings-modal-content");
+
+  // Get the button that opens the modal
+  const btn = document.getElementById("settings");
+
+  // Get the <span> element that closes the modal
+  const span = document.getElementById("close-settings");
+
+  // When the user clicks on the button, open the modal
+  btn.addEventListener("click", function () {
+    updateStatsModal();
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  span.addEventListener("click", function () {
+    //modal.style.display = "none";
+    modalContent.style.display = "none";
+  });
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.addEventListener("click", function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  });
+}
 
 //function to show messages after guesses and at end of game
 const showMessage = (message) => {
@@ -969,4 +1000,7 @@ buttons.forEach((button) =>{
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 initLocalStorage();
+initHelpModal();
+initStatsModal();
+initSettingsModal();
 
