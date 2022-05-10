@@ -44,6 +44,10 @@ let totalGames;
 let currentStreak;
 let totalWins;
 
+//define settings variables
+let hardMode = false;
+let hardModeViolated = false;
+
 /*var contextRows = [
   ['', '', '', '', ''],
   ['', '', '', '', ''],
@@ -286,7 +290,6 @@ const getTreble = () => {
     }).catch(err => console.log(err));
 
 }
-//getTreble();
 
 //function to convert between midi pitch number and vexflow note names
 const convertPitch = (inPitch) => {
@@ -356,24 +359,6 @@ const createContext = (divID, keySig) => {
 }*/
 
 //console.table(contextRows);
-
-//initLocalStorage();
-/*initHelpModal();
-initStatsModal();
-createSquares();
-addKeyboardClicks();
-loadLocalStorage();*/
-
-/*const initGameState = () => {
-  window.localStorage.setItem("currentDate", currentDate);
-  window.localStorage.setItem("currentSongIndex", currentSongIndex);
-  getTreble()
-  window.localStorage.setItem("treble", currentDate);
-
-
-
-  
-}*/
 
 //function to remove localStorage items when we need to create a new game state
 function resetGameState() {
@@ -655,6 +640,23 @@ const showMessage = (message) => {
 
 //function to color tiles based on guesses
 const flipTile = () => {
+
+  //get all notes in the previous rows
+  let alreadyGuessed = [];
+  //console.log("guessRows in flipTile: \n");
+  for(let row = 0; row < currentRow; row++){
+    guessRows[row].forEach((tile) => {
+      //console.log(tile);
+      alreadyGuessed.push(tile);
+    });
+  }
+
+  //get unique notes in the array of previously guessed notes
+  let uniqueGuesses = [... new Set(alreadyGuessed)];
+
+  //console.log(alreadyGuessed);
+  console.log(uniqueGuesses);
+
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
   //let checkTreble = treble; //copy of treble that we will remove letters from !DOES NOT WORK AS OBJECTS ARE MUTABLE!
   //let checkTreble = Object.assign({}, treble); //works
@@ -663,78 +665,80 @@ const flipTile = () => {
   //console.table(checkTreble);
   //console.log("FIrst val: " + checkTreble[0]);
   let guess = []; //storing the letters we have guessed
+  let currentRowGuess = [];
 
   //extract notes from tile 'data' attribute (which we set in the playNote function) and store
   //along with default grey overlay color in the 'guess' array
   rowTiles.forEach(tile => {
     guess.push({note: tile.getAttribute('data'), color: 'grey-overlay'});
+    currentRowGuess.push(tile.getAttribute('data'));
   });
 
-  /*console.log("flipTile scope: Before checking green: \n");
-  console.log("checkTreble: \n");
-  console.log(checkTreble)
-  console.log("guess: \n");
-  console.table(guess);*/
-  //console.log("source treble: \n");
-  //console.table(treble);
+  console.log("currentRowGuess: \n");
+  console.log(currentRowGuess);
+
+  //checkHardMode(uniqueGuesses, currentRowGuess);
+
+  (function(){
+    uniqueGuesses.forEach((prevGuess) => {
+      if(!currentRowGuess.includes(prevGuess) && currentRow > 0){
+        console.log("hard mode violated")
+        hardModeViolated = true;
+        console.log(prevGuess)
+        //return;
+      } else {
+        console.log("note in currentRowGuess")
+        console.log(prevGuess)
+      }
+    });
+
+    if(!hardModeViolated) {
   
-  guess.forEach((guess, index) => {
-    //console.log("check green guess.note: " + guess.note);
-    //console.log("check green checkTreble[index]: " + checkTreble[index]);
-    if(guess.note == treble[index]) { //don't forget to reference the note itself -- should be  check treble?
-      //console.log("equals - green")
-      guess.color = 'green-overlay';
-      checkTreble[index] = 'checkedTreble'; //important to set the 'checked' str differently for checkTreble vs guess.notes
-      guess.note = 'checkedGuess';
+      guess.forEach((guess, index) => {
+        //console.log("check green guess.note: " + guess.note);
+        //console.log("check green checkTreble[index]: " + checkTreble[index]);
+        if(guess.note == treble[index]) { //don't forget to reference the note itself -- should be  check treble?
+          //console.log("equals - green")
+          guess.color = 'green-overlay';
+          checkTreble[index] = 'checkedTreble'; //important to set the 'checked' str differently for checkTreble vs guess.notes
+          guess.note = 'checkedGuess';
+        }
+      });
+
+      guess.forEach((guess, index) => {
+        //console.log("check yellow guess.note: " + guess.note);
+        //console.log("check yellow checkTreble[index]: " + checkTreble[index]);
+        
+        if(checkTreble.includes(guess.note)){
+          //console.log('includes - yellow')
+          //guess.color = 'yellow-overlay';
+          const noteForRemoval = checkTreble.indexOf(guess.note);
+          checkTreble[noteForRemoval] = 'checkedTreble';
+          //checkTreble[index] = 'checkedTreble'; //need to remove the actual element that was guessed...
+        }
+        //console.log("checkTreble: \n");
+        //console.table(checkTreble)
+      });
+
+      rowTiles.forEach((tile, index) => {
+        const dataNote = tile.getAttribute('data'); //data_note = key.dataset.note is a string
+        const currentKey = document.querySelector('[data-note="' + dataNote + '"]');
+        //console.log('flipTile currentKey: ' + '[data-note="' + dataNote + '"]');
+
+        setTimeout(() => {
+          tile.classList.add('flip');
+          tile.classList.add(guess[index].color);
+          currentKey.classList.add(guess[index].color);
+
+        }, 500 * index);
+        
+      });
+
+      checkRows.push(guess);
+    } else {
+      //return;
     }
-  });
-
-  /*console.log("Before checking yellow: \n");
-  console.log("checkTreble: \n");
-  console.table(checkTreble)
-  console.log("guess: \n");
-  console.table(guess);*/
-  //console.log("source treble: \n");
-  //console.table(treble);
-
-  guess.forEach((guess, index) => {
-    //console.log("check yellow guess.note: " + guess.note);
-    //console.log("check yellow checkTreble[index]: " + checkTreble[index]);
-    
-    if(checkTreble.includes(guess.note)){
-      //console.log('includes - yellow')
-      //guess.color = 'yellow-overlay';
-      const noteForRemoval = checkTreble.indexOf(guess.note);
-      checkTreble[noteForRemoval] = 'checkedTreble';
-      //checkTreble[index] = 'checkedTreble'; //need to remove the actual element that was guessed...
-    }
-    //console.log("checkTreble: \n");
-    //console.table(checkTreble)
-  });
-
-  //console.log("After checking yellow and before adding classlist variables: \n");
-  //console.log("checkTreble: \n");
-  //console.table(checkTreble)
-  //console.log("guess: \n");
-  //console.table(guess);
-  //console.log("source treble: \n");
-  //console.table(treble);
-
-  rowTiles.forEach((tile, index) => {
-    const dataNote = tile.getAttribute('data'); //data_note = key.dataset.note is a string
-    const currentKey = document.querySelector('[data-note="' + dataNote + '"]');
-    //console.log('flipTile currentKey: ' + '[data-note="' + dataNote + '"]');
-
-    setTimeout(() => {
-      tile.classList.add('flip');
-      tile.classList.add(guess[index].color);
-      currentKey.classList.add(guess[index].color);
-
-    }, 500 * index);
-    
-  });
-
-  checkRows.push(guess);
+  })();
 };
 
 /*function to handle what happens when you click the enter or delete buttons*/
@@ -764,7 +768,10 @@ const editNote = (button) => {
     //color tile based on guess accuracy using the flipTile() function
     flipTile();
 
-    if(guess === trebleJoin && !isGameOver){
+    if(hardModeViolated){
+      hardModeViolated = false;
+      return;
+    } else if(guess === trebleJoin && !isGameOver){
       showMessage("OUTSTANDING!");
       showMessage("TREBLE " + currentJSONIndex);
       showMessage("SONG: " + songName);
