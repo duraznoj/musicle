@@ -47,6 +47,7 @@ let totalWins;
 //define settings variables
 let hardMode = false;
 let hardModeViolated = false;
+let hardModeDisabled = false;
 
 /*var contextRows = [
   ['', '', '', '', ''],
@@ -128,6 +129,9 @@ const piano = document.querySelector('.item-4-piano')
 const pianoKeys = document.querySelector('.item-4-piano.key');
 /*const body = document.querySelector('body');*/
 
+//get the hard mode slider checkbox input
+const hardModeCheckBox = document.getElementById("hardModeCheckBox");
+const hardModeSlider = document.getElementById("hardModeSlider")
 
 /*boolean for game status*/
 let isGameOver = false;
@@ -371,7 +375,8 @@ function resetGameState() {
   window.localStorage.removeItem("checkRows");
   window.localStorage.removeItem("currentRow");
   window.localStorage.removeItem("isGameOver");
-  //window.localStorage.removeItem("totalGames");
+  window.localStorage.removeItem("hardMode");
+  window.localStorage.removeItem("hardModeDisabled");
   //window.localStorage.removeItem("contextRows");
   //window.localStorage.removeItem("staveRows");
   //window.localStorage.removeItem("tileDisplay");
@@ -436,6 +441,15 @@ const initLocalStorage = () => {
 
       isGameOver = window.localStorage.getItem("isGameOver");
       //console.log("storedIsGameOver: " + isGameOver);
+
+      //hardMode = window.localStorage.getObj("hardMode") || 0;
+      //console.log("storedHardMode: " + hardMode);
+
+      //hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
+      //console.log("storedHardModeDisabled: " + hardModeDisabled);
+
+      //hardModeCheckBox.disabled = false;
+
 
       //create tiles
       createTiles();
@@ -508,10 +522,9 @@ const initLocalStorage = () => {
       getTreble();
       //create tile html elements
       createTiles();
-      
     }
   } else if (!storedCurrentDate) {
-    console.log("no date stored")
+    console.log("no date stored");
     //store current date and songIndex to local storage
     window.localStorage.setItem("currentDate", currentDate);
     window.localStorage.setItem("currentJSONIndex", currentJSONIndex.toString());
@@ -596,6 +609,17 @@ const initStatsModal = () => {
       modal.style.display = "none";
     }
   });
+  
+  hardMode = window.localStorage.getObj("hardMode") || false;
+  hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
+  console.log("storedHardMode: \n");
+  console.log((hardMode));
+  console.log("storedHardModeDisabled: \n");
+  console.log((hardModeDisabled));
+
+  //set hardmode checkbox checked or unchecked depending on stored value - keeps checkbox position constant upon refresh
+  hardModeCheckBox.checked = hardMode;
+
 }
 
 const initSettingsModal = () => {
@@ -607,6 +631,35 @@ const initSettingsModal = () => {
 
   // Get the <span> element that closes the modal
   const span = document.getElementById("close-settings");
+
+  hardModeSlider.addEventListener("click", function () {
+    if(currentRow > 0) {
+      hardModeDisabled = true;
+      hardModeCheckBox.disabled = true;
+      window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+
+    } else if (currentRow === 0) {
+
+      //listen for changes in the checkbox input value
+      hardModeCheckBox.addEventListener("change", function () {
+      if (this.checked) {
+        hardMode = true;
+        hardModeDisabled = true;
+        window.localStorage.setObj("hardMode", hardMode);
+        window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+
+      } else if (!this.checked) {
+        hardMode = false;
+        hardModeDisabled = false;
+        window.localStorage.setObj("hardMode", hardMode);
+        window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+
+      };
+    });
+    };
+  });
+
+  
 
   // When the user clicks on the button, open the modal
   btn.addEventListener("click", function () {
@@ -677,22 +730,20 @@ const flipTile = () => {
   console.log("currentRowGuess: \n");
   console.log(currentRowGuess);
 
-  //checkHardMode(uniqueGuesses, currentRowGuess);
 
+  //if hard mode is activated, valid guesses have to contain all unique previously guessed notes
   (function(){
-    uniqueGuesses.forEach((prevGuess) => {
-      if(!currentRowGuess.includes(prevGuess) && currentRow > 0){
-        console.log("hard mode violated")
+    uniqueGuesses.forEach((prevGuess, prevIdx) => {
+      if(hardMode && !currentRowGuess.includes(prevGuess) && currentRow > 0){
         hardModeViolated = true;
-        console.log(prevGuess)
-        //return;
-      } else {
-        console.log("note in currentRowGuess")
-        console.log(prevGuess)
+
+        if(prevIdx === 0){ //only show warning message once
+          showMessage("MUST USE NOTES FROM PREVIOUS GUESSES");
+        }
       }
     });
 
-    if(!hardModeViolated) {
+    if((hardMode && !hardModeViolated) || !hardMode) {
   
       guess.forEach((guess, index) => {
         //console.log("check green guess.note: " + guess.note);
@@ -1004,6 +1055,7 @@ buttons.forEach((button) =>{
     //editNote(button);
   });
 });
+
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 initLocalStorage();
