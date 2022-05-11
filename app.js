@@ -536,37 +536,6 @@ const initLocalStorage = () => {
   }
 }
 
-
-const initHelpModal = () => {
-  const modal = document.getElementById("help-modal");
-  const modalContent = document.getElementById("help-modal-content");
-
-  // Get the button that opens the modal
-  const btn = document.getElementById("help");
-
-  // Get the <span> element that closes the modal
-  const span = document.getElementById("close-help");
-
-  // When the user clicks on the button, open the modal
-  btn.addEventListener("click", function () {
-    //modal.style.display = "block";
-    modalContent.style.display = "block";
-  });
-
-  // When the user clicks on <span> (x), close the modal
-  span.addEventListener("click", function () {
-    //modal.style.display = "none";
-    modalContent.style.display = "none";
-  });
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener("click", function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
-}
-
 const updateStatsModal = () => {
   //const currentStreak = window.localStorage.getItem("currentStreak");
   //const totalWins = window.localStorage.getItem("totalWins");
@@ -583,6 +552,7 @@ const updateStatsModal = () => {
 const initStatsModal = () => {
   const modal = document.getElementById("stats-modal");
   const modalContent = document.getElementById("stats-modal-content");
+  const img = document.getElementById("stats-img");
 
   // Get the button that opens the modal
   const btn = document.getElementById("stats");
@@ -597,6 +567,13 @@ const initStatsModal = () => {
     modalContent.style.display = "block";
   });
 
+  // When the user clicks on the button image, open the modal
+  img.addEventListener("click", function () {
+    updateStatsModal();
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
+  });
+
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
     //modal.style.display = "none";
@@ -604,27 +581,57 @@ const initStatsModal = () => {
   });
 
   // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener("click", function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+  /*window.addEventListener("click", function (event) {
+    if (event.target !== modalContent && event.target !== btn && event.target !== img) {
+      modalContent.style.display = "none";
     }
+  });*/
+
+}
+
+const initHelpModal = () => {
+  const modal = document.getElementById("help-modal");
+  const modalContent = document.getElementById("help-modal-content");
+  const img = document.getElementById("help-img");
+
+  // Get the button that opens the modal
+  const btn = document.getElementById("help");
+
+  // Get the <span> element that closes the modal
+  const span = document.getElementById("close-help");
+
+  // When the user clicks on the button, open the modal
+  btn.addEventListener("click", function () {
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
   });
-  
-  hardMode = window.localStorage.getObj("hardMode") || false;
-  hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
-  console.log("storedHardMode: \n");
-  console.log((hardMode));
-  console.log("storedHardModeDisabled: \n");
-  console.log((hardModeDisabled));
 
-  //set hardmode checkbox checked or unchecked depending on stored value - keeps checkbox position constant upon refresh
-  hardModeCheckBox.checked = hardMode;
+  // When the user clicks on the button image, open the modal
+  img.addEventListener("click", function () {
+    updateStatsModal();
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
+  });
 
+  // When the user clicks on <span> (x), close the modal
+  span.addEventListener("click", function () {
+    //modal.style.display = "none";
+    modalContent.style.display = "none";
+  });
+
+  // When the user clicks anywhere outside of the modal, close it
+  /*window.addEventListener("click", function (event) {
+    if (event.target !== modalContent && event.target !== btn && event.target !== img) {
+      modalContent.style.display = "none";
+    }
+  });*/
 }
 
 const initSettingsModal = () => {
   const modal = document.getElementById("settings-modal");
   const modalContent = document.getElementById("settings-modal-content");
+  const img = document.getElementById("settings-img");
+  const warningText = document.getElementById("hard-mode-warning");
 
   // Get the button that opens the modal
   const btn = document.getElementById("settings");
@@ -632,14 +639,27 @@ const initSettingsModal = () => {
   // Get the <span> element that closes the modal
   const span = document.getElementById("close-settings");
 
+  //get hardMode variables from local storage
+  hardMode = window.localStorage.getObj("hardMode") || false;
+  hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
+  console.log("storedHardMode: \n");
+  console.log((hardMode));
+  console.log("storedHardModeDisabled: \n");
+  console.log((hardModeDisabled));
+  warningText.style.display = "none";
+
+  //set hardmode checkbox checked or unchecked depending on stored value - keeps checkbox position constant upon refresh
+  hardModeCheckBox.checked = hardMode;
+
+  //if game is in progress can't activate hard mode, otherwise slider controls hard mode
   hardModeSlider.addEventListener("click", function () {
     if(currentRow > 0) {
       hardModeDisabled = true;
       hardModeCheckBox.disabled = true;
       window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+      warningText.style.display = "block";
 
     } else if (currentRow === 0) {
-
       //listen for changes in the checkbox input value
       hardModeCheckBox.addEventListener("change", function () {
       if (this.checked) {
@@ -653,16 +673,20 @@ const initSettingsModal = () => {
         hardModeDisabled = false;
         window.localStorage.setObj("hardMode", hardMode);
         window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
-
       };
     });
     };
   });
 
-  
-
   // When the user clicks on the button, open the modal
   btn.addEventListener("click", function () {
+    updateStatsModal();
+    //modal.style.display = "block";
+    modalContent.style.display = "block";
+  });
+
+  // When the user clicks on the button image, open the modal
+  img.addEventListener("click", function () {
     updateStatsModal();
     //modal.style.display = "block";
     modalContent.style.display = "block";
@@ -675,11 +699,12 @@ const initSettingsModal = () => {
   });
 
   // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener("click", function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+  /*window.addEventListener("click", function (event) {
+    if (event.target !== modalContent && event.target !== btn && event.target !== img) {
+      modalContent.style.display = "none";
     }
-  });
+  });*/
+
 }
 
 //function to show messages after guesses and at end of game
@@ -762,7 +787,7 @@ const flipTile = () => {
         
         if(checkTreble.includes(guess.note)){
           //console.log('includes - yellow')
-          //guess.color = 'yellow-overlay';
+          guess.color = 'yellow-overlay';
           const noteForRemoval = checkTreble.indexOf(guess.note);
           checkTreble[noteForRemoval] = 'checkedTreble';
           //checkTreble[index] = 'checkedTreble'; //need to remove the actual element that was guessed...

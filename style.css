@@ -10,6 +10,7 @@ body {
   font-family: Arial, Geneva, Helvetica, sans-serif;
   color: white;
   background-color: #121213;
+  /*background-color: #ffffff;*/
   padding: 0;
   margin: 0;
   /*justify-content: center;*/
@@ -53,8 +54,6 @@ body {
   cursor: pointer;
   width: 100%;
   height: 100%;
-  /*height: 100%;
-  width: 100%;*/
 }
 
 .img {
@@ -226,6 +225,8 @@ body {
 #help-modal {
   grid-row: 1;
   grid-column: 1;
+  width: 100%;
+  height: 100%;
 }
 
 #help-modal-content {
@@ -240,6 +241,10 @@ body {
   top: 0;
   max-width: 40%;
   max-height: 30%;
+}
+
+#hard-mode-warning {
+  display: none;
 }
 
 #stats-modal-content {
@@ -259,7 +264,6 @@ body {
   width: 80%;
   color: gainsboro;
   max-width: 500px;
-  display: none;
   position: fixed;
   z-index: 2;
   /*left: 0;
@@ -380,11 +384,21 @@ input:checked + .slider:before {
   padding: 5px;
 }
 
+#Delete {
+  background-color: #844d4d;
+}
+
+#Enter {
+  background-color: #4d8459;
+}
+
 .item-4-piano button {
-  background-color: #0099cc;
+  /*background-color: #699eb0;*/
   width: calc(100%/17);
   height: 40%;
   border-radius: 10%;
+  font-weight: bold;
+  color: white;
 }
 
 .key {

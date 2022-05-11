@@ -32,14 +32,14 @@
       <div class = settings-stats>
         <div id="stats-modal" class="modal">
           <button class="fas fa-chart-bar" id="stats"> 
-            <img src="img/stats.svg" alt="Sorry, image could not be displayed">
+            <img src="img/stats.svg" alt="Sorry, image could not be displayed" id="stats-img">
           </button>
   
         </div>
 
         <div id="settings-modal" class="modal">
           <button class="fas fa-chart-bar" id="settings"> 
-            <img src="img/settings.svg" alt="Sorry, image could not be displayed">
+            <img src="img/settings.svg" alt="Sorry, image could not be displayed" id="settings-img">
           </button>
   
         </div>
@@ -48,7 +48,7 @@
 
       <div id="help-modal" class="modal">
         <button class="fas fa-chart-bar" id="help"> 
-          <img src="img/help.svg" alt="Sorry, image could not be displayed">
+          <img src="img/help.svg" alt="Sorry, image could not be displayed" id="help-img">
         </button>
       </div>
 
@@ -75,7 +75,9 @@
 
         <h2>SETTINGS</h2>
 
-        <h3><strong>Hard Mode</strong> </span></h3>
+        <h3><strong>Hard mode</strong> </span></h3>
+
+        <h3 id="hard-mode-warning"><i> Hard mode can't be changed once a game is in progress</i></span></h3>
 
         <!-- Rounded switch -->
         <label class="switch">
@@ -83,15 +85,6 @@
           <span class="slider round" id="hardModeSlider"></span>
         </label>
 
-        <!--h3><strong>Total</strong>: <span id="total-played"></span></h3>
-
-        <h3><strong>Wins</strong>: <span id="total-wins"></span></h3>
-
-        <h3><strong>Win %</strong>: <span id="win-pct"></span></h3>
-
-        <h3>
-          <strong>Current Streak</strong>: <span id="current-streak"></span>
-        </h3-->
       </div>
 
       <!-- Modal content -->
