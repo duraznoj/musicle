@@ -49,15 +49,6 @@ let hardMode = false;
 let hardModeViolated = false;
 let hardModeDisabled = false;
 
-/*var contextRows = [
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', '']
-];*/
-
 /*select range of pitches we want to use for the piano keys*/
 const pitches = [];
 const lowestPitch = 60;
@@ -67,12 +58,6 @@ const highestPitch = 84;
 let songName;
 let treble;
 var keySig;
-//let shiftedPitches;
-//let octaveDifference;
-
-//shiftPitches() used to be here
-
-//getTreble() used to be here
 
 //extend storage objects
 Storage.prototype.setObj = function(key, obj) {
@@ -82,18 +67,8 @@ Storage.prototype.getObj = function(key) {
   return JSON.parse(this.getItem(key))
 }
 
-//initLocalStorage() etc used to be here
-
-//const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
-//const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j']; /*only need this for keyboard input*/
-
 const WHITE_KEYS = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\''];
 const BLACK_KEYS = ['w', 'e', 't', 'y', 'u', 'o', 'p'];
-
-/*select range of pitches we want to use for the piano keys
-const pitches = [];
-const lowestPitch = 60;
-const highestPitch = 83;*/
 
 //create corresponding arrays for note names for use with vexflow
 //define two arrays - one for flats and one for sharps so that we can draw the appropriate note for the given key signature
@@ -133,16 +108,19 @@ const pianoKeys = document.querySelector('.item-4-piano.key');
 const hardModeCheckBox = document.getElementById("hardModeCheckBox");
 const hardModeSlider = document.getElementById("hardModeSlider")
 
+//screen resolution variables
+const devResList = ['350px', '375px', '400px', '820px'];
+const divWidthMultiplierList = [1.9, 1.9, 1.9, 1.6];
+const xPosList = [0, 0, 0, -15];
+const yPosList = [0, 0, 0, 10];
+
+let deviceResolution;
+let divWidthMultiplier;
+let xPos;
+let yPos;
+
 /*boolean for game status*/
 let isGameOver = false;
-
-/*choose melody for the game*/
-//const keySig = 'D';
-//const treble_in = [68,69,70,81,72];
-/*convert melody array of numbers to an array of strings for comparing with div attributes later on*/
-//let treble = treble_in.map(val => val.toString());
-
-/*console.log(treble)*/
 
 const VF = Vex.Flow;
 //const contextArr = [];
@@ -327,9 +305,35 @@ const createTiles = () => {
   });
 }
 
+//function to check device resolution so we can draw staves for each screen size
+const checkDeviceResolution = (devRes, devResInd) => {
+  // Create a condition that targets viewports at least 'x' px wide
+  const mediaQuery = window.matchMedia('(min-width: ' + devRes + ')');
+
+  /*mediaQuery.onchange = (event) => {
+    if (event.matches) {
+      console.log('This screen is in the ' + devRes + ' wide interval.')
+      deviceResolution = devResList[devResInd];
+      console.log("devRes: " + deviceResolution);
+    } else {
+      
+    }
+  }*/
+
+  if (mediaQuery.matches) {
+    //console.log('This screen is in the ' + devRes + ' wide interval.')
+    deviceResolution = devResList[devResInd];
+    divWidthMultiplier = divWidthMultiplierList[devResInd];
+    xPos = xPosList[devResInd];
+    yPos = yPosList[devResInd];
+    //console.log("devRes: " + deviceResolution);
+  }
+}
+
+
+
 const createContext = (divID, keySig) => {
   //const VF = Vex.Flow;
-  //const div = document.getElementById(divID)
   const div = document.querySelector(divID)
   const divHeight = div.clientHeight;
   const divWidth = div.clientWidth;
@@ -345,10 +349,22 @@ const createContext = (divID, keySig) => {
   //renderer.resize(divWidth/2, divHeight); // (width, height)
   //console.log(div.clientWidth);
   const context = renderer.getContext();
+  //context.scale(.5,.8);
   //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
-  //context.setViewBox(0, 0); //x, y, width, height
+  //context.setViewBox(divWidth * 0.15, divHeight * 0.2, divWidth * 1, divHeight * 1.5); //x, y, width, height
+  context.setViewBox(25, 0, divWidth * 1, divHeight * 2); //x, y, width, height
+  
+  //console.log(deviceResolution);
+
   //add stave
-  const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
+  //const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
+  //const stave = new VF.Stave(10, -12, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for desktop
+  //const stave = new VF.Stave(10, 0, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for mobile
+  ////const stave = new VF.Stave(0, 0, divWidth * 1.9).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
+  const stave = new VF.Stave(xPos, yPos, divWidth * divWidthMultiplier).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
+
+  //context.setViewBox(divWidth*.5, divHeight*0.1, divWidth * 2, divHeight * 2); //x, y, width, height
+
   stave.setContext(context).draw();
   return [context, stave]; //store context and stave objects so we can have something to draw notes on later
   //return context;
@@ -980,7 +996,6 @@ function playNote(key){
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 // initLocalStorage(); used to be here
 
-
 //create elements for list of note audio element
 pitches.forEach((pitch, index) => {
   const audioElement = document.createElement('audio');
@@ -1080,6 +1095,13 @@ buttons.forEach((button) =>{
     //editNote(button);
   });
 });
+
+//loop through screen resolutions to find the size of the current user's screen
+devResList.forEach((res, resInd) => {
+  checkDeviceResolution(res, resInd);
+});
+
+console.log(deviceResolution);
 
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects

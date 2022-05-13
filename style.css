@@ -16,34 +16,27 @@ body {
   /*justify-content: center;*/
 }
 
-/*header{
-  padding: 1px;
-  color: white;
-  height: 10vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgb(58, 58, 60);
-}*/
-
-/*header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgb(58, 58, 60);
-}*/
-
 .title {
   grid-row: 1;
   grid-column: 2;
-  padding: 1px;
-  color: white;
+  /*padding: 1px;*/
   /*height: 10vh;*/
   height: 100%;
   /*display: flex;*/
   align-items: center;
   /*justify-content: space-between;*/
   border-bottom: 1px solid rgb(58, 58, 60);
+
+  color: gainsboro;
+  /*font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;*/
+  font-size: 2.3rem;
+  /*font-size: 15px;*/
+  font-weight: bold;
+  /*margin: 0.4rem 0 0.4rem 0;*/
+  text-align: center;
+  align-items: top;
+
 }
 
 #help,
@@ -61,16 +54,7 @@ body {
   max-height: auto;
 }
 
-.title {
-  color: gainsboro;
-  /*font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;*/
-  font-size: 2.3rem;
-  /*font-size: 15px;*/
-  font-weight: bold;
-  margin: 0.4rem 0 0.4rem 0;
-  text-align: center;
-}
+
 
 @media only screen and (max-width: 480px) {
   .title {
@@ -82,12 +66,13 @@ body {
   z-index: 2;
   /*grid-template-rows: 5% 65% 30%;*/
   grid-template-columns: 5% 90% 5%;
-  grid-template-rows: 5% 2% 63% 30%;
+  /*grid-template-rows: 5% 2% 63% 30%;*/
+  grid-template-rows: 4% 2% 75% 18%;
   /*grid-template-rows: 5% 65% 30%;*/
   /*grid-template-columns: 100%;*/
   /*grid-gap: 10px; necessary?*/
   width: 100vw;
-  height: 90vh;
+  height: 100vh;
 }
 
 .tile-container {
@@ -106,9 +91,8 @@ body {
 
 .tile-container .guessRow {
   display: flex; /*need this so rows are in the right position*/
-  height: calc(85%/6); /*6 rows*/
-  width: 85%;
-  /*width: calc(90%/5); /*5 tiles per row*/
+  /*height: calc(100%/6); /*6 rows*/
+  width: 95%;
   align-items: center;
   justify-content: center;
 }
@@ -124,21 +108,8 @@ body {
   border-radius: 5%;
 }
 
-@media only screen and (max-width: 400px) {
-  .tile-container .tile {
-    min-width: 15vw;
-    min-height: 15vw;
-  }
-}
-
 .tile-container svg {
-  /*height: 100%;*/
-  /*height: calc(var(--tile-height) * 1);*/
-  /*height: auto;*/
-  /*width: var(--tile-width);*/
-  /*viewBox: '0 0 100 100';*/
-  /*transform: scale(0.2); */
-  /*preserveAspectRatio: 'xMidYMid';*/
+  transform: scale(1); /*translate(8%,10%);*/
 }
 
 .tile-container .vf-stave {
@@ -147,7 +118,102 @@ body {
   width: 100%;*/
   /*justify-content: center;
   align-items: center;*/
+  /*transform: scale(0.90) translate(8%,10%);*/
 }
+
+/*galaxy fold*/
+/*@media only screen and (min-width: 280px) {
+
+  .tile-container .guessRow {
+    height: calc((0.95 * 90vw) / 5);
+  }
+
+}*/
+
+@media only screen and (min-width: 360px) {
+
+  .tile-container .guessRow {
+    height: calc((0.95 * 90vw) / 5) !important;
+  }
+
+  /*.tile-container svg {
+    transform: scale(1); /*translate(0%,0%);*/
+  /*}*/
+
+}
+
+@media only screen and (min-width: 375px) {
+
+  .tile-container .guessRow {
+    /*height: calc(80%/6);*/
+    height: calc((0.95 * 90vw) / 5) !important;
+  }
+
+}
+
+@media only screen and (max-width: 400px) {
+  /*.tile-container .tile {
+    min-width: 15vw;
+    min-height: 15vw;
+  }*/
+
+  .tile-container .guessRow {
+    height: calc(100%/6);
+  }
+}
+
+@media only screen and (max-width: 595px) {
+
+  /*.tile-container .guessRow {
+    height: calc(55%/6);
+  }*/
+
+}
+ 
+@media only screen and (min-width: 600px) {
+
+  /*.tile-container .guessRow {
+    height: calc(75%/6);
+  }*/
+}
+ 
+/*@media only screen and (min-width: 768px) {*/
+@media only screen and (min-width: 820px) {
+
+
+  /*.tile-container .guessRow {
+    height: calc(70%/6);
+  }*/
+
+  .tile-container .guessRow {
+    height: calc(55%/6) !important;
+    /*height: calc((0.95 * 90vw) / 5) !important;*/
+  }
+
+  .tile-container svg {
+    transform: scale(1); /*translate(0%,0%);*/
+  }
+
+}
+ 
+@media only screen and (min-width: 889px) {
+
+  .tile-container .guessRow {
+    height: calc(80%/6) !important; 
+  }
+
+  .tile-container svg {
+    transform: scale(1); /*translate(-20%,0%);*/
+  }
+}
+ 
+/*@media only screen and (min-width: 1200px) {
+  
+  .tile-container .guessRow {
+    height: calc(100%/6);
+  }
+}*/
+
 
 .tile.flip {
   animation: 0.5s linear flipping;
@@ -382,6 +448,8 @@ input:checked + .slider:before {
   grid-row: 4;
   grid-column: 2;
   padding: 5px;
+  /*max-height: 50%;*/
+  /*align-items: end; !important*/
 }
 
 #Delete {
