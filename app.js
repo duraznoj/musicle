@@ -11,7 +11,7 @@
 
 //Get current date in yyyyMMdd format,
 //const dt = luxon.DateTime.utc().toFormat('yyyyMMdd'); //UTC time
-const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmm'); //UTC time - use minutes for testing
+const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmmss'); //UTC time - use minutes for testing
 console.log("Date: " + currentDate);
 
 //create array of json indices in random order (generated with basic python script)
@@ -100,8 +100,8 @@ const body = document.querySelector('body');
 const tileDisplay = document.querySelector('.tile-container');
 //var tileDisplay = document.querySelector('.tile-container');
 const messageDisplay = document.querySelector('.message-container');
-const piano = document.querySelector('.item-4-piano')
-const pianoKeys = document.querySelector('.item-4-piano.key');
+const piano = document.querySelector('.piano-container')
+const pianoKeys = document.querySelector('.piano-container.key');
 /*const body = document.querySelector('body');*/
 
 //get the hard mode slider checkbox input
@@ -109,10 +109,10 @@ const hardModeCheckBox = document.getElementById("hardModeCheckBox");
 const hardModeSlider = document.getElementById("hardModeSlider")
 
 //screen resolution variables
-const devResList = ['350px', '375px', '400px', '820px'];
-const divWidthMultiplierList = [1.9, 1.9, 1.9, 1.6];
-const xPosList = [0, 0, 0, -15];
-const yPosList = [0, 0, 0, 10];
+const devResList = ['280px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1000px', '1200px'];
+const divWidthMultiplierList = [2.2, 1.90, 1.85, 1.90, 1.8, 1.6, 1.6, 1.5, 1.5, 1.5, 1.6, 1.6];
+const xPosList = [-15, -5, -5, -10, -15, -15, -15, -15, -15, -15, -30, -45];
+const yPosList = [-10, 0, 0, 10, 10, 10, 10, 10, 15, 25, 0, 15];
 
 let deviceResolution;
 let divWidthMultiplier;
@@ -1007,7 +1007,8 @@ pitches.forEach((pitch, index) => {
 //create enter button
 const enterButton = document.createElement('button');
 enterButton.setAttribute('id', 'Enter');
-enterButton.textContent = 'Enter';
+//enterButton.textContent = 'Enter';
+enterButton.textContent = 'E';
 piano.append(enterButton);
 
 //create html elements to represent keys for piano and append relevant properties from lookup table*/
@@ -1021,7 +1022,8 @@ pitches.forEach((pitch, index) => {
 //create delete button
 const deleteButton = document.createElement('button');
 deleteButton.setAttribute('id', 'Delete');
-deleteButton.textContent = 'Delete';
+//deleteButton.textContent = 'Delete';
+deleteButton.textContent = 'D';
 piano.append(deleteButton);
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
@@ -1031,7 +1033,7 @@ piano.append(deleteButton);
 const keys = document.querySelectorAll('.key');
 const whiteKeys = document.querySelectorAll('.key.white'); //have to add period for space
 const blackKeys = document.querySelectorAll('.key.black');
-const buttons = document.querySelectorAll('.item-4-piano button');
+const buttons = document.querySelectorAll('.piano-container button');
 
 //createContext(), showMessage(), flipTile(), editNote(), playNote(), createTiles() used to be here
 

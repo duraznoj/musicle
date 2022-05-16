@@ -23,7 +23,7 @@ body {
   /*height: 10vh;*/
   height: 100%;
   /*display: flex;*/
-  align-items: center;
+  /*align-items: center;*/
   /*justify-content: space-between;*/
   border-bottom: 1px solid rgb(58, 58, 60);
 
@@ -54,8 +54,6 @@ body {
   max-height: auto;
 }
 
-
-
 @media only screen and (max-width: 480px) {
   .title {
     font-size: 1.5rem;
@@ -64,22 +62,21 @@ body {
 .container{
   display: grid;
   z-index: 2;
-  /*grid-template-rows: 5% 65% 30%;*/
-  grid-template-columns: 5% 90% 5%;
-  /*grid-template-rows: 5% 2% 63% 30%;*/
-  grid-template-rows: 4% 2% 75% 18%;
+  grid-template-columns: 10% 80% 5% 5%;
+  grid-template-rows: 4% 3% 75% 18%;
   /*grid-template-rows: 5% 65% 30%;*/
   /*grid-template-columns: 100%;*/
   /*grid-gap: 10px; necessary?*/
   width: 100vw;
   height: 100vh;
+  justify-content: center;
 }
 
 .tile-container {
   display: flex;
   flex-direction: column;
   grid-row: 3;
-  grid-column: 2;
+  grid-column: 1 / span 4;
   /*margin-bottom: 0%;*/
   /*margin: 5%;*/
   /*padding: 0px;*/
@@ -92,7 +89,8 @@ body {
 .tile-container .guessRow {
   display: flex; /*need this so rows are in the right position*/
   /*height: calc(100%/6); /*6 rows*/
-  width: 95%;
+  height: calc((0.97 * 100vw) / 5); /*for mobile screens*/
+  width: 97%;
   align-items: center;
   justify-content: center;
 }
@@ -112,63 +110,74 @@ body {
   transform: scale(1); /*translate(8%,10%);*/
 }
 
-.tile-container .vf-stave {
+/*.tile-container .vf-stave {
   /*height: auto;*/
   /*height: 100%;
   width: 100%;*/
   /*justify-content: center;
   align-items: center;*/
   /*transform: scale(0.90) translate(8%,10%);*/
-}
+/*}*/
 
-/*galaxy fold*/
-/*@media only screen and (min-width: 280px) {
+/*galaxy fold --> users might have issues with F# on the galaxy fold*/
+@media only screen and (min-width: 280px) {
 
   .tile-container .guessRow {
-    height: calc((0.95 * 90vw) / 5);
+    height: calc((1 * 100vw) / 5);
+    width: 100%;
   }
 
-}*/
+  .tile-container svg {
+    transform: scale(0.45); /*translate(0%,0%);*/
+  }
+
+}
 
 @media only screen and (min-width: 360px) {
 
   .tile-container .guessRow {
-    height: calc((0.95 * 90vw) / 5) !important;
+    height: calc((0.97 * 100vw) / 5);
+    width: 97% !important;
   }
 
-  /*.tile-container svg {
+  .tile-container svg {
+    transform: scale(1);
+  }
+
+}
+
+/*@media only screen and (min-width: 375px) {
+
+  .tile-container svg {
+    transform: scale(1) !important;
+  }
+
+}*/
+
+@media only screen and (min-width: 400px) {
+  .tile-container .guessRow {
+    height: calc((0.97 * 100vw) / 5); /*for mobile screens*/
+    width: 97%;
+  }
+
+  .tile-container svg {
     transform: scale(1); /*translate(0%,0%);*/
-  /*}*/
-
-}
-
-@media only screen and (min-width: 375px) {
-
-  .tile-container .guessRow {
-    /*height: calc(80%/6);*/
-    height: calc((0.95 * 90vw) / 5) !important;
-  }
-
-}
-
-@media only screen and (max-width: 400px) {
-  /*.tile-container .tile {
-    min-width: 15vw;
-    min-height: 15vw;
-  }*/
-
-  .tile-container .guessRow {
-    height: calc(100%/6);
   }
 }
 
-@media only screen and (max-width: 595px) {
+@media only screen and (min-width: 540px) {
+/*@media only screen and (min-width: 540px) and (min-height: 720px) {*/
 
-  /*.tile-container .guessRow {
-    height: calc(55%/6);
-  }*/
+
+  .tile-container .guessRow {
+    height: calc(80%/6);
+  }
 
 }
+ 
+
+/*@media only screen and (min-width: 595px) {
+}*/
  
 @media only screen and (min-width: 600px) {
 
@@ -177,8 +186,8 @@ body {
   }*/
 }
  
-/*@media only screen and (min-width: 768px) {*/
-@media only screen and (min-width: 820px) {
+@media only screen and (min-width: 768px) {
+/*@media only screen and (min-width: 820px) {*/
 
 
   /*.tile-container .guessRow {
@@ -186,12 +195,12 @@ body {
   }*/
 
   .tile-container .guessRow {
-    height: calc(55%/6) !important;
+    height: calc(55%/6);
     /*height: calc((0.95 * 90vw) / 5) !important;*/
   }
 
   .tile-container svg {
-    transform: scale(1); /*translate(0%,0%);*/
+    transform: scale(1.2); /*translate(0%,0%);*/
   }
 
 }
@@ -199,7 +208,18 @@ body {
 @media only screen and (min-width: 889px) {
 
   .tile-container .guessRow {
-    height: calc(80%/6) !important; 
+    height: calc(55%/6); 
+  }
+
+  .tile-container svg {
+    transform: scale(1); /*translate(-20%,0%);*/
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+
+  .tile-container .guessRow {
+    height: calc(80%/6); 
   }
 
   .tile-container svg {
@@ -207,12 +227,16 @@ body {
   }
 }
  
-/*@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1280px) {
   
   .tile-container .guessRow {
-    height: calc(100%/6);
+    height: calc(80%/6); 
   }
-}*/
+
+  .tile-container svg {
+    transform: scale(1); /*translate(-20%,0%);*/
+  }
+}
 
 
 .tile.flip {
@@ -295,6 +319,20 @@ body {
   height: 100%;
 }
 
+#stats-modal {
+  grid-row: 1;
+  grid-column: 3;
+  width: 100%;
+  height: 100%;
+}
+
+#settings-modal {
+  grid-row: 1;
+  grid-column: 4;
+  width: 100%;
+  height: 100%;
+}
+
 #help-modal-content {
   left: 0;
   top: 0;
@@ -371,12 +409,11 @@ body {
   display: none;
 }
 
-.settings-stats {
+/*.settings-stats {
   display: flex;
-  /*flex-direction: row;*/
   grid-row: 1;
   grid-column: 3;
-}
+}*/
 
 /* The switch - the box around the slider */
 .switch {
@@ -441,13 +478,14 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.item-4-piano {
-  display: flex; /*don't change this*/
+.piano-container {
+  display: flex !important; /*don't change this*/
   /*justify-content: center;*/
   /*align-items: start;*/
+  width: 100%;
+  height: 100%;
   grid-row: 4;
-  grid-column: 2;
-  padding: 5px;
+  grid-column: 1 / span 4;
   /*max-height: 50%;*/
   /*align-items: end; !important*/
 }
@@ -460,13 +498,17 @@ input:checked + .slider:before {
   background-color: #4d8459;
 }
 
-.item-4-piano button {
+.piano-container button {
   /*background-color: #699eb0;*/
   width: calc(100%/17);
   height: 40%;
   border-radius: 10%;
   font-weight: bold;
   color: white;
+  /*font-size: 0.7rem;*/
+  text-align: center !important;
+  justify-content: center !important;
+  /*align-items: top;*/
 }
 
 .key {
@@ -478,7 +520,7 @@ input:checked + .slider:before {
 
 .key.white{
   /*--width: 70px;*/
-  height: 100%;
+  height: 95%;
   /*--width: calc(100%/16);*/
   width: calc(100%/17);
   background-color: white;
