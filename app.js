@@ -109,12 +109,14 @@ const hardModeCheckBox = document.getElementById("hardModeCheckBox");
 const hardModeSlider = document.getElementById("hardModeSlider")
 
 //screen resolution variables
-const devResList = ['280px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1000px', '1200px'];
-const divWidthMultiplierList = [2.2, 1.90, 1.85, 1.90, 1.8, 1.6, 1.6, 1.5, 1.5, 1.5, 1.6, 1.6];
-const xPosList = [-15, -5, -5, -10, -15, -15, -15, -15, -15, -15, -30, -45];
-const yPosList = [-10, 0, 0, 10, 10, 10, 10, 10, 15, 25, 0, 15];
+const devResWdthList = ['350px', '350px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1024px', '1200px'];
+//const devResHghtList = ['350px', '350px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '8200px', '889px', '1024px', '1200px'];
+const divWidthMultiplierList = [2.2, 2, 1.90, 1.85, 1.90, 1.8, 1.6, 1.6, 1.5, 1.5, 1.5, 1.5, 1.6];
+const xPosList = [-15, -10, -5, -5, -10, -15, -15, -15, -15, -15, -15, -20, -45];
+const yPosList = [-10, 0, 0, 0, 10, 10, 10, 10, 10, 15, 25, -10, 15];
 
-let deviceResolution;
+let deviceWidth;
+let deviceHeight;
 let divWidthMultiplier;
 let xPos;
 let yPos;
@@ -171,7 +173,17 @@ for (let i=0; i < pitches.length; i++) {
   conversionLookup[pitches[i]] = {"pitch" : pitches[i],"noteNameFlat" : noteNamesFlats[i], "noteNameSharp" : noteNamesSharps[i], "keyColor" : keyColors[i]}; 
 }
 
+/*create lookup table from device resolution widths and heights, and associated stave rendering parameters*/
+let devResLookup = {};
+for (let i=0; i < devResWdthList.length; i++) {
+  //devResLookup[i] = {"width" : devResWdthList[i], "height"  : devResHghtList[i], "divWidthMultiplier": divWidthMultiplierList[i], "xPos": xPosList[i], "yPos": yPosList[i]}; 
+  devResLookup[i] = {"width" : devResWdthList[i], "divWidthMultiplier": divWidthMultiplierList[i], "xPos": xPosList[i], "yPos": yPosList[i]}; 
+}
+
+
 //console.table(conversionLookup)
+
+console.table(devResLookup);
 
 // OTHER FUNCTIONS
 
@@ -305,32 +317,42 @@ const createTiles = () => {
   });
 }
 
+//console.log('(min-width: ' + 1 + ') and (min-height: ' + 2 + ')');
 //function to check device resolution so we can draw staves for each screen size
-const checkDeviceResolution = (devRes, devResInd) => {
-  // Create a condition that targets viewports at least 'x' px wide
-  const mediaQuery = window.matchMedia('(min-width: ' + devRes + ')');
+const checkDeviceResolution = () => {
 
-  /*mediaQuery.onchange = (event) => {
-    if (event.matches) {
-      console.log('This screen is in the ' + devRes + ' wide interval.')
-      deviceResolution = devResList[devResInd];
-      console.log("devRes: " + deviceResolution);
-    } else {
-      
+  for(let i = 0; i < devResWdthList.length; i++) {
+    // Create a condition that targets viewports at least 'x' px wide
+    //const mediaQuery = window.matchMedia('(min-width: ' + devRes + ')');
+    //const mediaQuery = window.matchMedia('(min-width: ' + devResLookup[i].width + ') and (min-height: ' + devResLookup[i].height + ')');
+    const mediaQuery = window.matchMedia('(min-width: ' + devResLookup[i].width + ')');
+
+
+    /*mediaQuery.onchange = (event) => {
+      if (event.matches) {
+        //console.log('This screen is in the ' + devRes + ' wide interval.')
+        deviceWidth = devResWdthList[devResInd];
+        console.log("devRes: " + deviceWidth);
+      } else {
+        
+      }
+    }*/
+
+    if (mediaQuery.matches) {
+      //console.log('This screen is in the ' + devRes + ' wide interval.')
+      deviceWidth = devResLookup[i].width;
+      //deviceHeight = devResLookup[i].height;
+      //console.log("devResInd" + devResInd);
+      divWidthMultiplier = devResLookup[i].divWidthMultiplier;
+      xPos = devResLookup[i].xPos;
+      yPos = devResLookup[i].yPos;
+      //console.log("mediaQuery true: " + true);
+      console.log("devRes: " + deviceWidth);
     }
-  }*/
 
-  if (mediaQuery.matches) {
-    //console.log('This screen is in the ' + devRes + ' wide interval.')
-    deviceResolution = devResList[devResInd];
-    divWidthMultiplier = divWidthMultiplierList[devResInd];
-    xPos = xPosList[devResInd];
-    yPos = yPosList[devResInd];
-    //console.log("devRes: " + deviceResolution);
   }
+  
 }
-
-
 
 const createContext = (divID, keySig) => {
   //const VF = Vex.Flow;
@@ -342,7 +364,9 @@ const createContext = (divID, keySig) => {
   //console.log("h: " + divHeight + " w: " + divWidth);  
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   renderer.resize(divWidth, divHeight); // (width, height)
-  //console.log("h2: " + divHeight + " w2: " + divWidth);  
+  //console.log("h2: " + divHeight + " w2: " + divWidth); 
+  const svgID = document.querySelector(divID + ' > svg');
+  svgID.setAttribute('preserveAspectRatio', 'xMinYMin meet');
 
   //const divHeight = div.clientHeight;
   //const divWidth = div.innerWidth;
@@ -352,16 +376,18 @@ const createContext = (divID, keySig) => {
   //context.scale(.5,.8);
   //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
   //context.setViewBox(divWidth * 0.15, divHeight * 0.2, divWidth * 1, divHeight * 1.5); //x, y, width, height
-  context.setViewBox(25, 0, divWidth * 1, divHeight * 2); //x, y, width, height
+  //context.setViewBox(25, 0,  200, 0); //x, y, width, height
+
+  context.setViewBox(0, 19, divWidth * 1, divHeight * 2); //x, y, width, height
   
-  //console.log(deviceResolution);
+  //console.log(deviceWidth);
 
   //add stave
   //const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
   //const stave = new VF.Stave(10, -12, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for desktop
   //const stave = new VF.Stave(10, 0, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for mobile
-  ////const stave = new VF.Stave(0, 0, divWidth * 1.9).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
-  const stave = new VF.Stave(xPos, yPos, divWidth * divWidthMultiplier).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
+  const stave = new VF.Stave(0, 0, divWidth * 1.9).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
+  //const stave = new VF.Stave(xPos, yPos, divWidth * divWidthMultiplier).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
 
   //context.setViewBox(divWidth*.5, divHeight*0.1, divWidth * 2, divHeight * 2); //x, y, width, height
 
@@ -378,7 +404,6 @@ const createContext = (divID, keySig) => {
   return stave;
 }*/
 
-//console.table(contextRows);
 
 //function to remove localStorage items when we need to create a new game state
 function resetGameState() {
@@ -393,7 +418,6 @@ function resetGameState() {
   window.localStorage.removeItem("isGameOver");
   window.localStorage.removeItem("hardMode");
   window.localStorage.removeItem("hardModeDisabled");
-  //window.localStorage.removeItem("contextRows");
   //window.localStorage.removeItem("staveRows");
   //window.localStorage.removeItem("tileDisplay");
   //window.localStorage.removeItem("guessedWordCount");
@@ -583,13 +607,6 @@ const initStatsModal = () => {
     modalContent.style.display = "block";
   });
 
-  // When the user clicks on the button image, open the modal
-  img.addEventListener("click", function () {
-    updateStatsModal();
-    //modal.style.display = "block";
-    modalContent.style.display = "block";
-  });
-
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
     //modal.style.display = "none";
@@ -608,7 +625,7 @@ const initStatsModal = () => {
 const initHelpModal = () => {
   const modal = document.getElementById("help-modal");
   const modalContent = document.getElementById("help-modal-content");
-  const img = document.getElementById("help-img");
+  //const img = document.getElementById("help-img");
 
   // Get the button that opens the modal
   const btn = document.getElementById("help");
@@ -622,13 +639,6 @@ const initHelpModal = () => {
     modalContent.style.display = "block";
   });
 
-  // When the user clicks on the button image, open the modal
-  img.addEventListener("click", function () {
-    updateStatsModal();
-    //modal.style.display = "block";
-    modalContent.style.display = "block";
-  });
-
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
     //modal.style.display = "none";
@@ -637,7 +647,7 @@ const initHelpModal = () => {
 
   // When the user clicks anywhere outside of the modal, close it
   /*window.addEventListener("click", function (event) {
-    if (event.target !== modalContent && event.target !== btn && event.target !== img) {
+    if (event.target !== modalContent && event.target !== btn) {
       modalContent.style.display = "none";
     }
   });*/
@@ -701,12 +711,6 @@ const initSettingsModal = () => {
     modalContent.style.display = "block";
   });
 
-  // When the user clicks on the button image, open the modal
-  img.addEventListener("click", function () {
-    updateStatsModal();
-    //modal.style.display = "block";
-    modalContent.style.display = "block";
-  });
 
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
@@ -1008,7 +1012,7 @@ pitches.forEach((pitch, index) => {
 const enterButton = document.createElement('button');
 enterButton.setAttribute('id', 'Enter');
 //enterButton.textContent = 'Enter';
-enterButton.textContent = 'E';
+enterButton.innerHTML = '\u23CE';
 piano.append(enterButton);
 
 //create html elements to represent keys for piano and append relevant properties from lookup table*/
@@ -1023,7 +1027,7 @@ pitches.forEach((pitch, index) => {
 const deleteButton = document.createElement('button');
 deleteButton.setAttribute('id', 'Delete');
 //deleteButton.textContent = 'Delete';
-deleteButton.textContent = 'D';
+deleteButton.innerHTML = '\u232b';
 piano.append(deleteButton);
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
@@ -1098,12 +1102,18 @@ buttons.forEach((button) =>{
   });
 });
 
-//loop through screen resolutions to find the size of the current user's screen
-devResList.forEach((res, resInd) => {
-  checkDeviceResolution(res, resInd);
-});
+//check device resolution every time
+window.addEventListener('resize', checkDeviceResolution);
 
-console.log(deviceResolution);
+
+//loop through screen resolutions to find the size of the current user's screen
+/*devResLookup.forEach((res, resInd) => {
+  checkDeviceResolution(res, resInd);
+});*/
+
+checkDeviceResolution();
+
+console.log(deviceWidth);
 
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
