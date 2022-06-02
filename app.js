@@ -11,7 +11,7 @@
 
 //Get current date in yyyyMMdd format,
 //const dt = luxon.DateTime.utc().toFormat('yyyyMMdd'); //UTC time
-const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmmss'); //UTC time - use minutes for testing
+const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmm'); //UTC time - use minutes for testing
 console.log("Date: " + currentDate);
 
 //create array of json indices in random order (generated with basic python script)
@@ -130,6 +130,11 @@ let currentRow = 0;
 let currentTile = 0;
 let storedCurrentRow = 0;
 
+//variables for redrawing staves upon window resize
+let len = 0;
+let lastPopulatedRow = 0;
+//let wasEnterPressed = false;
+
 let guessRows = [ //previously was defined with 'var' - before that 'let'
   ['', '', '', '', ''],
   ['', '', '', '', ''],
@@ -148,8 +153,7 @@ let contextRows = [ //previously was defined with 'var' - before that - 'let'
   ['', '', '', '', '']
 ];
 
-let checkRows = [];
-
+let checkRows = []; //this is the matrix we use to store the guesses 
 
 //MAIN
 
@@ -317,7 +321,6 @@ const createTiles = () => {
   });
 }
 
-//console.log('(min-width: ' + 1 + ') and (min-height: ' + 2 + ')');
 //function to check device resolution so we can draw staves for each screen size
 const checkDeviceResolution = () => {
 
@@ -331,7 +334,7 @@ const checkDeviceResolution = () => {
     /*mediaQuery.onchange = (event) => {
       if (event.matches) {
         //console.log('This screen is in the ' + devRes + ' wide interval.')
-        deviceWidth = devResWdthList[devResInd];
+        deviceWidth = devResLookup[i].width;
         console.log("devRes: " + deviceWidth);
       } else {
         
@@ -351,7 +354,88 @@ const checkDeviceResolution = () => {
     }
 
   }
-  
+
+  //have to set currentTile and currentRow to 0 so that can redraw notes from the beginning
+  currentTile = 0;
+  currentRow = 0;
+
+  //render staves within the tiles
+  //loop through each row in guess rows
+  guessRows.forEach((guessRow, guessRowIndex) => {
+
+    //get length of notes that have been drawn for current row
+    const newLen = guessRows[guessRowIndex].filter(Boolean).length;
+
+    //if the length of notes that have been drawn for current row is greater than the length for previous row
+    //update the length variable to the new length and set lastPopulatedRow to the current row index
+
+    if(newLen > 0) {
+      len = newLen;
+      lastPopulatedRow = guessRowIndex;
+    }
+
+    //loop through each tile in each guess row
+    guessRow.forEach((guess, guessIndex) => {
+
+      //remove old staves
+      const oldStave = document.querySelector('#guessRow-' + guessRowIndex + '-tile-' + guessIndex + " svg");
+      oldStave.remove(); //delete note from stave
+      //console.log("resize delete oldStave - contextRows: ");
+      //console.table(contextRows);
+      //guessRows[currentRow][currentTile] = ''; //delete
+
+      //create new staves with proper render settings
+      contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+
+      //re-draw the previously guessed note
+      //console.log("note to be drawn: ")
+      //console.log(guess);
+      drawNote(guess);
+
+      //when you get to the fifth tile you have to reset the currentTile counter to zero to mimic what happens in the actual editNote fuction
+      if(guessIndex !== 0 && guessIndex % 4 === 0) {
+        if(guessRowIndex !== 5) {
+          currentRow++;
+          currentTile = 0;
+
+        } else if (guessRowIndex === 5) { //if you have completed the last row you need to reset the variables for the current game state
+
+          /*const currentHTMLTileRow = document.querySelector("#guessRow-" + currentRow).childNodes;          
+          const currentTileClass = currentHTMLTileRow[guessIndex].className;
+          console.log(currentTileClass);
+          console.log(currentTileClass === "tile"); /*works but is too slow if you resize while tiles are flipping*/
+
+          //if there are no stored guesses (i.e. enter has not been pressed after rendering five notes)
+          //or the last row that was populated has an undefined length (in other words some notes have been drawn but guess has not been submitted)
+          //then we set the current tile to the length of the current guessRows row (which coincides with the n+1 position of the rendered notes)
+          //we also set the current row to delete or render notes from to the last populated row
+          if(checkRows.length === 0 || checkRows[lastPopulatedRow] === undefined) { //note: using typeof seems to create an error
+            console.log("no checkRows or prev row undefined");
+            currentTile = len;
+            currentRow = lastPopulatedRow;
+          //if the last populated row is defined (in other words a guess has successfull been submitted, then we reset the currentTile counter to zero
+          //so that we can start drawing at the first tile in the next row and advance the current row to the next row following the last populated row
+          } else if(checkRows[lastPopulatedRow] !== undefined) {
+            console.log("exist prev row");
+            currentTile = 0; //reset currentTile to zero
+            currentRow = lastPopulatedRow + 1; //iterate to next row so now we can't delete notes from the previous row
+          } else {
+            //just in case
+            console.log("something else");
+          }
+
+          //just for diagnostics
+          //console.table(checkRows);
+        }
+      }
+    });
+  });
+
+  //console.log("guessRows as of resize: ")
+  //console.table(guessRows);
+
+  //window.localStorage.setObj("guessRows", guessRows);
+  //window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
 }
 
 const createContext = (divID, keySig) => {
@@ -376,9 +460,11 @@ const createContext = (divID, keySig) => {
   //context.scale(.5,.8);
   //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
   //context.setViewBox(divWidth * 0.15, divHeight * 0.2, divWidth * 1, divHeight * 1.5); //x, y, width, height
-  //context.setViewBox(25, 0,  200, 0); //x, y, width, height
+  //context.setViewBox(0, 0, 0, 0); //x, y, width, height
 
-  context.setViewBox(0, 19, divWidth * 1, divHeight * 2); //x, y, width, height
+  context.setViewBox(0, 19, divWidth * 1, divHeight * 2); //x, y, width, height //CURRENTLY USING
+  //context.setViewBox(0, 0, 100, 100); //x, y, width, height
+  
   
   //console.log(deviceWidth);
 
@@ -758,11 +844,13 @@ const flipTile = () => {
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
   //let checkTreble = treble; //copy of treble that we will remove letters from !DOES NOT WORK AS OBJECTS ARE MUTABLE!
   //let checkTreble = Object.assign({}, treble); //works
-  let checkTreble = treble.map(val => val.toString());
+  let checkTreble = treble.map(val => val.toString()); //prev working version
+  //checkTreble = treble.map(val => val.toString());
+
   //console.log("checkTreble as assigned: \n");
   //console.table(checkTreble);
-  //console.log("FIrst val: " + checkTreble[0]);
-  let guess = []; //storing the letters we have guessed
+  //console.log("First val: " + checkTreble[0]);
+  let guess = []; //storing the letters we have guessed //prev working version
   let currentRowGuess = [];
 
   //extract notes from tile 'data' attribute (which we set in the playNote function) and store
@@ -826,7 +914,7 @@ const flipTile = () => {
           tile.classList.add(guess[index].color);
           currentKey.classList.add(guess[index].color);
 
-        }, 500 * index);
+        }, 300 * index);
         
       });
 
@@ -843,6 +931,8 @@ const editNote = (button) => {
   /*document.getElementsByClassName("buttons")[0].id; */
   console.log(button.id)
   //console.table("editNote: " + treble);
+  console.log("editNote - currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
+
 
   if(button.id == "Delete" && currentTile > 0){
     currentTile--; //go back to previous tile
@@ -855,6 +945,8 @@ const editNote = (button) => {
   }
   //if the enter button is pressed and 5 tiles have been populated then check if the guess is correct
   else if(button.id == "Enter" && currentTile > 4){
+    //wasEnterPressed = true; //flag so we don't delete the entered notes if we press delete after window resize
+    //console.log("wasEnterPressed: " + wasEnterPressed);
     const guess = guessRows[currentRow].join('');
     const trebleJoin = treble.join('');
     //console.log('editNote scope: guess = ' + guess + " treble = " + trebleJoin);
@@ -900,6 +992,7 @@ const editNote = (button) => {
     } else if(currentRow < 5){
       currentRow++;
       currentTile = 0;
+      console.log("incorrect guess but currentRow < 5 and currentTile: " + currentTile);
       //window.localStorage.setItem('currentRow', currentRow);
       //window.localStorage.setObj('checkRows', checkRows);
       //window.localStorage.setObj('guessRows', guessRows);
@@ -1085,6 +1178,8 @@ document.addEventListener('keydown', (e) => {
 
 keys.forEach(key => {
   key.addEventListener('click', () => {
+    console.log("click event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
+
     if(!isGameOver && currentRow <= 5 & currentTile <= 4){
       playNote(key);
       //console.table(guessRows)
@@ -1103,17 +1198,16 @@ buttons.forEach((button) =>{
 });
 
 //check device resolution every time
-window.addEventListener('resize', checkDeviceResolution);
-
+window.addEventListener('resize', checkDeviceResolution); //note: this event listener may fire multiple times when a browser window is resized
 
 //loop through screen resolutions to find the size of the current user's screen
 /*devResLookup.forEach((res, resInd) => {
   checkDeviceResolution(res, resInd);
 });*/
 
-checkDeviceResolution();
+//checkDeviceResolution();
 
-console.log(deviceWidth);
+//console.log(deviceWidth);
 
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects

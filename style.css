@@ -208,21 +208,23 @@ body {
     height: calc(95%/6);
   }*/
 
+
 }
  
  
 @media only screen and (min-width: 600px) {
 
   .tile-container svg {
-    transform: scale(0.75); /*translate(8%,10%);*/ /*seems to affect responsive resizing*/
+    transform: scale(1); /*translate(10%,0%); /*seems to affect responsive resizing*/
     display: inline-block;
     position: absolute;
     top: 0;
     left: 0; /*works pretty well*/
     /*top: 0;
-    left: 0;*/
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
   }
-
  
 }
  
@@ -235,6 +237,8 @@ body {
   .tile-container svg {
     transform: scale(1.2);
   }
+
+  
 }
  
 @media only screen and (min-width: 889px) {
