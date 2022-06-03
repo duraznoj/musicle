@@ -11,7 +11,7 @@
 
 //Get current date in yyyyMMdd format,
 //const dt = luxon.DateTime.utc().toFormat('yyyyMMdd'); //UTC time
-const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmm'); //UTC time - use minutes for testing
+const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmmss'); //UTC time - use minutes for testing
 console.log("Date: " + currentDate);
 
 //create array of json indices in random order (generated with basic python script)
@@ -34,7 +34,8 @@ const jsonIndices = [99, 4, 37, 109, 82, 52, 19, 75, 10,
 //console.table(jsonIndices);
 
 //set currentJSON Index to 0 the first time we load the page
-let currentJSONIndex;
+//let currentJSONIndex; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
+let currentJSONIndex = 167; 
 //get song index from jsonIndices
 //let currentSongIndex = jsonIndices[currentJSONIndex];
 let currentSongIndex;
@@ -111,9 +112,9 @@ const hardModeSlider = document.getElementById("hardModeSlider")
 //screen resolution variables
 const devResWdthList = ['280px', '320px', '360px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1024px', '1200px'];
 //const devResHghtList = ['350px', '350px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '8200px', '889px', '1024px', '1200px'];
-const divWidthMultiplierList = [2.2, 2, 1.90, 1.85, 1.90, 1.8, 1.6, 1.6, 1.5, 1.5, 1.5, 1.5, 1.6];
-const xPosList = [-15, -10, -5, -5, -10, -15, -15, -15, -15, -15, -15, -20, -45];
-const yPosList = [-10, 0, 0, 0, 10, 10, 10, 10, 10, 15, 25, -10, 15];
+const divWidthMultiplierList = [2.2, 2, 1.90, 1.90, 1.75, 1.8, 1.6, 1.6, 1.5, 1.5, 1.90, 1.5, 1.6];
+const xPosList = [-15, -10, -5, -5, -1, -15, -5, 25, 0, -15, 0, -20, -45];
+const yPosList = [-10, 0, 0, 0, 10, 10, 10, -10, 10, 15, -15, -10, 15];
 
 let deviceWidth;
 let deviceHeight;
@@ -484,11 +485,9 @@ const createContext = (divID, keySig) => {
   const context = renderer.getContext();
   //context.scale(.5,.8);
   //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
-  //context.setViewBox(divWidth * 0.15, divHeight * 0.2, divWidth * 1, divHeight * 1.5); //x, y, width, height
-  //context.setViewBox(0, 0, 0, 0); //x, y, width, height
 
-  context.setViewBox(0, 19, divWidth * 1, divHeight * 2); //x, y, width, height //CURRENTLY USING
-  //context.setViewBox(0, 0, 100, 100); //x, y, width, height
+  //context.setViewBox(0, 19, divWidth * 1, divHeight * 2); //x, y, width, height //PREVIOUSLY USING
+  context.setViewBox(0, 0, divWidth * 1, divHeight * 2); //x, y, width, height //CURRENTLY USING
   
   
   //console.log(deviceWidth);
@@ -545,7 +544,7 @@ const initLocalStorage = () => {
   //const storedSong
   //const storedTreble = window.localStorage.getObj("treble");
 
-  currentJSONIndex = Number(window.localStorage.getItem("currentJSONIndex")) || 0;
+  //currentJSONIndex = Number(window.localStorage.getItem("currentJSONIndex")) || 0; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
   console.log("currentJSONIndex: " + currentJSONIndex);
 
   currentSongIndex = jsonIndices[currentJSONIndex];
@@ -665,7 +664,7 @@ const initLocalStorage = () => {
 
     } else if (currentDate !== storedCurrentDate) {
       console.log("stored date !== currentDate");
-      currentJSONIndex++; //move to next song
+      //currentJSONIndex++; //move to next song //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
       currentSongIndex = jsonIndices[currentJSONIndex];
       //reset game state and initialize new game state
       resetGameState();
