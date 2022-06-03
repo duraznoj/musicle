@@ -109,7 +109,7 @@ const hardModeCheckBox = document.getElementById("hardModeCheckBox");
 const hardModeSlider = document.getElementById("hardModeSlider")
 
 //screen resolution variables
-const devResWdthList = ['350px', '350px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1024px', '1200px'];
+const devResWdthList = ['280px', '320px', '360px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1024px', '1200px'];
 //const devResHghtList = ['350px', '350px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '8200px', '889px', '1024px', '1200px'];
 const divWidthMultiplierList = [2.2, 2, 1.90, 1.85, 1.90, 1.8, 1.6, 1.6, 1.5, 1.5, 1.5, 1.5, 1.6];
 const xPosList = [-15, -10, -5, -5, -10, -15, -15, -15, -15, -15, -15, -20, -45];
@@ -236,93 +236,9 @@ const shiftPitches = (inPitches) => {
 //console.log("shift global scope out: " + shiftPitches(inTreble));
 //console.log( "shift global scope out: " + shiftedPitches);
 
-
-//function to get treble and save items to local storage
-const getTreble = () => {
-  fetch("./melody_processing/processed/intro_pitches.json")
-    .then(response => response.json())
-    .then(json => {
-      //let melody_json = json.intro_pitches
-
-      //generate random index so we can select a new song every day
-      //const numSongs = Object.keys(json.intro_pitches).length;
-      //console.log(numSongs);
-      //let currentSongIndex = getRandIndex(numSongs - 1);
-      console.log("currentSongIndex: " + currentSongIndex);
-      //let currentSongIndex = '20220323';
-
-      //get song from json
-      let melody = json.intro_pitches[currentSongIndex];
-
-      //get name of song, notes in the melody and key signature
-      songName = melody.song_name.replaceAll('_', ' ').toUpperCase();
-      let inTreble = melody.notes;
-      keySig = keySignatures[melody.key_signature]; //source is in integer notation
-
-      //console.log("melody.notes: " + melody.notes.join);
-      let shiftedTreble = shiftPitches(inTreble);
-      treble = shiftedTreble.map(val => val.toString());
-
-      //store items in local storage
-      //window.localStorage.setItem("currentDate", currentDate);
-      //window.localStorage.setItem("currentSongIndex", currentSongIndex);
-      window.localStorage.setItem("songName", songName);
-      window.localStorage.setObj("treble", treble);
-      window.localStorage.setItem("keySig", keySig);
-
-      console.log(melody);
-      console.log(songName);
-      console.log(treble);
-      console.log(keySig);
-
-      //render staves within the tiles
-      guessRows.forEach((guessRow, guessRowIndex) => {
-        guessRow.forEach((guess, guessIndex) => {
-          contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
-        });
-      });
-
-      window.localStorage.setObj("guessRows", guessRows);
-      window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
-      
-    }).catch(err => console.log(err));
-
-}
-
-//function to convert between midi pitch number and vexflow note names
-const convertPitch = (inPitch) => {
-  let outNote;
-  //convert midi pitch to note name for vexflow
-  if (keySigFlats.includes(keySig)) {
-    outNote = conversionLookup[inPitch].noteNameFlat;
-
-  } else if (keySigSharps.includes(keySig)){
-    outNote = conversionLookup[inPitch].noteNameSharp;
-  }
-
-  return outNote;
-};
-
-//create tiles for music notes
-const createTiles = () => {
-  guessRows.forEach((guessRow, guessRowIndex) => {
-    const rowElement = document.createElement('div');
-    rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
-    rowElement.classList.add('guessRow');
-    guessRow.forEach((guess, guessIndex) => {
-      const tileElement = document.createElement('div');
-      tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
-      tileElement.classList.add('tile');
-      //tileElement.style.width ="100%";
-      //tileElement.style.height ="100%";
-      rowElement.append(tileElement);
-    });
-    tileDisplay.append(rowElement);
-  });
-}
-
-//function to check device resolution so we can draw staves for each screen size
+//function to check device resolution so we can select the appropriate stave drawing parameters for that device
 const checkDeviceResolution = () => {
+  console.log("Resize happened");
 
   for(let i = 0; i < devResWdthList.length; i++) {
     // Create a condition that targets viewports at least 'x' px wide
@@ -350,11 +266,33 @@ const checkDeviceResolution = () => {
       xPos = devResLookup[i].xPos;
       yPos = devResLookup[i].yPos;
       //console.log("mediaQuery true: " + true);
-      console.log("devRes: " + deviceWidth);
+      //console.log("devRes: " + deviceWidth);
     }
-
   }
 
+  console.log("devRes: " + deviceWidth);
+
+
+  let lastSVG = document.querySelector("#guessRow-5-tile-4 > svg");
+  //console.log("lastSVG: " + lastSVG);
+  //console.log("!!lastSVG: " + !!lastSVG)
+  //console.log("!lastSVG: " + !lastSVG)
+
+  //if the last tile has been drawn, then re-render staves (in other words- waiting for getTreble to finish)
+  if(!!lastSVG) {
+    reDrawStaves();
+
+
+  } else if(!lastSVG) { // else if the last tile has not been drawn yet, don't do anything
+    console.log("lastSVG not drawn yet");
+
+  }
+}
+
+//function to re-draw staves and notes if page was resized
+const reDrawStaves = () => {
+  
+  console.log("running resizeFlag code");
   //have to set currentTile and currentRow to 0 so that can redraw notes from the beginning
   currentTile = 0;
   currentRow = 0;
@@ -430,13 +368,100 @@ const checkDeviceResolution = () => {
       }
     });
   });
-
-  //console.log("guessRows as of resize: ")
-  //console.table(guessRows);
-
-  //window.localStorage.setObj("guessRows", guessRows);
-  //window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
 }
+
+    
+
+
+//function to get treble and save items to local storage
+const getTreble = () => {
+  fetch("./melody_processing/processed/intro_pitches.json")
+    .then(response => response.json())
+    .then(json => {
+      //let melody_json = json.intro_pitches
+
+      //generate random index so we can select a new song every day
+      //const numSongs = Object.keys(json.intro_pitches).length;
+      //console.log(numSongs);
+      //let currentSongIndex = getRandIndex(numSongs - 1);
+      console.log("currentSongIndex: " + currentSongIndex);
+      //let currentSongIndex = '20220323';
+
+      //get song from json
+      let melody = json.intro_pitches[currentSongIndex];
+
+      //get name of song, notes in the melody and key signature
+      songName = melody.song_name.replaceAll('_', ' ').toUpperCase();
+      let inTreble = melody.notes;
+      keySig = keySignatures[melody.key_signature]; //source is in integer notation
+
+      //console.log("melody.notes: " + melody.notes.join);
+      let shiftedTreble = shiftPitches(inTreble);
+      treble = shiftedTreble.map(val => val.toString());
+
+      //store items in local storage
+      //window.localStorage.setItem("currentDate", currentDate);
+      //window.localStorage.setItem("currentSongIndex", currentSongIndex);
+      window.localStorage.setItem("songName", songName);
+      window.localStorage.setObj("treble", treble);
+      window.localStorage.setItem("keySig", keySig);
+
+      console.log(melody);
+      console.log(songName);
+      console.log(treble);
+      console.log(keySig);
+
+      
+      //check device resolution and set rendering parameters
+      //checkDeviceResolution();
+
+      //render staves within the tiles
+      guessRows.forEach((guessRow, guessRowIndex) => {
+        guessRow.forEach((guess, guessIndex) => {
+          contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
+        });
+      });
+
+      window.localStorage.setObj("guessRows", guessRows);
+      window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
+      
+    }).catch(err => console.log(err));
+
+}
+
+//function to convert between midi pitch number and vexflow note names
+const convertPitch = (inPitch) => {
+  let outNote;
+  //convert midi pitch to note name for vexflow
+  if (keySigFlats.includes(keySig)) {
+    outNote = conversionLookup[inPitch].noteNameFlat;
+
+  } else if (keySigSharps.includes(keySig)){
+    outNote = conversionLookup[inPitch].noteNameSharp;
+  }
+
+  return outNote;
+};
+
+//create tiles for music notes
+const createTiles = () => {
+  guessRows.forEach((guessRow, guessRowIndex) => {
+    const rowElement = document.createElement('div');
+    rowElement.setAttribute('id', 'guessRow-' + guessRowIndex);
+    rowElement.classList.add('guessRow');
+    guessRow.forEach((guess, guessIndex) => {
+      const tileElement = document.createElement('div');
+      tileElement.setAttribute('id', 'guessRow-' + guessRowIndex + '-tile-' + guessIndex)
+      tileElement.classList.add('tile');
+      //tileElement.style.width ="100%";
+      //tileElement.style.height ="100%";
+      rowElement.append(tileElement);
+    });
+    tileDisplay.append(rowElement);
+  });
+}
+
+//checkDeviceResolution used to be here
 
 const createContext = (divID, keySig) => {
   //const VF = Vex.Flow;
@@ -472,8 +497,8 @@ const createContext = (divID, keySig) => {
   //const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
   //const stave = new VF.Stave(10, -12, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for desktop
   //const stave = new VF.Stave(10, 0, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for mobile
-  const stave = new VF.Stave(0, 0, divWidth * 1.9).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
-  //const stave = new VF.Stave(xPos, yPos, divWidth * divWidthMultiplier).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
+  //const stave = new VF.Stave(0, 0, divWidth * 1.9).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
+  const stave = new VF.Stave(xPos, yPos, divWidth * divWidthMultiplier).addClef('treble').addKeySignature(keySig); //(x, y, width) --> good for 360 px width
 
   //context.setViewBox(divWidth*.5, divHeight*0.1, divWidth * 2, divHeight * 2); //x, y, width, height
 
@@ -579,6 +604,10 @@ const initLocalStorage = () => {
 
       //create tiles
       createTiles();
+
+
+      //check device resolution
+      //checkDeviceResolution();
 
       //console.log("currentRow: " + currentRow);
       //console.log("currentTile: " + currentTile);
@@ -1196,6 +1225,8 @@ buttons.forEach((button) =>{
     //editNote(button);
   });
 });
+
+checkDeviceResolution();
 
 //check device resolution every time
 window.addEventListener('resize', checkDeviceResolution); //note: this event listener may fire multiple times when a browser window is resized
