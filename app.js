@@ -110,11 +110,11 @@ const hardModeCheckBox = document.getElementById("hardModeCheckBox");
 const hardModeSlider = document.getElementById("hardModeSlider")
 
 //screen resolution variables
-const devResWdthList = ['280px', '320px', '360px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1024px', '1200px'];
+const devResWdthList = ['320px', '360px', '375px', '400px', '540px', '595px', '600px', '768px', '820px', '889px', '1024px', '1180px', '1200px'];
 //const devResHghtList = ['350px', '350px', '350px', '375px', '400px', '540px', '595px', '600px', '768px', '8200px', '889px', '1024px', '1200px'];
-const divWidthMultiplierList = [2.2, 2, 1.90, 1.90, 1.75, 1.8, 1.6, 1.6, 1.5, 1.5, 1.90, 1.5, 1.6];
-const xPosList = [-15, -10, -5, -5, -1, -15, -5, 25, 0, -15, 0, -20, -45];
-const yPosList = [-10, 0, 0, 0, 10, 10, 10, -10, 10, 15, -15, -10, 15];
+const divWidthMultiplierList = [2.2, 1.95, 1.95, 1.75, 1.90, 1.6, 1.95, 1.5, 1.95, 1.90, 1.5, 1.5, 1.55];
+const xPosList = [-10, 0, 0, 10, 0, -5, 0, 35, 0, 10, 50, 60, 60];
+const yPosList = [5, 10, 10, 15, -15, 10, -15, -10, -10, -10, 15, 20, 20];
 
 let deviceWidth;
 let deviceHeight;

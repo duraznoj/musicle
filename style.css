@@ -150,35 +150,58 @@ body {
   /*transform: scale(0.90) translate(8%,10%);*/
 /*}*/
 
-
-
-@media only screen and (min-width: 280px) {
-
-  /*.tile-container .guessRow {
-    height: calc((1 * 100vw) / 5);
-    width: 100%;
-  }*/
-
-  .tile-container svg {
-    transform: scale(0.45);
-  }
-
-}
-
 @media only screen and (min-width: 320px) {
 
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .modal-content {
+    font-size: 0.6rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc((0.99 * 100vw) / 5);
+    width: 99%;
+  }
+
+  .tile-container .tile {
+    border: 1px solid#3a3a3c;
+  }
+
+  .tile-container svg {
+    transform: scale(0.9); /*translate(10%,0%); /*seems to affect responsive resizing*/
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+  
   /*.tile-container .guessRow {
     height: calc((1 * 100vw) / 5);
     width: 100%;
   }*/
 
-  .tile-container svg {
-    transform: scale(0.65);
-  }
+  /*.tile-container svg {
+    transform: scale(0.75);
+  }*/
 
 }
 
 @media only screen and (min-width: 360px) {
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .modal-content {
+    font-size: 0.7rem !important;
+  }
 
   /*.tile-container .guessRow {
     height: calc((0.97 * 100vw) / 5);
@@ -208,11 +231,39 @@ body {
     height: calc(95%/6);
   }*/
 
+  .tile-container svg {
+    transform: scale(.8); /*translate(10%,0%); /*seems to affect responsive resizing*/
+    top: 0;
+    left: 0; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    font-size: 0.5rem !important;
+  }
 
 }
  
- 
 @media only screen and (min-width: 600px) {
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    font-size: 0.55rem !important;
+  }
+
+  .tile-container svg {
+    transform: scale(0.8) !important;
+  }
 
   .tile-container svg {
     transform: scale(1); /*translate(10%,0%); /*seems to affect responsive resizing*/
@@ -225,53 +276,317 @@ body {
     width: 100% !important;
     height: 100% !important;*/
   }
+
+  .tile-container .guessRow {
+    height: calc(95%/6);
+  }
+
+}
+
+@media only screen and (min-width: 600px) and (min-height: 500px) {
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .tile-container svg {
+    transform: scale(1); /*translate(10%,0%); /*seems to affect responsive resizing*/
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+  .tile-container .guessRow {
+    height: calc(85%/6);
+  }
+
 }
  
 @media only screen and (min-width: 768px) {
 
+  .title {
+    font-size: 1rem;
+  }
+
   .tile-container .guessRow {
-    height: calc(55%/6);
+    height: calc(95%/6);
   }
 
   .tile-container svg {
-    transform: scale(1.2);
+    transform: scale(0.8) !important;
+  }
+  .modal-content {
+    font-size: 0.55rem !important;
   }
 
+  .piano-container button {
+    font-size: 1rem;
+  }
   
+}
+
+/*ipad mini vertical and iphone x horizontal both have this dimension*/
+@media only screen and (min-width: 768px) and (min-height: 1000px) {
+
+  .title {
+    font-size: 2.3rem;
+  }
+
+  .modal-content {
+    font-size: 0.95rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc(85%/6);
+  }
+  
+  .tile-container svg {
+    transform: scale(1.2) !important; /*translate(10%,0%); /*seems to affect responsive resizing*/
+    display: inline-block;
+    position: absolute;
+    top: 30%;
+    left: 0; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+  .modal button {
+    font-size: 2.0rem;
+  }
+}
+
+@media only screen and (min-width: 820px) {
+
+  .title {
+    font-size: 1.0rem;
+  }
+
+  .modal-content {
+    font-size: 0.65rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc(95%/6);
+  }
+
+  .tile-container svg {
+    transform: scale(0.9) !important; 
+  }
+
+}
+
+@media only screen and (min-width: 820px) and (min-height: 1000px) {
+
+  .title {
+    font-size: 2.4rem;
+  }
+
+  .tile-container .guessRow {
+    height: calc(65%/6);
+  }
+
+  .modal-content {
+    font-size: 0.95rem !important;
+  }
+
+  .tile-container svg {
+    transform: scale(0.9) !important; /*translate(10%,0%); /*seems to affect responsive resizing*/
+    display: inline-block;
+    position: absolute;
+    top: 20%;
+    left: 0%; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
 }
  
 @media only screen and (min-width: 889px) {
 
-  .tile-container .guessRow {
-    height: calc(90%/6);
+  .title {
+    font-size: 1rem;
   }
 
   .tile-container svg {
-    transform: scale(0.8); 
+    transform: scale(0.9); 
+  }
+
+  .modal-content {
+    font-size: 0.65rem !important;
+  }
+}
+
+@media only screen and (min-width: 889px) and (min-height: 1000px) {
+
+  .title {
+    font-size: 2.5rem !important;
+  }
+
+  /*.modal button {
+    font-size: 1.5rem;
+  }*/
+
+  .modal-content {
+    font-size: 1.25rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc(35%/6);
+  }
+
+  .tile-container svg {
+    transform: scale(0.9); 
   }
 }
 
 @media only screen and (min-width: 1024px) {
+  
+  .title {
+    font-size: 2rem;
+  }
+
+  .modal button {
+    font-size: 1.5rem;
+  }
+
+  .modal-content {
+    font-size: 0.95rem !important;
+  }
 
   .tile-container .guessRow {
-    height: calc(60%/6); 
+    height: calc(95%/6); 
   }
 
   .tile-container svg {
-    transform: scale(1.2); 
+    transform: scale(1.2) !important; 
   }
 }
 
+@media only screen and (min-width: 1024px) and (min-height: 768px) {
+
+  
+  .title {
+    font-size: 2rem;
+  }
+
+  .modal button {
+    font-size: 1.5rem;
+  }
+
+  .modal-content {
+    font-size: 0.95rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc(80%/6); 
+  }
+
+  .tile-container svg {
+    transform: scale(1.2) !important; 
+  }
+}
+
+@media only screen and (min-width: 1024px) and (min-height: 1300px) {
+
+  
+  .title {
+    font-size: 2rem;
+  }
+
+  .modal button {
+    font-size: 1.5rem;
+  }
+
+  .modal-content {
+    font-size: 0.95rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc(50%/6); 
+  }
+
+  .tile-container svg {
+    transform: scale(1.2) !important; /*translate(10%,0%); /*seems to affect responsive resizing*/
+    display: inline-block;
+    position: absolute;
+    top: 10%;
+    left: 0%; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+}
+
 @media only screen and (min-width: 1280px) {
+
+  /*.title {
+    font-size: 2rem;
+  }
+
+  .modal button {
+    font-size: 1.5rem;
+  }*/
+
+  .modal-content {
+    font-size: 1.25rem !important;
+  }
   
   .tile-container .guessRow {
     height: calc(70%/6); 
   }
 
   .tile-container svg {
-    transform: scale(1);
+    transform: scale(1.2);
   }
+
+  .modal button {
+    font-size: 1.9rem;
+  }
+
 }
+
+@media only screen and (min-width: 1280px) and (min-height: 1000px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .modal button {
+    font-size: 1.5rem;
+  }
+
+  .modal-content {
+    font-size: 0.95rem !important;
+  }
+
+  .tile-container .guessRow {
+    height: calc(80%/6); 
+  }
+
+  .tile-container svg {
+    transform: scale(1.2) !important; /*translate(10%,0%); /*seems to affect responsive resizing*/
+    display: inline-block;
+    position: absolute;
+    top: 10%;
+    left: 0%; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+}
+
 
 
 .tile.flip {
@@ -415,6 +730,7 @@ body {
   /*overflow: auto;*/
   /*background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.7);*/
+  /*font-size: .6rem !important;*/
 }
 
 .modal-content hr {
