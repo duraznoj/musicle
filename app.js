@@ -34,8 +34,8 @@ const jsonIndices = [99, 4, 37, 109, 82, 52, 19, 75, 10,
 //console.table(jsonIndices);
 
 //set currentJSON Index to 0 the first time we load the page
-//let currentJSONIndex; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
-let currentJSONIndex = 167; 
+let currentJSONIndex; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
+//let currentJSONIndex = 167; //for testing screen resolutions
 //get song index from jsonIndices
 //let currentSongIndex = jsonIndices[currentJSONIndex];
 let currentSongIndex;
@@ -423,16 +423,6 @@ const getTreble = () => {
       console.log(treble);
       console.log(keySig);
 
-      //update help modal with names of songs
-      const helpModalSongParagraph = document.getElementById("help-modal-song-paragraph");
-      const helpModalSongList = document.getElementById("help-modal-song-list");
-      helpModalSongParagraph.textContent = "Song list (scroll down within this window to see more)";
-      songNamesList.forEach((songName)=>{
-        let listElem = document.createElement("li");
-        listElem.innerText = songName;
-        helpModalSongList.appendChild(listElem);
-      });
-
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
         guessRow.forEach((guess, guessIndex) => {
@@ -442,6 +432,16 @@ const getTreble = () => {
 
       window.localStorage.setObj("guessRows", guessRows);
       window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
+
+      //update help modal with names of songs
+      const helpModalSongParagraph = document.getElementById("help-modal-song-paragraph");
+      const helpModalSongList = document.getElementById("help-modal-song-list");
+      helpModalSongParagraph.textContent = "SONG LIST: ";
+      songNamesList.forEach((songName)=>{
+        let listElem = document.createElement("li");
+        listElem.innerText = songName;
+        helpModalSongList.appendChild(listElem);
+      });
 
       
     }).catch(err => console.log(err));
@@ -563,7 +563,7 @@ const initLocalStorage = () => {
   //const storedSong
   //const storedTreble = window.localStorage.getObj("treble");
 
-  //currentJSONIndex = Number(window.localStorage.getItem("currentJSONIndex")) || 0; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
+  currentJSONIndex = Number(window.localStorage.getItem("currentJSONIndex")) || 0; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
   console.log("currentJSONIndex: " + currentJSONIndex);
 
   currentSongIndex = jsonIndices[currentJSONIndex];
@@ -603,7 +603,7 @@ const initLocalStorage = () => {
       //update help modal with names of songs
       const helpModalSongParagraph = document.getElementById("help-modal-song-paragraph");
       const helpModalSongList = document.getElementById("help-modal-song-list");
-      helpModalSongParagraph.textContent = "Song list (scroll down within this window to see more: )";
+      helpModalSongParagraph.textContent = "SONG LIST: ";
       songNamesList.forEach((songName)=>{
         let listElem = document.createElement("li");
         listElem.innerText = songName;
@@ -697,7 +697,7 @@ const initLocalStorage = () => {
 
     } else if (currentDate !== storedCurrentDate) {
       console.log("stored date !== currentDate");
-      //currentJSONIndex++; //move to next song //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
+      currentJSONIndex++; //move to next song //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
       currentSongIndex = jsonIndices[currentJSONIndex];
       //reset game state and initialize new game state
       resetGameState();
@@ -734,122 +734,62 @@ const updateStatsModal = () => {
 
   const winPct = Math.round((totalWins / totalGames) * 100) || 0;
   document.getElementById("win-pct").textContent = winPct;
+  
 }
 
-const initStatsModal = () => {
-  const modal = document.getElementById("stats-modal");
-  const modalContent = document.getElementById("stats-modal-content");
-  const img = document.getElementById("stats-img");
+//function to initalize the different types of modals
+const initModal = (modalType) => {
+  const modal = document.getElementById(modalType + "-modal");
+  const modalContent = document.getElementById(modalType + "-modal-content");
 
   // Get the button that opens the modal
-  const btn = document.getElementById("stats");
+  const btn = document.getElementById(modalType);
 
   // Get the <span> element that closes the modal
-  const span = document.getElementById("close-stats");
+  const span = document.getElementById("close-" + modalType);
 
-  // When the user clicks on the button, open the modal
-  btn.addEventListener("click", function () {
-    updateStatsModal();
-    //modal.style.display = "block";
-    modalContent.style.display = "block";
-  });
+  if(modalType === "settings") { //if it's the settings modal we need to set up the hard mode slider
+    const warningText = document.getElementById("hard-mode-warning");
 
-  // When the user clicks on <span> (x), close the modal
-  span.addEventListener("click", function () {
-    //modal.style.display = "none";
-    modalContent.style.display = "none";
-  });
+    //get hardMode variables from local storage
+    hardMode = window.localStorage.getObj("hardMode") || false;
+    hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
+    console.log("storedHardMode: \n");
+    console.log((hardMode));
+    console.log("storedHardModeDisabled: \n");
+    console.log((hardModeDisabled));
+    warningText.style.display = "none";
 
-  // When the user clicks anywhere outside of the modal, close it
-  /*window.addEventListener("click", function (event) {
-    if (event.target !== modalContent && event.target !== btn && event.target !== img) {
-      modalContent.style.display = "none";
-    }
-  });*/
+    //set hardmode checkbox checked or unchecked depending on stored value - keeps checkbox position constant upon refresh
+    hardModeCheckBox.checked = hardMode;
 
-}
-
-const initHelpModal = () => {
-  const modal = document.getElementById("help-modal");
-  const modalContent = document.getElementById("help-modal-content");
-  //const img = document.getElementById("help-img");
-
-  // Get the button that opens the modal
-  const btn = document.getElementById("help");
-
-  // Get the <span> element that closes the modal
-  const span = document.getElementById("close-help");
-
-  // When the user clicks on the button, open the modal
-  btn.addEventListener("click", function () {
-    //modal.style.display = "block";
-    modalContent.style.display = "block";
-  });
-
-  // When the user clicks on <span> (x), close the modal
-  span.addEventListener("click", function () {
-    //modal.style.display = "none";
-    modalContent.style.display = "none";
-  });
-
-  // When the user clicks anywhere outside of the modal, close it
-  /*window.addEventListener("click", function (event) {
-    if (event.target !== modalContent && event.target !== btn) {
-      modalContent.style.display = "none";
-    }
-  });*/
-}
-
-const initSettingsModal = () => {
-  const modal = document.getElementById("settings-modal");
-  const modalContent = document.getElementById("settings-modal-content");
-  const img = document.getElementById("settings-img");
-  const warningText = document.getElementById("hard-mode-warning");
-
-  // Get the button that opens the modal
-  const btn = document.getElementById("settings");
-
-  // Get the <span> element that closes the modal
-  const span = document.getElementById("close-settings");
-
-  //get hardMode variables from local storage
-  hardMode = window.localStorage.getObj("hardMode") || false;
-  hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
-  console.log("storedHardMode: \n");
-  console.log((hardMode));
-  console.log("storedHardModeDisabled: \n");
-  console.log((hardModeDisabled));
-  warningText.style.display = "none";
-
-  //set hardmode checkbox checked or unchecked depending on stored value - keeps checkbox position constant upon refresh
-  hardModeCheckBox.checked = hardMode;
-
-  //if game is in progress can't activate hard mode, otherwise slider controls hard mode
-  hardModeSlider.addEventListener("click", function () {
-    if(currentRow > 0) {
-      hardModeDisabled = true;
-      hardModeCheckBox.disabled = true;
-      window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
-      warningText.style.display = "block";
-
-    } else if (currentRow === 0) {
-      //listen for changes in the checkbox input value
-      hardModeCheckBox.addEventListener("change", function () {
-      if (this.checked) {
-        hardMode = true;
+    //if game is in progress can't activate hard mode, otherwise slider controls hard mode
+    hardModeSlider.addEventListener("click", function () {
+      if(currentRow > 0) {
         hardModeDisabled = true;
-        window.localStorage.setObj("hardMode", hardMode);
+        hardModeCheckBox.disabled = true;
         window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+        warningText.style.display = "block";
 
-      } else if (!this.checked) {
-        hardMode = false;
-        hardModeDisabled = false;
-        window.localStorage.setObj("hardMode", hardMode);
-        window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+      } else if (currentRow === 0) {
+        //listen for changes in the checkbox input value
+        hardModeCheckBox.addEventListener("change", function () {
+        if (this.checked) {
+          hardMode = true;
+          hardModeDisabled = true;
+          window.localStorage.setObj("hardMode", hardMode);
+          window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+
+        } else if (!this.checked) {
+          hardMode = false;
+          hardModeDisabled = false;
+          window.localStorage.setObj("hardMode", hardMode);
+          window.localStorage.setObj("hardModeDisabled", hardModeDisabled);
+        };
+      });
       };
     });
-    };
-  });
+  }
 
   // When the user clicks on the button, open the modal
   btn.addEventListener("click", function () {
@@ -858,19 +798,11 @@ const initSettingsModal = () => {
     modalContent.style.display = "block";
   });
 
-
   // When the user clicks on <span> (x), close the modal
   span.addEventListener("click", function () {
     //modal.style.display = "none";
     modalContent.style.display = "none";
   });
-
-  // When the user clicks anywhere outside of the modal, close it
-  /*window.addEventListener("click", function (event) {
-    if (event.target !== modalContent && event.target !== btn && event.target !== img) {
-      modalContent.style.display = "none";
-    }
-  });*/
 
 }
 
@@ -1155,7 +1087,6 @@ function playNote(key){
 ////////////////////////////////// MAIN ///////////////////////////////////////
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
-// initLocalStorage(); used to be here
 
 //create elements for list of note audio element
 pitches.forEach((pitch, index) => {
@@ -1168,7 +1099,6 @@ pitches.forEach((pitch, index) => {
 //create enter button
 const enterButton = document.createElement('button');
 enterButton.setAttribute('id', 'Enter');
-//enterButton.textContent = 'Enter';
 enterButton.innerHTML = '\u23CE';
 piano.append(enterButton);
 
@@ -1183,20 +1113,14 @@ pitches.forEach((pitch, index) => {
 //create delete button
 const deleteButton = document.createElement('button');
 deleteButton.setAttribute('id', 'Delete');
-//deleteButton.textContent = 'Delete';
 deleteButton.innerHTML = '\u232b';
 piano.append(deleteButton);
-
-//load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
-//initLocalStorage();
 
 //get newly created elements
 const keys = document.querySelectorAll('.key');
 const whiteKeys = document.querySelectorAll('.key.white'); //have to add period for space
 const blackKeys = document.querySelectorAll('.key.black');
 const buttons = document.querySelectorAll('.piano-container button');
-
-//createContext(), showMessage(), flipTile(), editNote(), playNote(), createTiles() used to be here
 
 let whiteOctaveShift = 0;
 let blackOctaveShift = 0;
@@ -1261,24 +1185,15 @@ buttons.forEach((button) =>{
   });
 });
 
+//check the current screen resolution
 checkDeviceResolution();
 
-//check device resolution every time
+//also add listener so that we check the device resolution every time the window resizes
 window.addEventListener('resize', checkDeviceResolution); //note: this event listener may fire multiple times when a browser window is resized
-
-//loop through screen resolutions to find the size of the current user's screen
-/*devResLookup.forEach((res, resInd) => {
-  checkDeviceResolution(res, resInd);
-});*/
-
-//checkDeviceResolution();
-
-//console.log(deviceWidth);
-
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 initLocalStorage();
-initHelpModal();
-initStatsModal();
-initSettingsModal();
+initModal("help");
+initModal("stats");
+initModal("settings");
 
