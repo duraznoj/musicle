@@ -853,21 +853,24 @@ const showMessage = (message) => {
 //function to color tiles based on guesses
 const flipTile = () => {
 
-  //get all notes in the previous rows
-  let alreadyGuessed = [];
-  //console.log("guessRows in flipTile: \n");
-  for(let row = 0; row < currentRow; row++){
-    guessRows[row].forEach((tile) => {
-      //console.log(tile);
-      alreadyGuessed.push(tile);
-    });
-  }
+  //create new array to store green/yello tile guesses
+  let greenOrYellowGuesses = [];
 
-  //get unique notes in the array of previously guessed notes
-  let uniqueGuesses = [... new Set(alreadyGuessed)];
+  //console.log("selected note: " + JSON.parse(JSON.stringify(guessRows[0][1])));
 
-  //console.log(alreadyGuessed);
-  console.log(uniqueGuesses);
+  checkRows.forEach((row, rowIdx) => {
+    row.forEach((tile, tileIdx) => {
+      if(tile.color === "green-overlay" | tile.color === "yellow-overlay") {
+        //console.log("checkRow green or yellow note: \n" + guessRows[rowIdx][tileIdx]);
+        greenOrYellowGuesses.push(guessRows[rowIdx][tileIdx]);
+      }
+    })
+  });
+
+  //get unique notes in the array of previously guessed green/yellow tile notes
+  let uniqueGuesses = [... new Set(greenOrYellowGuesses)];
+
+  //console.log("UNIQUE GUESSES: " + uniqueGuesses);
 
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
   //let checkTreble = treble; //copy of treble that we will remove letters from !DOES NOT WORK AS OBJECTS ARE MUTABLE!
@@ -899,7 +902,7 @@ const flipTile = () => {
         hardModeViolated = true;
 
         if(prevIdx === 0){ //only show warning message once
-          showMessage("MUST USE NOTES FROM PREVIOUS GUESSES");
+          showMessage("MUST USE GREEN/YELLOW TILES FROM PREVIOUS GUESSES");
         }
       }
     });
