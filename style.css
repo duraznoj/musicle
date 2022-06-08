@@ -667,6 +667,8 @@ body {
   grid-column: 1;
   width: 100%;
   height: 100%;
+  overflow-y: initial !important
+
 }
 
 #stats-modal {
@@ -688,6 +690,8 @@ body {
   top: 0;
   max-width: 40%;
   max-height: 30%;
+  overflow-y: auto;
+
 }
 
 #settings-modal-content {

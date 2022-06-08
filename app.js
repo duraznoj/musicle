@@ -60,6 +60,9 @@ let songName;
 let treble;
 var keySig;
 
+//variable to hold all names of songs to create list of possible valid guesses
+let songNamesList = [];
+
 //extend storage objects
 Storage.prototype.setObj = function(key, obj) {
   return this.setItem(key, JSON.stringify(obj))
@@ -400,21 +403,35 @@ const getTreble = () => {
       let shiftedTreble = shiftPitches(inTreble);
       treble = shiftedTreble.map(val => val.toString());
 
+      //get all names of songs
+      json.intro_pitches.forEach((song, songIdx) => {
+        //console.log(song.song_name.replaceAll('_', ' ').toUpperCase())
+        songNamesList.push(song.song_name.replaceAll('_', ' ').toUpperCase());
+      });
+      //console.table("songNames: " + songNamesList);
+
       //store items in local storage
       //window.localStorage.setItem("currentDate", currentDate);
       //window.localStorage.setItem("currentSongIndex", currentSongIndex);
       window.localStorage.setItem("songName", songName);
       window.localStorage.setObj("treble", treble);
       window.localStorage.setItem("keySig", keySig);
+      window.localStorage.setObj("songNamesList", songNamesList);
 
       console.log(melody);
       console.log(songName);
       console.log(treble);
       console.log(keySig);
 
-      
-      //check device resolution and set rendering parameters
-      //checkDeviceResolution();
+      //update help modal with names of songs
+      const helpModalSongParagraph = document.getElementById("help-modal-song-paragraph");
+      const helpModalSongList = document.getElementById("help-modal-song-list");
+      helpModalSongParagraph.textContent = "Song list (scroll down within this window to see more)";
+      songNamesList.forEach((songName)=>{
+        let listElem = document.createElement("li");
+        listElem.innerText = songName;
+        helpModalSongList.appendChild(listElem);
+      });
 
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
@@ -425,6 +442,7 @@ const getTreble = () => {
 
       window.localStorage.setObj("guessRows", guessRows);
       window.localStorage.setObj("checkRows", checkRows); //seems to help with checkRows null error
+
       
     }).catch(err => console.log(err));
 
@@ -528,6 +546,7 @@ function resetGameState() {
   window.localStorage.removeItem("isGameOver");
   window.localStorage.removeItem("hardMode");
   window.localStorage.removeItem("hardModeDisabled");
+  //window.localStorage.removeItem("songNamesList");
   //window.localStorage.removeItem("staveRows");
   //window.localStorage.removeItem("tileDisplay");
   //window.localStorage.removeItem("guessedWordCount");
@@ -576,7 +595,21 @@ const initLocalStorage = () => {
       console.log("storedTreble: \n" + treble);
       keySig = window.localStorage.getItem("keySig");
       console.log("storedKeySig: " + keySig);
-      
+
+      songNamesList = window.localStorage.getObj("songNamesList");
+      //console.log(Array.isArray(Array(songNamesList)));
+      //console.table(songNamesList);
+
+      //update help modal with names of songs
+      const helpModalSongParagraph = document.getElementById("help-modal-song-paragraph");
+      const helpModalSongList = document.getElementById("help-modal-song-list");
+      helpModalSongParagraph.textContent = "Song list (scroll down within this window to see more: )";
+      songNamesList.forEach((songName)=>{
+        let listElem = document.createElement("li");
+        listElem.innerText = songName;
+        helpModalSongList.appendChild(listElem);
+      });
+
       guessRows = window.localStorage.getObj("guessRows");
       //console.log("storedGuessRows: \n")
       //console.table(guessRows);
