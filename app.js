@@ -12,7 +12,7 @@
 //Get current date in yyyyMMdd format,
 //const dt = luxon.DateTime.utc().toFormat('yyyyMMdd'); //UTC time
 const currentDate = luxon.DateTime.utc().toFormat('yyyyMMddHHmmss'); //UTC time - use minutes for testing
-console.log("Date: " + currentDate);
+////console.log("Date: " + currentDate);
 
 //create array of json indices in random order (generated with basic python script)
 const jsonIndices = [99, 4, 37, 109, 82, 52, 19, 75, 10, 
@@ -31,7 +31,7 @@ const jsonIndices = [99, 4, 37, 109, 82, 52, 19, 75, 10,
   189, 121, 159, 183, 176, 79, 17, 58, 186, 23, 0, 72, 171, 
   117, 85, 59, 64, 47, 27, 67, 34, 57, 156, 119, 1, 118, 126, 
   115, 131, 125, 32, 14, 192, 68, 21,];
-//console.table(jsonIndices);
+////console.table(jsonIndices);
 
 //set currentJSON Index to 0 the first time we load the page
 let currentJSONIndex; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
@@ -97,7 +97,7 @@ const keySigSharps = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
 const keyColorsBasic = ["white", "black", "white", "black", "white", "white", "black", "white", "black", "white", "black", "white"];
 const keyColors = keyColorsBasic.concat(keyColorsBasic);
 keyColors.push("white"); //add extra white key to have full second octave
-//console.table(keyColors);
+////console.table(keyColors);
 
 /*define constants for accessing and creating html elements*/
 const body = document.querySelector('body');
@@ -169,9 +169,9 @@ for(let p = lowestPitch; p <= highestPitch; p++){
 
 //define middle pitch for rendering bass vs treble clef
 const middlePitch = pitches[Math.floor((highestPitch - lowestPitch) / 2) + 1];
-/*console.log(highestPitch)
-console.log(middlePitch)
-console.log(lowestPitch)*/
+/*////console.log(highestPitch)
+////console.log(middlePitch)
+////console.log(lowestPitch)*/
 
 /*create lookup table from the pitches, vexflow note names and piano key colors for converting between them*/
 let conversionLookup = {};
@@ -189,60 +189,60 @@ for (let i=0; i < devResWdthList.length; i++) {
 }
 
 
-//console.table(conversionLookup)
+////console.table(conversionLookup)
 
-console.table(devResLookup);
+//console.table(devResLookup);
 
 // OTHER FUNCTIONS
 
 //function to shift input pitches to the correct octave for our piano keyboard
 const shiftPitches = (inPitches) => {
   //assumes intro melodies are never more than two octaves apart
-  console.log("inPitches: " + inPitches);
+  ////console.log("inPitches: " + inPitches);
   const minTreblePitch = Math.min(...inPitches);
   const maxTreblePitch = Math.max(...inPitches);
   let shiftedPitches;
   let octaveDifference;
   if (minTreblePitch < lowestPitch) {
     if (minTreblePitch % 12 === 0) {
-      console.log('min: multiple of 12');
-      console.log(lowestPitch - minTreblePitch);
+      ////console.log('min: multiple of 12');
+      //console.log(lowestPitch - minTreblePitch);
       octaveDifference = (lowestPitch - minTreblePitch);
-      console.log("low octave difference: " + octaveDifference);
+      //console.log("low octave difference: " + octaveDifference);
     } else {
       octaveDifference = ((Math.floor((lowestPitch - minTreblePitch) / 12) + 1) * 12);
-      console.log("low octave difference: " + octaveDifference);
+      //console.log("low octave difference: " + octaveDifference);
     }
     shiftedPitches = inPitches.map(p => p + octaveDifference)
-    //console.log("low octave difference: " + octaveDifference);
-    console.log("low: " + shiftedPitches);
+    ////console.log("low octave difference: " + octaveDifference);
+    //console.log("low: " + shiftedPitches);
     
   } else if (maxTreblePitch > highestPitch) {
     if (maxTreblePitch % 12 === 0) {
-      console.log('max: multiple of 12');
-      console.log(maxTreblePitch - highestPitch);
+      //console.log('max: multiple of 12');
+      //console.log(maxTreblePitch - highestPitch);
       octaveDifference = (maxTreblePitch - highestPitch);
     } else {
       octaveDifference = ((Math.floor((maxTreblePitch - highestPitch) / 12) + 1) * 12)
     }
-    console.log("high octave difference: " + ((octaveDifference + 1) * 12));
+    //console.log("high octave difference: " + ((octaveDifference + 1) * 12));
     shiftedPitches = inPitches.map(val => val - octaveDifference);
-    console.log("high: " + shiftedPitches);
+    //console.log("high: " + shiftedPitches);
 
   } else {
-    console.log("No difference");
+    //console.log("No difference");
     shiftedPitches = inPitches;
   }
-  console.log("out shifted: " + shiftedPitches);
+  //console.log("out shifted: " + shiftedPitches);
   return shiftedPitches;
 }
 
-//console.log("shift global scope out: " + shiftPitches(inTreble));
-//console.log( "shift global scope out: " + shiftedPitches);
+////console.log("shift global scope out: " + shiftPitches(inTreble));
+////console.log( "shift global scope out: " + shiftedPitches);
 
 //function to check device resolution so we can select the appropriate stave drawing parameters for that device
 const checkDeviceResolution = () => {
-  console.log("Resize happened");
+  //console.log("Resize happened");
 
   for(let i = 0; i < devResWdthList.length; i++) {
     // Create a condition that targets viewports at least 'x' px wide
@@ -253,34 +253,34 @@ const checkDeviceResolution = () => {
 
     /*mediaQuery.onchange = (event) => {
       if (event.matches) {
-        //console.log('This screen is in the ' + devRes + ' wide interval.')
+        ////console.log('This screen is in the ' + devRes + ' wide interval.')
         deviceWidth = devResLookup[i].width;
-        console.log("devRes: " + deviceWidth);
+        //console.log("devRes: " + deviceWidth);
       } else {
         
       }
     }*/
 
     if (mediaQuery.matches) {
-      //console.log('This screen is in the ' + devRes + ' wide interval.')
+      ////console.log('This screen is in the ' + devRes + ' wide interval.')
       deviceWidth = devResLookup[i].width;
       //deviceHeight = devResLookup[i].height;
-      //console.log("devResInd" + devResInd);
+      ////console.log("devResInd" + devResInd);
       divWidthMultiplier = devResLookup[i].divWidthMultiplier;
       xPos = devResLookup[i].xPos;
       yPos = devResLookup[i].yPos;
-      //console.log("mediaQuery true: " + true);
-      //console.log("devRes: " + deviceWidth);
+      ////console.log("mediaQuery true: " + true);
+      ////console.log("devRes: " + deviceWidth);
     }
   }
 
-  console.log("devRes: " + deviceWidth);
+  //console.log("devRes: " + deviceWidth);
 
 
   let lastSVG = document.querySelector("#guessRow-5-tile-4 > svg");
-  //console.log("lastSVG: " + lastSVG);
-  //console.log("!!lastSVG: " + !!lastSVG)
-  //console.log("!lastSVG: " + !lastSVG)
+  ////console.log("lastSVG: " + lastSVG);
+  ////console.log("!!lastSVG: " + !!lastSVG)
+  ////console.log("!lastSVG: " + !lastSVG)
 
   //if the last tile has been drawn, then re-render staves (in other words- waiting for getTreble to finish)
   if(!!lastSVG) {
@@ -288,7 +288,7 @@ const checkDeviceResolution = () => {
 
 
   } else if(!lastSVG) { // else if the last tile has not been drawn yet, don't do anything
-    console.log("lastSVG not drawn yet");
+    //console.log("lastSVG not drawn yet");
 
   }
 }
@@ -296,7 +296,7 @@ const checkDeviceResolution = () => {
 //function to re-draw staves and notes if page was resized
 const reDrawStaves = () => {
   
-  console.log("running resizeFlag code");
+  //console.log("running resizeFlag code");
   //have to set currentTile and currentRow to 0 so that can redraw notes from the beginning
   currentTile = 0;
   currentRow = 0;
@@ -322,16 +322,16 @@ const reDrawStaves = () => {
       //remove old staves
       const oldStave = document.querySelector('#guessRow-' + guessRowIndex + '-tile-' + guessIndex + " svg");
       oldStave.remove(); //delete note from stave
-      //console.log("resize delete oldStave - contextRows: ");
-      //console.table(contextRows);
+      ////console.log("resize delete oldStave - contextRows: ");
+      ////console.table(contextRows);
       //guessRows[currentRow][currentTile] = ''; //delete
 
       //create new staves with proper render settings
       contextRows[guessRowIndex][guessIndex] = createContext('#guessRow-' + guessRowIndex + '-tile-' + guessIndex, keySig);
 
       //re-draw the previously guessed note
-      //console.log("note to be drawn: ")
-      //console.log(guess);
+      ////console.log("note to be drawn: ")
+      ////console.log(guess);
       drawNote(guess);
 
       //when you get to the fifth tile you have to reset the currentTile counter to zero to mimic what happens in the actual editNote fuction
@@ -344,30 +344,30 @@ const reDrawStaves = () => {
 
           /*const currentHTMLTileRow = document.querySelector("#guessRow-" + currentRow).childNodes;          
           const currentTileClass = currentHTMLTileRow[guessIndex].className;
-          console.log(currentTileClass);
-          console.log(currentTileClass === "tile"); /*works but is too slow if you resize while tiles are flipping*/
+          //console.log(currentTileClass);
+          //console.log(currentTileClass === "tile"); /*works but is too slow if you resize while tiles are flipping*/
 
           //if there are no stored guesses (i.e. enter has not been pressed after rendering five notes)
           //or the last row that was populated has an undefined length (in other words some notes have been drawn but guess has not been submitted)
           //then we set the current tile to the length of the current guessRows row (which coincides with the n+1 position of the rendered notes)
           //we also set the current row to delete or render notes from to the last populated row
           if(checkRows.length === 0 || checkRows[lastPopulatedRow] === undefined) { //note: using typeof seems to create an error
-            console.log("no checkRows or prev row undefined");
+            //console.log("no checkRows or prev row undefined");
             currentTile = len;
             currentRow = lastPopulatedRow;
           //if the last populated row is defined (in other words a guess has successfull been submitted, then we reset the currentTile counter to zero
           //so that we can start drawing at the first tile in the next row and advance the current row to the next row following the last populated row
           } else if(checkRows[lastPopulatedRow] !== undefined) {
-            console.log("exist prev row");
+            //console.log("exist prev row");
             currentTile = 0; //reset currentTile to zero
             currentRow = lastPopulatedRow + 1; //iterate to next row so now we can't delete notes from the previous row
           } else {
             //just in case
-            console.log("something else");
+            //console.log("something else");
           }
 
           //just for diagnostics
-          //console.table(checkRows);
+          ////console.table(checkRows);
         }
       }
     });
@@ -386,9 +386,9 @@ const getTreble = () => {
 
       //generate random index so we can select a new song every day
       //const numSongs = Object.keys(json.intro_pitches).length;
-      //console.log(numSongs);
+      ////console.log(numSongs);
       //let currentSongIndex = getRandIndex(numSongs - 1);
-      console.log("currentSongIndex: " + currentSongIndex);
+      //console.log("currentSongIndex: " + currentSongIndex);
       //let currentSongIndex = '20220323';
 
       //get song from json
@@ -399,16 +399,16 @@ const getTreble = () => {
       let inTreble = melody.notes;
       keySig = keySignatures[melody.key_signature]; //source is in integer notation
 
-      //console.log("melody.notes: " + melody.notes.join);
+      ////console.log("melody.notes: " + melody.notes.join);
       let shiftedTreble = shiftPitches(inTreble);
       treble = shiftedTreble.map(val => val.toString());
 
       //get all names of songs
       json.intro_pitches.forEach((song, songIdx) => {
-        //console.log(song.song_name.replaceAll('_', ' ').toUpperCase())
+        ////console.log(song.song_name.replaceAll('_', ' ').toUpperCase())
         songNamesList.push(song.song_name.replaceAll('_', ' ').toUpperCase());
       });
-      //console.table("songNames: " + songNamesList);
+      ////console.table("songNames: " + songNamesList);
 
       //store items in local storage
       //window.localStorage.setItem("currentDate", currentDate);
@@ -418,10 +418,10 @@ const getTreble = () => {
       window.localStorage.setItem("keySig", keySig);
       window.localStorage.setObj("songNamesList", songNamesList);
 
-      console.log(melody);
-      console.log(songName);
-      console.log(treble);
-      console.log(keySig);
+      //console.log(melody);
+      //console.log(songName);
+      //console.log(treble);
+      //console.log(keySig);
 
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
@@ -489,26 +489,26 @@ const createContext = (divID, keySig) => {
   const divWidth = div.clientWidth;
   //const divHeight = window.getComputedStyle(div, null).getPropertyValue('height');
   //const divWidth = window.getComputedStyle(div, null).getPropertyValue('width');
-  //console.log("h: " + divHeight + " w: " + divWidth);  
+  ////console.log("h: " + divHeight + " w: " + divWidth);  
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   renderer.resize(divWidth, divHeight); // (width, height)
-  //console.log("h2: " + divHeight + " w2: " + divWidth); 
+  ////console.log("h2: " + divHeight + " w2: " + divWidth); 
   const svgID = document.querySelector(divID + ' > svg');
   svgID.setAttribute('preserveAspectRatio', 'xMinYMin meet');
 
   //const divHeight = div.clientHeight;
   //const divWidth = div.innerWidth;
   //renderer.resize(divWidth/2, divHeight); // (width, height)
-  //console.log(div.clientWidth);
+  ////console.log(div.clientWidth);
   const context = renderer.getContext();
   //context.scale(.5,.8);
-  //console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
+  ////console.log("type context: " + typeof(Object.values(context)) + "\ncontext: " + Object.values(context));
 
   //context.setViewBox(0, 19, divWidth * 1, divHeight * 2); //x, y, width, height //PREVIOUSLY USING
   context.setViewBox(0, 0, divWidth * 1, divHeight * 2); //x, y, width, height //CURRENTLY USING
   
   
-  //console.log(deviceWidth);
+  ////console.log(deviceWidth);
 
   //add stave
   //const stave = new VF.Stave(10, -20, divWidth * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
@@ -527,7 +527,7 @@ const createContext = (divID, keySig) => {
 /*const createStave = (inContext, keySig) => {
   const stave = new VF.Stave(10, -20, 150 * 0.85).addClef('treble').addKeySignature(keySig); //(x, y, width)
   stave.setContext(inContext).draw();
-  console.log("Create stave")
+  //console.log("Create stave")
   //return [context, stave]; //store context and stave objects so we can have something to draw notes on later
   return stave;
 }*/
@@ -564,41 +564,41 @@ const initLocalStorage = () => {
   //const storedTreble = window.localStorage.getObj("treble");
 
   currentJSONIndex = Number(window.localStorage.getItem("currentJSONIndex")) || 0; //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
-  console.log("currentJSONIndex: " + currentJSONIndex);
+  //console.log("currentJSONIndex: " + currentJSONIndex);
 
   currentSongIndex = jsonIndices[currentJSONIndex];
-  console.log("currentSongIndex: " + currentSongIndex);
+  //console.log("currentSongIndex: " + currentSongIndex);
 
   totalGames = window.localStorage.getItem("totalGames") || 0;
 
-  console.log("totalGames");
-  console.table(totalGames);
+  //console.log("totalGames");
+  //console.table(totalGames);
 
   currentStreak = window.localStorage.getItem("currentStreak") || 0;
 
-  console.log("currentStreak");
-  console.table(currentStreak);
+  //console.log("currentStreak");
+  //console.table(currentStreak);
 
   totalWins = window.localStorage.getItem("totalWins") || 0;
 
-  console.log("totalWins");
-  console.table(totalWins);
+  //console.log("totalWins");
+  //console.table(totalWins);
 
   if(storedCurrentDate) { //could add check for if other items exist...
     if(currentDate === storedCurrentDate) {
-      console.log("stored date === currentDate")
+      //console.log("stored date === currentDate")
       
       //load data
       songName = window.localStorage.getItem("songName");
-      console.log("storedSongName: " + songName);
+      //console.log("storedSongName: " + songName);
       treble = window.localStorage.getObj("treble");
-      console.log("storedTreble: \n" + treble);
+      //console.log("storedTreble: \n" + treble);
       keySig = window.localStorage.getItem("keySig");
-      console.log("storedKeySig: " + keySig);
+      //console.log("storedKeySig: " + keySig);
 
       songNamesList = window.localStorage.getObj("songNamesList");
-      //console.log(Array.isArray(Array(songNamesList)));
-      //console.table(songNamesList);
+      ////console.log(Array.isArray(Array(songNamesList)));
+      ////console.table(songNamesList);
 
       //update help modal with names of songs
       const helpModalSongParagraph = document.getElementById("help-modal-song-paragraph");
@@ -611,25 +611,25 @@ const initLocalStorage = () => {
       });
 
       guessRows = window.localStorage.getObj("guessRows");
-      //console.log("storedGuessRows: \n")
-      //console.table(guessRows);
+      ////console.log("storedGuessRows: \n")
+      ////console.table(guessRows);
 
       checkRows = window.localStorage.getObj("checkRows");
-      //console.log("storedCheckRows: \n")
-      //console.table(checkRows);
+      ////console.log("storedCheckRows: \n")
+      ////console.table(checkRows);
 
       storedCurrentRow = window.localStorage.getItem("currentRow");
-      //console.log("storedCurrentRow: \n")
-      //console.log(storedCurrentRow);
+      ////console.log("storedCurrentRow: \n")
+      ////console.log(storedCurrentRow);
 
       isGameOver = window.localStorage.getItem("isGameOver");
-      //console.log("storedIsGameOver: " + isGameOver);
+      ////console.log("storedIsGameOver: " + isGameOver);
 
       //hardMode = window.localStorage.getObj("hardMode") || 0;
-      //console.log("storedHardMode: " + hardMode);
+      ////console.log("storedHardMode: " + hardMode);
 
       //hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
-      //console.log("storedHardModeDisabled: " + hardModeDisabled);
+      ////console.log("storedHardModeDisabled: " + hardModeDisabled);
 
       //hardModeCheckBox.disabled = false;
 
@@ -641,9 +641,9 @@ const initLocalStorage = () => {
       //check device resolution
       //checkDeviceResolution();
 
-      //console.log("currentRow: " + currentRow);
-      //console.log("currentTile: " + currentTile);
-      //console.log("isGameOver? " + isGameOver);
+      ////console.log("currentRow: " + currentRow);
+      ////console.log("currentTile: " + currentTile);
+      ////console.log("isGameOver? " + isGameOver);
 
       //render staves within the tiles
       guessRows.forEach((guessRow, guessRowIndex) => {
@@ -657,46 +657,46 @@ const initLocalStorage = () => {
 
       } else {
         guessRows.slice(0, storedCurrentRow+1).forEach((guessRow, guessRowIndex) => { //only want to iterate up to the currentRow
-          //console.log("iter guessRow: " + guessRow);
+          ////console.log("iter guessRow: " + guessRow);
   
           guessRow.forEach((guess, guessIndex) => {
             if(checkRows[guessRowIndex]) {
               const colorToBeAdded = checkRows[guessRowIndex][guessIndex].color;
               const tileToBeColored = document.querySelector("#guessRow-" + currentRow).childNodes;
-              //console.log("html element to be selected: " + '[data-note="' + guessRows[currentRow][currentTile] + '"]');
+              ////console.log("html element to be selected: " + '[data-note="' + guessRows[currentRow][currentTile] + '"]');
               const keyToBeColored = document.querySelector('[data-note="' + guessRows[currentRow][currentTile] + '"]');
               
               tileToBeColored[guessIndex].classList.add(colorToBeAdded);
               keyToBeColored.classList.add(colorToBeAdded);
 
             } //else {
-              //console.log("No color");
+              ////console.log("No color");
             //}
 
-            //console.log("note to be drawn: " + guessRows[guessRowIndex][guessIndex]);
+            ////console.log("note to be drawn: " + guessRows[guessRowIndex][guessIndex]);
             drawNote(guessRows[guessRowIndex][guessIndex]); //note: currentTile changes within drawNote function
             
             if(guessIndex !== 0 && guessIndex % 4 === 0) {
               //currentRow++;
               currentTile = 0;
-              //console.log("currentTile in init guessRow loop: " + currentTile);
+              ////console.log("currentTile in init guessRow loop: " + currentTile);
             }
           });
 
           currentRow++;
-          //console.log("currentRow in init guessRow loop: " + currentRow);
+          ////console.log("currentRow in init guessRow loop: " + currentRow);
         });
   
         currentRow = storedCurrentRow;
         currentTile = 0; //reset currentTile
       }
       
-      //console.log("currentRow: " + currentRow);
-      //console.log("currentTile: " + currentTile);
-      //console.log("isGameOver? " + isGameOver);
+      ////console.log("currentRow: " + currentRow);
+      ////console.log("currentTile: " + currentTile);
+      ////console.log("isGameOver? " + isGameOver);
 
     } else if (currentDate !== storedCurrentDate) {
-      console.log("stored date !== currentDate");
+      //console.log("stored date !== currentDate");
       currentJSONIndex++; //move to next song //UNCOMMENT WHEN DONE TESTING STAVE PARAMETERS ON DEVICE RESOLUTIONS
       currentSongIndex = jsonIndices[currentJSONIndex];
       //reset game state and initialize new game state
@@ -711,7 +711,7 @@ const initLocalStorage = () => {
       createTiles();
     }
   } else if (!storedCurrentDate) {
-    console.log("no date stored");
+    //console.log("no date stored");
     //store current date and songIndex to local storage
     window.localStorage.setItem("currentDate", currentDate);
     window.localStorage.setItem("currentJSONIndex", currentJSONIndex.toString());
@@ -754,10 +754,10 @@ const initModal = (modalType) => {
     //get hardMode variables from local storage
     hardMode = window.localStorage.getObj("hardMode") || false;
     hardModeDisabled = window.localStorage.getObj("hardModeDisabled") || false;
-    console.log("storedHardMode: \n");
-    console.log((hardMode));
-    console.log("storedHardModeDisabled: \n");
-    console.log((hardModeDisabled));
+    //console.log("storedHardMode: \n");
+    //console.log((hardMode));
+    //console.log("storedHardModeDisabled: \n");
+    //console.log((hardModeDisabled));
     warningText.style.display = "none";
 
     //set hardmode checkbox checked or unchecked depending on stored value - keeps checkbox position constant upon refresh
@@ -808,11 +808,19 @@ const initModal = (modalType) => {
 
 //function to show messages after guesses and at end of game
 const showMessage = (message) => {
-  const messageElement = document.createElement('p');
-  messageElement.textContent = message;
-  messageDisplay.append(messageElement);
-  setTimeout(() => messageDisplay.removeChild(messageElement), 4000);
 
+  //only show the message if there is no prior message currently being displayed to avoid spamming messages
+  if(message === "MUST USE GREEN/YELLOW TILES FROM PREVIOUS GUESSES" && !messageDisplay.hasChildNodes()){
+    const messageElement = document.createElement('p');
+    messageElement.textContent = message;
+    messageDisplay.append(messageElement);
+    setTimeout(() => messageDisplay.removeChild(messageElement), 4000);
+  } else if(message !== "MUST USE GREEN/YELLOW TILES FROM PREVIOUS GUESSES") {
+    const messageElement = document.createElement('p');
+    messageElement.textContent = message;
+    messageDisplay.append(messageElement);
+    setTimeout(() => messageDisplay.removeChild(messageElement), 4000);
+  }
 }
 
 //function to color tiles based on guesses
@@ -821,12 +829,12 @@ const flipTile = () => {
   //create new array to store green/yello tile guesses
   let greenOrYellowGuesses = [];
 
-  //console.log("selected note: " + JSON.parse(JSON.stringify(guessRows[0][1])));
+  ////console.log("selected note: " + JSON.parse(JSON.stringify(guessRows[0][1])));
 
   checkRows.forEach((row, rowIdx) => {
     row.forEach((tile, tileIdx) => {
       if(tile.color === "green-overlay" | tile.color === "yellow-overlay") {
-        //console.log("checkRow green or yellow note: \n" + guessRows[rowIdx][tileIdx]);
+        ////console.log("checkRow green or yellow note: \n" + guessRows[rowIdx][tileIdx]);
         greenOrYellowGuesses.push(guessRows[rowIdx][tileIdx]);
       }
     })
@@ -835,7 +843,7 @@ const flipTile = () => {
   //get unique notes in the array of previously guessed green/yellow tile notes
   let uniqueGuesses = [... new Set(greenOrYellowGuesses)];
 
-  //console.log("UNIQUE GUESSES: " + uniqueGuesses);
+  ////console.log("UNIQUE GUESSES: " + uniqueGuesses);
 
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
   //let checkTreble = treble; //copy of treble that we will remove letters from !DOES NOT WORK AS OBJECTS ARE MUTABLE!
@@ -843,9 +851,9 @@ const flipTile = () => {
   let checkTreble = treble.map(val => val.toString()); //prev working version
   //checkTreble = treble.map(val => val.toString());
 
-  //console.log("checkTreble as assigned: \n");
-  //console.table(checkTreble);
-  //console.log("First val: " + checkTreble[0]);
+  ////console.log("checkTreble as assigned: \n");
+  ////console.table(checkTreble);
+  ////console.log("First val: " + checkTreble[0]);
   let guess = []; //storing the letters we have guessed //prev working version
   let currentRowGuess = [];
 
@@ -856,8 +864,8 @@ const flipTile = () => {
     currentRowGuess.push(tile.getAttribute('data'));
   });
 
-  console.log("currentRowGuess: \n");
-  console.log(currentRowGuess);
+  //console.log("currentRowGuess: \n");
+  //console.log(currentRowGuess);
 
 
   //if hard mode is activated, valid guesses have to contain all unique previously guessed notes
@@ -875,10 +883,10 @@ const flipTile = () => {
     if((hardMode && !hardModeViolated) || !hardMode) {
   
       guess.forEach((guess, index) => {
-        //console.log("check green guess.note: " + guess.note);
-        //console.log("check green checkTreble[index]: " + checkTreble[index]);
+        ////console.log("check green guess.note: " + guess.note);
+        ////console.log("check green checkTreble[index]: " + checkTreble[index]);
         if(guess.note == treble[index]) { //don't forget to reference the note itself -- should be  check treble?
-          //console.log("equals - green")
+          ////console.log("equals - green")
           guess.color = 'green-overlay';
           checkTreble[index] = 'checkedTreble'; //important to set the 'checked' str differently for checkTreble vs guess.notes
           guess.note = 'checkedGuess';
@@ -886,24 +894,24 @@ const flipTile = () => {
       });
 
       guess.forEach((guess, index) => {
-        //console.log("check yellow guess.note: " + guess.note);
-        //console.log("check yellow checkTreble[index]: " + checkTreble[index]);
+        ////console.log("check yellow guess.note: " + guess.note);
+        ////console.log("check yellow checkTreble[index]: " + checkTreble[index]);
         
         if(checkTreble.includes(guess.note)){
-          //console.log('includes - yellow')
+          ////console.log('includes - yellow')
           guess.color = 'yellow-overlay';
           const noteForRemoval = checkTreble.indexOf(guess.note);
           checkTreble[noteForRemoval] = 'checkedTreble';
           //checkTreble[index] = 'checkedTreble'; //need to remove the actual element that was guessed...
         }
-        //console.log("checkTreble: \n");
-        //console.table(checkTreble)
+        ////console.log("checkTreble: \n");
+        ////console.table(checkTreble)
       });
 
       rowTiles.forEach((tile, index) => {
         const dataNote = tile.getAttribute('data'); //data_note = key.dataset.note is a string
         const currentKey = document.querySelector('[data-note="' + dataNote + '"]');
-        //console.log('flipTile currentKey: ' + '[data-note="' + dataNote + '"]');
+        ////console.log('flipTile currentKey: ' + '[data-note="' + dataNote + '"]');
 
         setTimeout(() => {
           tile.classList.add('flip');
@@ -923,11 +931,11 @@ const flipTile = () => {
 
 /*function to handle what happens when you click the enter or delete buttons*/
 const editNote = (button) => {
-  /*console.log('clicked');*/
+  /*//console.log('clicked');*/
   /*document.getElementsByClassName("buttons")[0].id; */
-  console.log(button.id)
-  //console.table("editNote: " + treble);
-  console.log("editNote - currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
+  //console.log(button.id)
+  ////console.table("editNote: " + treble);
+  //console.log("editNote - currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
 
 
   if(button.id == "Delete" && currentTile > 0){
@@ -937,16 +945,16 @@ const editNote = (button) => {
     //const currentStave = staveRows[currentRow][currentTile];
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
     guessRows[currentRow][currentTile] = ''; //delete note from matrix
-    console.log(guessRows);
+    //console.log(guessRows);
   }
   //if the enter button is pressed and 5 tiles have been populated then check if the guess is correct
   else if(button.id == "Enter" && currentTile > 4){
     //wasEnterPressed = true; //flag so we don't delete the entered notes if we press delete after window resize
-    //console.log("wasEnterPressed: " + wasEnterPressed);
+    ////console.log("wasEnterPressed: " + wasEnterPressed);
     const guess = guessRows[currentRow].join('');
     const trebleJoin = treble.join('');
-    //console.log('editNote scope: guess = ' + guess + " treble = " + trebleJoin);
-    //console.log(guess === trebleJoin)
+    ////console.log('editNote scope: guess = ' + guess + " treble = " + trebleJoin);
+    ////console.log(guess === trebleJoin)
     //window.localStorage.setItem('guessRows', guessRows);
 
     //color tile based on guess accuracy using the flipTile() function
@@ -988,7 +996,7 @@ const editNote = (button) => {
     } else if(currentRow < 5){
       currentRow++;
       currentTile = 0;
-      console.log("incorrect guess but currentRow < 5 and currentTile: " + currentTile);
+      //console.log("incorrect guess but currentRow < 5 and currentTile: " + currentTile);
       //window.localStorage.setItem('currentRow', currentRow);
       //window.localStorage.setObj('checkRows', checkRows);
       //window.localStorage.setObj('guessRows', guessRows);
@@ -1002,10 +1010,10 @@ const editNote = (button) => {
 
 const drawNote = (inNote) => {
   if(inNote) {
-    //console.log("note to be drawn in drawNote: " + inNote +"\n");
+    ////console.log("note to be drawn in drawNote: " + inNote +"\n");
     //const currentNoteName = conversionLookup[inNote].noteName;
     const currentNoteName = convertPitch(Number(inNote));
-    console.log(currentNoteName)
+    //console.log(currentNoteName)
 
     var staveNote = [
       // A quarter-note.
@@ -1019,17 +1027,17 @@ const drawNote = (inNote) => {
     // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
     var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
-    //console.log("drawNote - currentRow: " + currentRow + " currentTile: " + currentTile + "\n");
+    ////console.log("drawNote - currentRow: " + currentRow + " currentTile: " + currentTile + "\n");
 
     //Draw note
     voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //have to make sure currentRow is correct
 
     // increment tile counter
     currentTile++;
-    //console.log("currentTile in drawNote: " + currentTile);
+    ////console.log("currentTile in drawNote: " + currentTile);
   }
   else {
-    //console.log("No note");
+    ////console.log("No note");
   }
   
 }
@@ -1038,9 +1046,9 @@ const drawNote = (inNote) => {
 function playNote(key){
 
   var currentNote = key.dataset.note;
-  console.log("key: " + currentNote);
-  //console.log("type: " + typeof(currentNote));
-  //console.log(guessRows);
+  //console.log("key: " + currentNote);
+  ////console.log("type: " + typeof(currentNote));
+  ////console.log(guessRows);
 
   //store note in guessRows matrix
   guessRows[currentRow][currentTile] = currentNote;
@@ -1050,7 +1058,7 @@ function playNote(key){
   tile.setAttribute('data', currentNote);
 
   const noteAudio = document.getElementById(key.dataset.note);
-  //console.log("key: "+noteAudio);
+  ////console.log("key: "+noteAudio);
   noteAudio.currentTime = 0;
   noteAudio.play();
   key.classList.add('active');
@@ -1062,7 +1070,7 @@ function playNote(key){
 
   /*//const currentNoteName = conversionLookup[currentNote].noteName;
   const currentNoteName = convertPitch(currentNote);
-  console.log(currentNoteName)
+  //console.log(currentNoteName)
 
   var staveNote = [
     // A quarter-note.
@@ -1127,36 +1135,36 @@ let blackOctaveShift = 0;
 
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Enter') { 
-    //console.log('Enter is pressed!');
+    ////console.log('Enter is pressed!');
     let keyButton = {id:"Enter"};
     editNote(keyButton);
   } else if (e.code === "Backspace" || e.code === "Delete") {
-    //console.log('Delete is pressed!');
+    ////console.log('Delete is pressed!');
     let keyButton = {id:"Delete"};
     editNote(keyButton);
   }
   if (e.key === '1') {
-    console.log("octave shift for keyboard: 0")
+    //console.log("octave shift for keyboard: 0")
     whiteOctaveShift = 0;
     blackOctaveShift = 0;
   } else if(e.key === '2') {
-    console.log("octave shift for keyboard: 7")
+    //console.log("octave shift for keyboard: 7")
     whiteOctaveShift = 7;
     blackOctaveShift = 5;
   } //else {
   if (e.repeat) return
   const key = e.key;
-  console.log("e.key: " + e.key);
+  //console.log("e.key: " + e.key);
   const whiteKeyIndex = WHITE_KEYS.indexOf(key); //+ whiteOctaveShift; //can't have addition of octaveShift at this step
   const blackKeyIndex = BLACK_KEYS.indexOf(key); //+ blackOctaveShift;
-  //console.log("keydown event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
+  ////console.log("keydown event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
   if (!isGameOver && currentRow <= 5 & currentTile <= 4){
     if (whiteKeyIndex > -1 && whiteKeyIndex <= 14) {
-      //console.log("whiteKeyIndex: " + whiteKeyIndex)
+      ////console.log("whiteKeyIndex: " + whiteKeyIndex)
       playNote(whiteKeys[whiteKeyIndex + whiteOctaveShift]);
     }
     if (blackKeyIndex > -1 & blackKeyIndex <= 9) {
-      //console.log("blackKeyIndex: " + blackKeyIndex)
+      ////console.log("blackKeyIndex: " + blackKeyIndex)
       playNote(blackKeys[blackKeyIndex + blackOctaveShift]);
     }
   }
@@ -1166,11 +1174,11 @@ document.addEventListener('keydown', (e) => {
 
 keys.forEach(key => {
   key.addEventListener('click', () => {
-    console.log("click event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
+    //console.log("click event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
 
     if(!isGameOver && currentRow <= 5 & currentTile <= 4){
       playNote(key);
-      //console.table(guessRows)
+      ////console.table(guessRows)
     }
   });
 });
