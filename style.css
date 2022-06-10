@@ -203,6 +203,9 @@ body {
   /*.tile-container svg {
     transform: scale(0.75);
   }*/
+  .message-container p{
+    font-size: .5rem;
+  }
 
 }
 
@@ -255,11 +258,45 @@ body {
   }
 
   .title {
+    font-size: .8rem;
+  }
+
+  .modal-content {
+    font-size: 0.5rem !important;
+  }
+
+  .message-container p{
+    font-size: .5rem;
+  }
+
+}
+
+@media only screen and (min-width: 540px) and (min-height: 900px){
+
+  .message-container p{
+    font-size: 2rem;
+  }
+
+  .tile-container svg {
+    transform: scale(.8); /*translate(10%,0%); /*seems to affect responsive resizing*/
+    top: 0;
+    left: 0; /*works pretty well*/
+    /*top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;*/
+  }
+
+  .title {
     font-size: 1rem;
   }
 
   .modal-content {
     font-size: 0.5rem !important;
+  }
+
+  .message-container p{
+    font-size: .5rem;
   }
 
 }
@@ -344,6 +381,10 @@ body {
   #help-modal-content img {
     width: 80%;
     height: 80%;
+  }
+
+  .message-container p{
+    font-size: .8rem;
   }
   
 }
@@ -465,12 +506,17 @@ body {
   .tile-container svg {
     transform: scale(0.9); 
   }
+
+  .message-container p{
+    font-size: 1.2rem;
+  }
+
 }
 
 @media only screen and (min-width: 1024px) {
   
   .title {
-    font-size: 2rem;
+    font-size: 1.7rem;
   }
 
   .modal button {
@@ -488,6 +534,11 @@ body {
   .tile-container svg {
     transform: scale(1.2) !important; 
   }
+
+  .message-container p{
+    font-size: .8rem;
+  }
+
 }
 
 @media only screen and (min-width: 1024px) and (min-height: 768px) {
@@ -512,6 +563,11 @@ body {
   .tile-container svg {
     transform: scale(1.2) !important; 
   }
+
+  .message-container p{
+    font-size: 1.5rem !important;
+  }
+
 }
 
 @media only screen and (min-width: 1024px) and (min-height: 1300px) {
@@ -543,6 +599,10 @@ body {
     left: 0;
     width: 100% !important;
     height: 100% !important;*/
+  }
+
+  .message-container p{
+    font-size: 1.2rem;
   }
 
 }
@@ -602,6 +662,10 @@ body {
     left: 0;
     width: 100% !important;
     height: 100% !important;*/
+  }
+
+  .message-container p{
+    /*font-size: 5.5rem !important;*/
   }
 
 }
@@ -664,6 +728,9 @@ body {
   border-radius: 5px;
   padding: 5px;
   margin: 0;
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
 }
 
 .modal {
@@ -729,6 +796,17 @@ body {
   left: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
+}
+
+#stats-modal-content button {
+  background-color: #4d8459;
+  color: gainsboro;
+  border-radius: 5%;
+  display: none;
+}
+
+#stats-modal-content #share-text {
+  display: none;
 }
 
 .modal-content {

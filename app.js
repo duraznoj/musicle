@@ -73,6 +73,8 @@ Storage.prototype.getObj = function(key) {
 
 const WHITE_KEYS = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\''];
 const BLACK_KEYS = ['w', 'e', 't', 'y', 'u', 'o', 'p'];
+//const WHITE_KEYS_OCTAVE_UP = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k'];
+//const BLACK_KEYS_OCTAVE_UP = ['w', 'e', 't', 'y', 'u'];
 
 //create corresponding arrays for note names for use with vexflow
 //define two arrays - one for flats and one for sharps so that we can draw the appropriate note for the given key signature
@@ -127,6 +129,7 @@ let yPos;
 
 /*boolean for game status*/
 let isGameOver = false;
+let winningRow = 'X';
 
 const VF = Vex.Flow;
 //const contextArr = [];
@@ -270,7 +273,7 @@ const checkDeviceResolution = () => {
       xPos = devResLookup[i].xPos;
       yPos = devResLookup[i].yPos;
       ////console.log("mediaQuery true: " + true);
-      ////console.log("devRes: " + deviceWidth);
+      //console.log("devRes: " + deviceWidth);
     }
   }
 
@@ -544,7 +547,8 @@ function resetGameState() {
   window.localStorage.removeItem("checkRows");
   window.localStorage.removeItem("currentRow");
   window.localStorage.removeItem("isGameOver");
-  window.localStorage.removeItem("hardMode");
+  window.localStorage.removeItem("winningRow");
+  //window.localStorage.removeItem("hardMode");
   window.localStorage.removeItem("hardModeDisabled");
   //window.localStorage.removeItem("songNamesList");
   //window.localStorage.removeItem("staveRows");
@@ -625,6 +629,8 @@ const initLocalStorage = () => {
       isGameOver = window.localStorage.getItem("isGameOver");
       ////console.log("storedIsGameOver: " + isGameOver);
 
+      winningRow = window.localStorage.getItem("winningRow");
+
       //hardMode = window.localStorage.getObj("hardMode") || 0;
       ////console.log("storedHardMode: " + hardMode);
 
@@ -633,10 +639,8 @@ const initLocalStorage = () => {
 
       //hardModeCheckBox.disabled = false;
 
-
       //create tiles
       createTiles();
-
 
       //check device resolution
       //checkDeviceResolution();
@@ -819,7 +823,7 @@ const showMessage = (message) => {
     const messageElement = document.createElement('p');
     messageElement.textContent = message;
     messageDisplay.append(messageElement);
-    setTimeout(() => messageDisplay.removeChild(messageElement), 4000);
+    setTimeout(() => messageDisplay.removeChild(messageElement), 2000);
   }
 }
 
@@ -873,10 +877,8 @@ const flipTile = () => {
     uniqueGuesses.forEach((prevGuess, prevIdx) => {
       if(hardMode && !currentRowGuess.includes(prevGuess) && currentRow > 0){
         hardModeViolated = true;
-
-        if(prevIdx === 0){ //only show warning message once
-          showMessage("MUST USE GREEN/YELLOW TILES FROM PREVIOUS GUESSES");
-        }
+        //console.log("hardModeviolated");
+        showMessage("MUST USE GREEN/YELLOW TILES FROM PREVIOUS GUESSES");
       }
     });
 
@@ -967,8 +969,10 @@ const editNote = (button) => {
       showMessage("OUTSTANDING!");
       showMessage("TREBLE " + currentJSONIndex);
       showMessage("SONG: " + songName);
+      winningRow = currentRow + 1;
       isGameOver = true;
       window.localStorage.setItem('isGameOver', isGameOver);
+      window.localStorage.setItem('winningRow', winningRow);
       window.localStorage.setItem('currentRow', currentRow);
       window.localStorage.setObj('checkRows', checkRows);
       window.localStorage.setObj('guessRows', guessRows);
@@ -978,20 +982,24 @@ const editNote = (button) => {
       window.localStorage.setItem("currentStreak", currentStreak);
       totalWins = ((Number(totalWins)) + 1).toString();
       window.localStorage.setItem("totalWins", totalWins);
+      updateShareMessage();
       return;
     } else if(currentRow >= 5 && !isGameOver){
       showMessage("GAME OVER");
       showMessage("TREBLE " + currentJSONIndex);
       showMessage("SONG: " + songName);      
       isGameOver = true;
+      winningRow = 'X';
       window.localStorage.setItem('isGameOver', isGameOver);
+      window.localStorage.setItem('winningRow', winningRow);
       window.localStorage.setItem('currentRow', currentRow);
       window.localStorage.setObj('checkRows', checkRows);
       window.localStorage.setObj('guessRows', guessRows);
-      totalGames = ((Number(totalGames)) + 1).toString()
+      totalGames = ((Number(totalGames)) + 1).toString();
       window.localStorage.setItem("totalGames", totalGames);
       currentStreak = 0;
       window.localStorage.setItem("currentStreak", currentStreak);
+      updateShareMessage();
       return;
     } else if(currentRow < 5){
       currentRow++;
@@ -1130,10 +1138,19 @@ const whiteKeys = document.querySelectorAll('.key.white'); //have to add period 
 const blackKeys = document.querySelectorAll('.key.black');
 const buttons = document.querySelectorAll('.piano-container button');
 
+//define variables for keydown logic
+let whiteKeyIndex;
+let blackKeyIndex;
+
 let whiteOctaveShift = 0;
 let blackOctaveShift = 0;
 
+let maxWhiteKeyIdx = 10;
+let maxBlackKeyIdx = 6;
+
 document.addEventListener('keydown', (e) => {
+  //let octaveShift = false;
+  
   if (e.code === 'Enter') { 
     ////console.log('Enter is pressed!');
     let keyButton = {id:"Enter"};
@@ -1147,25 +1164,48 @@ document.addEventListener('keydown', (e) => {
     //console.log("octave shift for keyboard: 0")
     whiteOctaveShift = 0;
     blackOctaveShift = 0;
+    maxWhiteKeyIdx = 10;
+    maxBlackKeyIdx = 6;
+    //octaveShift = false;
   } else if(e.key === '2') {
-    //console.log("octave shift for keyboard: 7")
+    console.log("octave shift for keyboard: 7")
     whiteOctaveShift = 7;
     blackOctaveShift = 5;
-  } //else {
+    maxWhiteKeyIdx = 7;
+    maxBlackKeyIdx = 4;
+    //octaveShift = true;
+  } else if (e.key === "CapsLock") { 
+    showMessage("CAPS LOCK IS TURNED ON - TURN OFF CAPS LOCK TO USE MUSICAL TYPING")
+    //console.log("caps lock pressed");
+  }
   if (e.repeat) return
   const key = e.key;
   //console.log("e.key: " + e.key);
-  const whiteKeyIndex = WHITE_KEYS.indexOf(key); //+ whiteOctaveShift; //can't have addition of octaveShift at this step
-  const blackKeyIndex = BLACK_KEYS.indexOf(key); //+ blackOctaveShift;
-  ////console.log("keydown event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
+  //console.log(maxBlackKeyIdx);
+
+  //console.log(octaveShift);
+  /*if(!octaveShift) {
+    whiteKeyIndex = WHITE_KEYS.indexOf(key); //+ whiteOctaveShift; //can't have addition of octaveShift at this step
+    blackKeyIndex = BLACK_KEYS.indexOf(key); //+ blackOctaveShift;
+  } else if(octaveShift) {
+    whiteKeyIndex = WHITE_KEYS_OCTAVE_UP.indexOf(key); //+ whiteOctaveShift; //can't have addition of octaveShift at this step
+    blackKeyIndex = BLACK_KEYS_OCTAVE_UP.indexOf(key); //+ blackOctaveShift;
+  }*/
+
+  whiteKeyIndex = WHITE_KEYS.indexOf(key); //+ whiteOctaveShift; //can't have addition of octaveShift at this step
+  blackKeyIndex = BLACK_KEYS.indexOf(key); //+ blackOctaveShift;
+  //console.log("keydown event listener- currentRow: " + currentRow + " currentTile: " + currentTile + " isGameOver: " + isGameOver);
   if (!isGameOver && currentRow <= 5 & currentTile <= 4){
-    if (whiteKeyIndex > -1 && whiteKeyIndex <= 14) {
-      ////console.log("whiteKeyIndex: " + whiteKeyIndex)
-      playNote(whiteKeys[whiteKeyIndex + whiteOctaveShift]);
-    }
-    if (blackKeyIndex > -1 & blackKeyIndex <= 9) {
-      ////console.log("blackKeyIndex: " + blackKeyIndex)
-      playNote(blackKeys[blackKeyIndex + blackOctaveShift]);
+    //if (whiteKeyIndex > -1 && whiteKeyIndex <= 14) {
+      if (whiteKeyIndex > -1 && whiteKeyIndex <= maxWhiteKeyIdx) {
+        //console.log("max: " + maxWhiteKeyIdx);
+        //console.log("whiteKeyIndex: " + whiteKeyIndex)
+        playNote(whiteKeys[whiteKeyIndex + whiteOctaveShift]);
+      }
+    //if (blackKeyIndex > -1 & blackKeyIndex <= 9) {
+      if (blackKeyIndex > -1 & blackKeyIndex <= maxBlackKeyIdx) {
+        //console.log("blackKeyIndex: " + blackKeyIndex)
+        playNote(blackKeys[blackKeyIndex + blackOctaveShift]);
     }
   }
 
@@ -1204,4 +1244,63 @@ initLocalStorage();
 initModal("help");
 initModal("stats");
 initModal("settings");
+
+
+//function to add share results button and copy results to clipboard
+const updateShareMessage = () => {
+  const greenSquare = String.fromCodePoint(0x1F7E9);
+  const yellowSquare = String.fromCodePoint(0x1F7E8);
+  const greySquare = String.fromCodePoint(0x2B1C);
+  let shareGraph = "";
+  //let winningRow;
+
+  checkRows.forEach((row, rowIdx) => {
+    row.forEach((tile, tileIdx) => {
+      switch(tile.color) {
+        case "green-overlay":
+          shareGraph+=greenSquare + " ";
+          //console.log("green");
+          break;
+        case "yellow-overlay":
+          shareGraph+=yellowSquare + " ";
+          //console.log("yellow");
+          break;
+        case "grey-overlay":
+          shareGraph+=greySquare + " ";
+          //console.log("grey");
+          break;
+      }
+      if(tileIdx === 4 && rowIdx < 5) {
+        shareGraph += "\n";
+      }
+    });
+  });
+
+  //if game has been won, get the row which had the winning guess, otherwise show the loss
+  //gameWon ? winningRow = currentRow + 1 : winningRow = 'X'; 
+
+  //console.log(gameWon)
+  //winningRow = 0;
+
+  let shareMessage = "TREBLE " + currentJSONIndex + " " + winningRow + "/6\n" + shareGraph;
+  //console.log(shareMessage);
+
+  const shareButton = document.querySelector("#stats-modal-content button");
+  const shareText = document.getElementById("share-text");
+  shareButton.style.display = "block";
+  shareButton.addEventListener('click', () => {
+    navigator.clipboard.writeText(shareMessage);
+    shareText.style.display = "block";
+    setTimeout(() => shareText.style.display = "none", 2000);
+  });
+
+  //update the stats
+  updateStatsModal();
+
+  //show the modal at the end so the user knows there is a result to share
+  const statsModalContent = document.querySelector("#stats-modal-content");
+  statsModalContent.style.display = "block";
+}
+
+//updateGraph();
 
