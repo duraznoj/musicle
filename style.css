@@ -10,7 +10,7 @@ body {
   font-family: Arial, Geneva, Helvetica, sans-serif;
   color: white;
   background-color: #121213;
-  /*background-color: #ffffff;*/
+  /*background-color: rgb(109, 156, 163);*/
   padding: 0%;
   /*padding: 42%;*/
   margin: 0%;
@@ -821,6 +821,9 @@ body {
   /*z-index: 2;*/
   /*left: 0;
   top: 0;*/
+  border: gainsboro, black;
+  border-style: double;
+  border-width: 3px;
   border-radius: 2%;
   /*width: 100%;
   height: 100%;*/
