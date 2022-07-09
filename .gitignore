@@ -1,2 +1,12 @@
-ignore/
 .DS_Store
+ignore/
+
+# webpack bundle
+dist/main.js
+dist/main.js.LICENSE.txt
+
+#node files
+node_modules/
+npm-debug.log*
+stats.json
+
