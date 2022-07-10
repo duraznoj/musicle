@@ -14,7 +14,7 @@ import melodyJSON from "../melody_processing/processed/intro_pitches.json";
 //we can also map the objects to a new array, which we need to do anyway to compare between same type;
 //let checkTreble = treble.map(val => val.toString());
 
-//Get current date in yyyyMMdd format,
+//Get current date in desired format,
 const currentDate = DateTime.utc().toFormat('yyyyMMddHHmm'); //UTC time - use minutes for testing
 
 //create array of json indices in random order (generated with basic python script)
@@ -821,7 +821,7 @@ function playNote(key){
 pitches.forEach((pitch, index) => {
   const audioElement = document.createElement('audio');
   audioElement.setAttribute('id', pitch);
-  audioElement.src = "../notes/notes_" + pitch + ".mp3"; //use mp3 for smaller file sizes
+  audioElement.src = "notes/notes_" + pitch + ".mp3"; //use mp3 for smaller file sizes
   body.append(audioElement);
 });
 

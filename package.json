@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --progress --watch",
-    "start": "open-cli dist/index.html"
+    "start": "open-cli index.html"
   },
   "repository": {
     "type": "git",
