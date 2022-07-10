@@ -1,5 +1,3 @@
-//'use strict';
-
 //CONSTANTS AND IMPORTS
 import { DateTime } from "luxon";
 import { Vex } from "vexflow";
