@@ -1,3 +1,5 @@
+//'use strict';
+
 //CONSTANTS AND IMPORTS
 import { DateTime } from "luxon";
 import { Vex } from "vexflow";
@@ -466,9 +468,8 @@ const initLocalStorage = () => {
         });
       });
 
-      if(!storedCurrentRow) {
-
-      } else {
+      //if user has completed one row, redraw all stave notes and tile colors up to that current row
+      if(storedCurrentRow) {
         guessRows.slice(0, storedCurrentRow+1).forEach((guessRow, guessRowIndex) => { //only want to iterate up to the currentRow
   
           guessRow.forEach((guess, guessIndex) => {
@@ -611,25 +612,10 @@ const showMessage = (message) => {
     messageDisplay.append(messageElement);
     setTimeout(() => messageDisplay.removeChild(messageElement), 4000);
   } else if(message !== "MUST USE GREEN/YELLOW TILES FROM PREVIOUS GUESSES") {
-
-    if(message === "TREBLE IS READY TO PLAY!") {
-      //remove all existing messages
-      while (messageDisplay.firstChild) {
-        messageDisplay.removeChild(messageDisplay.firstChild);
-      }
-    }
-
     const messageElement = document.createElement('p');
     messageElement.textContent = message;
     messageDisplay.append(messageElement);
-    //setTimeout(() => messageDisplay.removeChild(messageElement), 2000);
-
-    if(message === "TREBLE IS LOADING...") {
-      //set longer loading message if waiting for data from Treble API
-      setTimeout(() => messageDisplay.removeChild(messageElement), 10000);
-    } else {
-      setTimeout(() => messageDisplay.removeChild(messageElement), 2000);
-    }
+    setTimeout(() => messageDisplay.removeChild(messageElement), 2000);
   }
 }
 
@@ -991,32 +977,3 @@ const updateShareMessage = () => {
   const statsModalContent = document.querySelector("#stats-modal-content");
   statsModalContent.style.display = "block";
 }
-
-//EXPORTS
-//export functions for testing
-const func = () => {
-  return 1;
-}
-
-export { func }
-
-export { convertPitch }
-/*module.exports = {
-  shiftPitches: shiftPitches,
-  checkDeviceResolution: checkDeviceResolution,
-  reDrawStaves: reDrawStaves,
-  getTreble: getTreble,
-  convertPitch: convertPitch,
-  createTiles: createTiles,
-  createContext: createContext,
-  resetGameState: resetGameState,
-  initLocalStorage: initLocalStorage,
-  updateStatsModal: updateStatsModal,
-  initModal: initModal,
-  showMessage: showMessage,
-  flipTile: flipTile,
-  editNote: editNote,
-  drawNote: drawNote,
-  playNote: playNote,
-  updateShareMessage: updateShareMessage,
-}*/
