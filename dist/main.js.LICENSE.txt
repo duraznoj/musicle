@@ -1,0 +1,5 @@
+/*!
+ * VexFlow 4.0.3   2022-05-16T23:29:47.258Z   1874642be3f8ba11bf7b39ca94d9a36b32a6e8c0
+ * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
+ * https://www.vexflow.com   https://github.com/0xfe/vexflow
+ */
