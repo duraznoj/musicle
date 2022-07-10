@@ -2,12 +2,8 @@
   "name": "treble",
   "version": "1.0.0",
   "description": "A Wordle-inspired game to guess popular musical phrases!",
-  "private": true,
-  "jest": {
-    "testEnvironment": "jsdom"
-  },
+  "private": "true",
   "scripts": {
-    "test": "jest",
     "build": "webpack",
     "watch": "webpack --progress --watch",
     "start": "open-cli dist/index.html"
@@ -31,9 +27,6 @@
     "@babel/node": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "babel-loader": "^8.2.5",
-    "jest": "^28.1.1",
-    "jest-environment-jsdom": "^28.1.1",
-    "nodemon": "^2.0.19",
     "webpack": "^5.73.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.10.0",
