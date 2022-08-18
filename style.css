@@ -78,9 +78,11 @@ body {
   /*grid-template-rows: 5% 65% 30%;*/
   /*grid-template-columns: 100%;*/
   /*grid-gap: 10px; necessary?*/
-  width: 100vw;
-  height: 100vh;
-  justify-content: center;
+  width: 96vw;
+  height: 96vh;
+  padding: 2vh 2vw 2vh 2vw;
+  /*justify-content: center;
+  align-items: center;*/
 }
 
 .tile-container {

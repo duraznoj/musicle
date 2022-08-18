@@ -139,7 +139,7 @@ let lastPopulatedRow = 0;
 //let guessRows = Array(6).fill().map(() => Array.fill(5));
 //console.table(guessRows);
 
-let guessRows = Array(6).fill().map(() => Array(5).fill());
+let guessRows = Array(6).fill(null).map(() => Array(5).fill(null));
 //console.table(guessRows);
 
 //console.log(typeof guessRows[0][0])
@@ -715,7 +715,8 @@ const editNote = (button) => {
     currentTile--; //go back to previous tile
     const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
-    guessRows[currentRow][currentTile] = ''; //delete note from matrix
+    //guessRows[currentRow][currentTile] = ''; //delete note from matrix
+    guessRows[currentRow][currentTile] = null; //delete note from matrix
   }
   //if the enter button is pressed and 5 tiles have been populated then check if the guess is correct
   else if(button.id == "enter" && currentTile > 4){
