@@ -943,17 +943,23 @@ input:checked + .slider:before {
   /*align-items: end; !important*/
 }
 
-#Delete {
+.edit-buttons {
+  display: flex;
+  flex-direction: column;
+  width: calc(100%/16);
+}
+
+#delete {
   background-color: #844d4d;
 }
 
-#Enter {
+#enter {
   background-color: #4d8459;
 }
 
 .piano-container button {
   /*background-color: #699eb0;*/
-  width: calc(100%/17);
+  /*width: calc(100%/16);*/
   height: 40%;
   border-radius: 10%;
   font-weight: bold;
@@ -979,7 +985,7 @@ input:checked + .slider:before {
   /*--width: 70px;*/
   height: 95%;
   /*--width: calc(100%/16);*/
-  width: calc(100%/17);
+  width: calc(100%/16);
   background-color: white;
   border: 1px solid #333;
 }

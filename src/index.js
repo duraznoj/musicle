@@ -140,7 +140,7 @@ let lastPopulatedRow = 0;
 //console.table(guessRows);
 
 let guessRows = Array(6).fill().map(() => Array(5).fill());
-console.table(guessRows);
+//console.table(guessRows);
 
 //console.log(typeof guessRows[0][0])
 
@@ -690,12 +690,15 @@ const flipTile = () => {
         const dataNote = tile.getAttribute('data'); //data_note = key.dataset.note is a string
         const currentKey = document.querySelector('[data-note="' + dataNote + '"]');
 
-        setTimeout(() => {
+        tile.classList.add(guess[index].color);
+        currentKey.classList.add(guess[index].color);
+
+        /*setTimeout(() => {
           tile.classList.add('flip');
           tile.classList.add(guess[index].color);
           currentKey.classList.add(guess[index].color);
 
-        }, 300 * index);
+        }, 300 * index);*/
         
       });
 
@@ -708,14 +711,14 @@ const flipTile = () => {
 /*function to handle what happens when you click the enter or delete buttons*/
 const editNote = (button) => {
 
-  if(button.id == "Delete" && currentTile > 0){
+  if(button.id == "delete" && currentTile > 0){
     currentTile--; //go back to previous tile
     const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
     guessRows[currentRow][currentTile] = ''; //delete note from matrix
   }
   //if the enter button is pressed and 5 tiles have been populated then check if the guess is correct
-  else if(button.id == "Enter" && currentTile > 4){
+  else if(button.id == "enter" && currentTile > 4){
     const guess = guessRows[currentRow].join('');
     const trebleJoin = treble.join('');
 
@@ -811,7 +814,7 @@ function playNote(key){
   /* this code seems to be where it is slowing down */
   //store note in guessRows matrix
   guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
-  console.table(guessRows);
+  //console.table(guessRows);
 
   /*//add note value to element data value
   const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile);
@@ -842,10 +845,10 @@ pitches.forEach((pitch, index) => {
 });
 
 //create enter button
-const enterButton = document.createElement('button');
+/*const enterButton = document.createElement('button');
 enterButton.setAttribute('id', 'Enter');
 enterButton.innerHTML = '\u23CE';
-piano.append(enterButton);
+piano.append(enterButton);*/
 
 //create html elements to represent keys for piano and append relevant properties from lookup table*/
 pitches.forEach((pitch, index) => {
@@ -856,10 +859,10 @@ pitches.forEach((pitch, index) => {
 });
 
 //create delete button
-const deleteButton = document.createElement('button');
+/*const deleteButton = document.createElement('button');
 deleteButton.setAttribute('id', 'Delete');
 deleteButton.innerHTML = '\u232b';
-piano.append(deleteButton);
+piano.append(deleteButton);*/
 
 //get newly created elements
 const keys = document.querySelectorAll('.key');
