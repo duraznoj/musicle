@@ -237,7 +237,7 @@ const checkDeviceResolution = () => {
       yPos = devResLookup[i].yPos;
     }
   }
-
+  
   let lastSVG = document.querySelector("#guessRow-5-tile-4 > svg");
 
   //if the last tile has been drawn, then re-render staves (in other words- waiting for getTreble to finish)

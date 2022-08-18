@@ -115,10 +115,14 @@ body {
 .tile-container .guessRow {
   display: flex; /*need this so rows are in the right position*/
   /*height: calc(100%/6); /*6 rows*/
-  height: calc((0.97 * 100vw) / 5); /*for mobile screens*/
+  /*height: calc((0.97 * 100vw) / 5); /*for mobile screens*/
+  /*height: calc((var(--vh) * 100%) / 5); /*for mobile screens*/
+
+  /*height: calc(99% / 5);*/
+  /*height: 100%;
+  width: 97%;*/
   width: 97%;
-  /*width: 100%;
-  height: 100%;*/
+  height: 15%;
   align-items: center;
   justify-content: center;
 }
@@ -186,8 +190,11 @@ body {
 
   .tile-container .guessRow {
     /*height: calc((0.99 * 100vw) / 5);*/
-    height: calc((99%) / 5);
-    width: 99%;
+    /*height: 100%;*/
+    /*height: calc((var(--vh) * 97%) / 5); /*for mobile screens*/
+
+    /*width: 99%;*/
+    height: 15%;
   }
 
   .tile-container .tile {
@@ -206,16 +213,11 @@ body {
     height: 100% !important;*/
   }
 
-  
-  /*.tile-container .guessRow {
-    height: calc((1 * 100vw) / 5);
-    width: 100%;
-  }*/
-
   /*.tile-container svg {
     transform: scale(0.75);
   }*/
-  .message-container p{
+
+  .message-container p {
     font-size: .5rem;
   }
 
@@ -231,10 +233,11 @@ body {
     font-size: 0.7rem !important;
   }
 
-  /*.tile-container .guessRow {
-    height: calc((0.97 * 100vw) / 5);
-    width: 97% !important;
-  }*/
+  .tile-container .guessRow {
+    /*height: calc((0.97 * 100vw) / 5);
+    width: 97% !important;*/
+    height: 15%;
+  }
 
   .tile-container svg {
     transform: scale(0.85);
@@ -340,7 +343,9 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(95%/6);
+    /*height: calc(95%/6);*/
+    /*height: 100%;*/
+    height: 15%;
   }
 
 }
@@ -364,7 +369,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(85%/6);
+    /*height: calc(85%/6);*/
+    height: 14%;
   }
 
 }
@@ -376,7 +382,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(95%/6);
+    /*height: calc(95%/6);*/
+    height: 15%;
   }
 
   .tile-container svg {
@@ -413,7 +420,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(85%/6);
+    /*height: calc(85%/6);*/
+    height: 14%;
   }
   
   .tile-container svg {
@@ -444,7 +452,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(95%/6);
+    /*height: calc(95%/6);*/
+    height: 15%;
   }
 
   .tile-container svg {
@@ -460,7 +469,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(65%/6);
+    /*height: calc(65%/6);*/
+    height: 11%;
   }
 
   .modal-content {
@@ -512,7 +522,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(35%/6);
+    /*height: calc(35%/6);*/
+    height: 6%;
   }
 
   .tile-container svg {
@@ -540,7 +551,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(95%/6); 
+    /*height: calc(95%/6); */
+    height: 15%;
   }
 
   .tile-container svg {
@@ -569,7 +581,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(80%/6); 
+    /*height: calc(80%/6); */
+    height: 14%;
   }
 
   .tile-container svg {
@@ -598,7 +611,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(50%/6); 
+    /*height: calc(50%/6); */
+    height: 8%;
   }
 
   .tile-container svg {
@@ -634,7 +648,8 @@ body {
   }
   
   .tile-container .guessRow {
-    height: calc(70%/6); 
+    /*height: calc(70%/6); */
+    height: 12%;
   }
 
   .tile-container svg {
@@ -661,7 +676,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc(80%/6); 
+    /*height: calc(80%/6); */
+    height: 14%;
   }
 
   .tile-container svg {
