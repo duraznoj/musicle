@@ -833,7 +833,7 @@ function playNote(key){
 
   drawNote(currentNote);
 
-  if(currentTile === 1) {
+  /*if(currentTile === 1) {
     drawNoteBuffer = Array(5).fill(null); //reassign array to array of nulls
   }
   //console.log(currentTile)
@@ -844,7 +844,7 @@ function playNote(key){
   if(currentTile === 5) {
     drawNoteBuffer.forEach((bufNote, bufIdx) => guessRows[currentRow][bufIdx] = bufNote); //only at the last tile do we update guessRows
     //console.table(guessRows);
-  }
+  }*/
 
 }
 
