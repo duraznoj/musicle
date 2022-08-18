@@ -237,7 +237,7 @@ const checkDeviceResolution = () => {
       yPos = devResLookup[i].yPos;
     }
   }
-  
+
   let lastSVG = document.querySelector("#guessRow-5-tile-4 > svg");
 
   //if the last tile has been drawn, then re-render staves (in other words- waiting for getTreble to finish)
@@ -816,20 +816,20 @@ function playNote(key){
 
   /* this code seems to be where it is slowing down */
   //store note in guessRows matrix
-  //guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
+  guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
   //console.table(guessRows);
 
-  /*//add note value to element data value
+  //add note value to element data value
   const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile);
   tile.setAttribute('data', currentNote);
 
   const noteAudio = document.getElementById(key.dataset.note);
   noteAudio.currentTime = 0;
-  //noteAudio.play();
+  noteAudio.play();
   key.classList.add('active');
   noteAudio.addEventListener('ended', () => {
     key.classList.remove('active');
-  })*/
+  });
 
   drawNote(currentNote);
 
