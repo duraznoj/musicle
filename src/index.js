@@ -153,6 +153,8 @@ let guessRows = Array(6).fill(null).map(() => Array(5).fill(null));
   ['', '', '', '', '']
 ];*/
 
+let drawNoteBuffer = Array(5).fill(null);
+
 let contextRows = [
   ['', '', '', '', ''],
   ['', '', '', '', ''],
@@ -711,7 +713,7 @@ const flipTile = () => {
 /*function to handle what happens when you click the enter or delete buttons*/
 const editNote = (button) => {
 
-  if(button.id == "delete" && currentTile > 0){
+  if(button.id == "Delete" && currentTile > 0){
     currentTile--; //go back to previous tile
     const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
@@ -719,7 +721,7 @@ const editNote = (button) => {
     guessRows[currentRow][currentTile] = null; //delete note from matrix
   }
   //if the enter button is pressed and 5 tiles have been populated then check if the guess is correct
-  else if(button.id == "enter" && currentTile > 4){
+  else if(button.id == "Enter" && currentTile > 4){
     const guess = guessRows[currentRow].join('');
     const trebleJoin = treble.join('');
 
@@ -807,14 +809,14 @@ const drawNote = (inNote) => {
 //function to play note audio, store note in guessRows matrix, and render note on vexflow staves in the tile elements
 function playNote(key){
 
-  //var currentNote = key.dataset.note;
-  const currentNote = key.dataset.note;
+   //var currentNote = key.dataset.note;
+   const currentNote = key.dataset.note;
 
   //console.log(`typeof currentNote: ${typeof currentNote}`); currentNote has string type
 
   /* this code seems to be where it is slowing down */
   //store note in guessRows matrix
-  guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
+  //guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
   //console.table(guessRows);
 
   /*//add note value to element data value
@@ -830,7 +832,22 @@ function playNote(key){
   })*/
 
   drawNote(currentNote);
+
+  if(currentTile === 1) {
+    drawNoteBuffer = Array(5).fill(null); //reassign array to array of nulls
+  }
+  //console.log(currentTile)
+
+  drawNoteBuffer[currentTile - 1] = Number(currentNote); //push current note to the buffer (note that currentTile gets incremented during drawNote hence why we subtract 1 from it)
+  //console.table(drawNoteBuffer);
+
+  if(currentTile === 5) {
+    drawNoteBuffer.forEach((bufNote, bufIdx) => guessRows[currentRow][bufIdx] = bufNote); //only at the last tile do we update guessRows
+    //console.table(guessRows);
+  }
+
 }
+
 
 
 ////////////////////////////////// MAIN ///////////////////////////////////////

@@ -959,11 +959,11 @@ input:checked + .slider:before {
   width: calc(100%/16);
 }
 
-#delete {
+#Delete {
   background-color: #844d4d;
 }
 
-#enter {
+#Enter {
   background-color: #4d8459;
 }
 
