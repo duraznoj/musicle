@@ -136,14 +136,22 @@ let storedCurrentRow = 0;
 let len = 0;
 let lastPopulatedRow = 0;
 
-let guessRows = [
+//let guessRows = Array(6).fill().map(() => Array.fill(5));
+//console.table(guessRows);
+
+let guessRows = Array(6).fill().map(() => Array(5).fill());
+console.table(guessRows);
+
+//console.log(typeof guessRows[0][0])
+
+/*let guessRows = [
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', '']
-];
+];*/
 
 let contextRows = [
   ['', '', '', '', ''],
@@ -768,17 +776,20 @@ const drawNote = (inNote) => {
   if(inNote) {
     const currentNoteName = convertPitch(Number(inNote));
 
-    var staveNote = [
+    //var staveNote = [
+    const staveNote = [
       // A quarter-note.
       new VF.StaveNote({clef: "treble", keys: [currentNoteName + "/5"], duration: "q" }).setStem(new VF.Stem()),
     ];
 
     // Create a voice in 4/4 and add the note from above
-    var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+    // var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+    const voice = new VF.Voice({num_beats: 1,  beat_value: 4});
     voice.addTickables(staveNote);
 
     // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
-    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+    //var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+    const formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
     //Draw note
     voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //have to make sure currentRow is correct
@@ -792,11 +803,15 @@ const drawNote = (inNote) => {
 //function to play note audio, store note in guessRows matrix, and render note on vexflow staves in the tile elements
 function playNote(key){
 
-  var currentNote = key.dataset.note;
+  //var currentNote = key.dataset.note;
+  const currentNote = key.dataset.note;
+
+  //console.log(`typeof currentNote: ${typeof currentNote}`); currentNote has string type
 
   /* this code seems to be where it is slowing down */
   //store note in guessRows matrix
-  guessRows[currentRow][currentTile] = currentNote;
+  guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
+  console.table(guessRows);
 
   /*//add note value to element data value
   const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile);
