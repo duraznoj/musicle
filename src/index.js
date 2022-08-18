@@ -794,6 +794,7 @@ function playNote(key){
 
   var currentNote = key.dataset.note;
 
+  /*
   //store note in guessRows matrix
   guessRows[currentRow][currentTile] = currentNote;
 
@@ -807,7 +808,7 @@ function playNote(key){
   key.classList.add('active');
   noteAudio.addEventListener('ended', () => {
     key.classList.remove('active');
-  })
+  })*/
 
   drawNote(currentNote);
 }
