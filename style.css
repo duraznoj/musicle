@@ -973,6 +973,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center; 
   justify-content: center; 
+  touch-action: manipulation;
 
 }
 
