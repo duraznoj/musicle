@@ -794,11 +794,11 @@ function playNote(key){
 
   var currentNote = key.dataset.note;
 
-  /*
+  /* this code seems to be where it is slowing down */
   //store note in guessRows matrix
   guessRows[currentRow][currentTile] = currentNote;
 
-  //add note value to element data value
+  /*//add note value to element data value
   const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile);
   tile.setAttribute('data', currentNote);
 
