@@ -835,6 +835,14 @@ function playNote(key){
 
 ////////////////////////////////// MAIN ///////////////////////////////////////
 
+function fixHeight() {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight / 100}px`);
+};
+
+addEventListener('load', fixHeight);
+addEventListener('resize', fixHeight);
+addEventListener('orientationchange', fixHeight);
+
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 
 //create elements for list of note audio element

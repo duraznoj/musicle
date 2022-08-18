@@ -46,6 +46,7 @@ body {
   border-radius: 10%;
   align-items: center; 
   justify-content: center; 
+  touch-action: manipulation; /*to prevent zoom after double tap*/
 }
 
 #help,
@@ -78,9 +79,11 @@ body {
   /*grid-template-rows: 5% 65% 30%;*/
   /*grid-template-columns: 100%;*/
   /*grid-gap: 10px; necessary?*/
-  width: 96vw;
+  /*width: 96vw;
   height: 96vh;
-  padding: 2vh 2vw 2vh 2vw;
+  padding: 2vh 2vw 2vh 2vw;*/
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   /*justify-content: center;
   align-items: center;*/
 }
@@ -973,8 +976,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center; 
   justify-content: center; 
-  touch-action: manipulation;
-
+  touch-action: manipulation; /*to prevent zoom after double tap*/
 }
 
 .key {
