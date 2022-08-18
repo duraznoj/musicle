@@ -71,7 +71,8 @@ body {
     font-size: 1.5rem;
   }
 }
-.container{
+
+.container {
   display: grid;
   z-index: 2;
   grid-template-columns: 10% 80% 5% 5%;
@@ -184,7 +185,8 @@ body {
   }
 
   .tile-container .guessRow {
-    height: calc((0.99 * 100vw) / 5);
+    /*height: calc((0.99 * 100vw) / 5);*/
+    height: calc((99%) / 5);
     width: 99%;
   }
 
@@ -674,7 +676,7 @@ body {
     height: 100% !important;*/
   }
 
-  .message-container p{
+  .message-container p {
     /*font-size: 5.5rem !important;*/
   }
 
