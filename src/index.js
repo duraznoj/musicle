@@ -781,9 +781,9 @@ const drawNote = (inNote) => {
     var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
     //Draw note
-    console.log("draw note before, time: " + DateTime.utc().toFormat('yyyyMMddhhmmssS'));
+    console.log("draw note before, time: " + DateTime.utc().toFormat('yyyy/MM/dd/ hh:mm:ss:S'));
     voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //have to make sure currentRow is correct
-    console.log("draw note after, time: " + DateTime.utc().toFormat('yyyyMMddhhmmssS'));
+    console.log("draw note after, time: " + DateTime.utc().toFormat('yyyy/MM/dd/ hh:mm:ss:S'));
     // increment tile counter
     currentTile++;
   }
@@ -794,7 +794,7 @@ const drawNote = (inNote) => {
 function playNote(key){
 
   var currentNote = key.dataset.note;
-  console.log("currentNote: " + currentNote + " time: " + DateTime.utc().toFormat('yyyyMMddhhmmssS'));
+  console.log("currentNote: " + currentNote + " time: " + DateTime.utc().toFormat('yyyy/MM/dd/ hh:mm:ss:S'));
 
   //store note in guessRows matrix
   guessRows[currentRow][currentTile] = currentNote;
