@@ -136,24 +136,14 @@ let storedCurrentRow = 0;
 let len = 0;
 let lastPopulatedRow = 0;
 
-//let guessRows = Array(6).fill().map(() => Array.fill(5));
-//console.table(guessRows);
-
-let guessRows = Array(6).fill(null).map(() => Array(5).fill(null));
-//console.table(guessRows);
-
-//console.log(typeof guessRows[0][0])
-
-/*let guessRows = [
+let guessRows = [
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', ''],
   ['', '', '', '', '']
-];*/
-
-let drawNoteBuffer = Array(5).fill(null);
+];
 
 let contextRows = [
   ['', '', '', '', ''],
@@ -692,15 +682,12 @@ const flipTile = () => {
         const dataNote = tile.getAttribute('data'); //data_note = key.dataset.note is a string
         const currentKey = document.querySelector('[data-note="' + dataNote + '"]');
 
-        tile.classList.add(guess[index].color);
-        currentKey.classList.add(guess[index].color);
-
-        /*setTimeout(() => {
+        setTimeout(() => {
           tile.classList.add('flip');
           tile.classList.add(guess[index].color);
           currentKey.classList.add(guess[index].color);
 
-        }, 300 * index);*/
+        }, 300 * index);
         
       });
 
@@ -717,8 +704,7 @@ const editNote = (button) => {
     currentTile--; //go back to previous tile
     const context = contextRows[currentRow][currentTile][0]; //get context - consider making this a single value for all functions?
     context.svg.removeChild(context.svg.lastChild); //delete note from stave
-    //guessRows[currentRow][currentTile] = ''; //delete note from matrix
-    guessRows[currentRow][currentTile] = null; //delete note from matrix
+    guessRows[currentRow][currentTile] = ''; //delete note from matrix
   }
   //if the enter button is pressed and 5 tiles have been populated then check if the guess is correct
   else if(button.id == "Enter" && currentTile > 4){
@@ -782,20 +768,17 @@ const drawNote = (inNote) => {
   if(inNote) {
     const currentNoteName = convertPitch(Number(inNote));
 
-    //var staveNote = [
-    const staveNote = [
+    var staveNote = [
       // A quarter-note.
       new VF.StaveNote({clef: "treble", keys: [currentNoteName + "/5"], duration: "q" }).setStem(new VF.Stem()),
     ];
 
     // Create a voice in 4/4 and add the note from above
-    // var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
-    const voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+    var voice = new VF.Voice({num_beats: 1,  beat_value: 4});
     voice.addTickables(staveNote);
 
     // Format and justify the notes to 350 pixels (50 pixels left for key and time signatures).
-    //var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
-    const formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
+    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 350);
 
     //Draw note
     voice.draw(contextRows[currentRow][currentTile][0], contextRows[currentRow][currentTile][1]); //have to make sure currentRow is correct
@@ -809,15 +792,10 @@ const drawNote = (inNote) => {
 //function to play note audio, store note in guessRows matrix, and render note on vexflow staves in the tile elements
 function playNote(key){
 
-   //var currentNote = key.dataset.note;
-   const currentNote = key.dataset.note;
+  var currentNote = key.dataset.note;
 
-  //console.log(`typeof currentNote: ${typeof currentNote}`); currentNote has string type
-
-  /* this code seems to be where it is slowing down */
   //store note in guessRows matrix
-  guessRows[currentRow][currentTile] = Number(currentNote); //seems to be a point that slows it down
-  //console.table(guessRows);
+  guessRows[currentRow][currentTile] = currentNote;
 
   //add note value to element data value
   const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile);
@@ -825,40 +803,17 @@ function playNote(key){
 
   const noteAudio = document.getElementById(key.dataset.note);
   noteAudio.currentTime = 0;
-  noteAudio.play();
+  //noteAudio.play();
   key.classList.add('active');
   noteAudio.addEventListener('ended', () => {
     key.classList.remove('active');
-  });
+  })
 
   drawNote(currentNote);
-
-  /*if(currentTile === 1) {
-    drawNoteBuffer = Array(5).fill(null); //reassign array to array of nulls
-  }
-  //console.log(currentTile)
-
-  drawNoteBuffer[currentTile - 1] = Number(currentNote); //push current note to the buffer (note that currentTile gets incremented during drawNote hence why we subtract 1 from it)
-  //console.table(drawNoteBuffer);
-
-  if(currentTile === 5) {
-    drawNoteBuffer.forEach((bufNote, bufIdx) => guessRows[currentRow][bufIdx] = bufNote); //only at the last tile do we update guessRows
-    //console.table(guessRows);
-  }*/
-
 }
 
 
-
 ////////////////////////////////// MAIN ///////////////////////////////////////
-
-function fixHeight() {
-  document.documentElement.style.setProperty('--vh', `${window.innerHeight / 100}px`);
-};
-
-addEventListener('load', fixHeight);
-addEventListener('resize', fixHeight);
-addEventListener('orientationchange', fixHeight);
 
 //load game state if it was saved and it's not yet time to generate a new treble, otherwise initalize game state and store first objects
 
@@ -871,10 +826,10 @@ pitches.forEach((pitch, index) => {
 });
 
 //create enter button
-/*const enterButton = document.createElement('button');
+const enterButton = document.createElement('button');
 enterButton.setAttribute('id', 'Enter');
 enterButton.innerHTML = '\u23CE';
-piano.append(enterButton);*/
+piano.append(enterButton);
 
 //create html elements to represent keys for piano and append relevant properties from lookup table*/
 pitches.forEach((pitch, index) => {
@@ -885,10 +840,10 @@ pitches.forEach((pitch, index) => {
 });
 
 //create delete button
-/*const deleteButton = document.createElement('button');
+const deleteButton = document.createElement('button');
 deleteButton.setAttribute('id', 'Delete');
 deleteButton.innerHTML = '\u232b';
-piano.append(deleteButton);*/
+piano.append(deleteButton);
 
 //get newly created elements
 const keys = document.querySelectorAll('.key');
